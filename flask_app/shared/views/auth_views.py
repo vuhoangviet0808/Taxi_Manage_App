@@ -8,4 +8,3 @@ CORS(auth_blueprint)
 @auth_blueprint.route('/login', methods=['POST'])
 def login_route():
     return login()
-
