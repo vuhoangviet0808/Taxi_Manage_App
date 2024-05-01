@@ -7,10 +7,13 @@ class AccountLoginViewModel extends ChangeNotifier {
   Account? _account ;
   String _errorMessage = '';
   bool _isLoading = false;
+  String _role = 'admin';
 
   Account? get account => _account;
   String get errorMessage => _errorMessage;
   bool get isLoading => _isLoading;
+  String get role => _role;
+
 
   void setBusy(bool isBusy) {
     _isLoading = isBusy;

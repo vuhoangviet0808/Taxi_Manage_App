@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/views/views.dart';
 import 'package:flutter_app/admin/viewmodels/viewmodels.dart';
-import 'package:flutter_app/admin/services/services.dart';
 
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
+
+class AdminPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
