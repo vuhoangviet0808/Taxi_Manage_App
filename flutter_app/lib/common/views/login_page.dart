@@ -3,7 +3,8 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import '../viewmodels/account_login_view_model.dart';
-
+import '../../../../user/user_main.dart';
+import '../../../../admin/admin_main.dart';
 
 class LoginPage extends StatefulWidget {
 
@@ -34,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
               if (viewModel.isLoading)
                 CircularProgressIndicator(), 
               SizedBox(height: 100),
-              Image(image: AssetImage('assets/icontaxi.png'), width: 200, height: 60, ),
+              Image(image: AssetImage('common/icontaxi.png'), width: 200, height: 60, ),
               Padding(
                 padding: EdgeInsets.only(top: 40, bottom: 6),
                 child: Text(
@@ -89,7 +90,22 @@ class _LoginPageState extends State<LoginPage> {
                   if(!success) {
                     _showDialog(context, viewModel.errorMessage);
                   } else {
-                    _showDialog(context, "Successfully!");
+                    switch(viewModel.role) {
+                      case "admin":
+                        Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AdminPage()));
+                        break;
+                      case "driver":
+                        Navigator.pushReplacementNamed(context, '/driver');
+                        break;
+                      case "user":
+                        Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => UserPage()));
+                        break;
+                      default:
+                        _showDialog(context, "Access Denied");
+                        break;
+                    }
                   }
                 },
                 child: Text("Login"),
