@@ -1,14 +1,6 @@
-# auth_service.py
+from shared.services.database_service import db
 
-class AuthenticationService:
-    def __init__(self):
-        # Giả sử chúng ta có một "cơ sở dữ liệu" đơn giản
-        self.users = {
-            "john": "password123",
-            "emma": "password456"
-        }
-
-    def authenticate(self, username, password):
-        if username in self.users and self.users[username] == password:
-            return True
-        return False
+def get_user_data():
+    query = 'select * form user'
+    result = db.cursor().excute(query)
+    return result.fetchall()

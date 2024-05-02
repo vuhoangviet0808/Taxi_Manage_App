@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint 
 from flask_cors import CORS
 from ..controllers.auth_controller import login
 
