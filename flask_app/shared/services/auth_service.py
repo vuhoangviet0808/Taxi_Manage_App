@@ -1,13 +1,11 @@
-from database_service import db
+from .database_service import db
 
 
 class AuthService:
     def authenticate(self, username, password):
-        quert = 'Select * from account where username = :username AND password = :password'
-        result = db.cursor().excute(query, {'username': username, 'password': password})
+        query = 'Select * from account where username = %s AND password = %s'
+        result = db.cursor().execute(query, (username, password))
 
-        account = result.fetchone()
-
-        if account:
-            return  account
+        if result:
+            return result.fetchone()
         return None

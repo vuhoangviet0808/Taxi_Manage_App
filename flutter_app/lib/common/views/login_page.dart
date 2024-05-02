@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
               if (viewModel.isLoading)
                 CircularProgressIndicator(), 
               SizedBox(height: 100),
-              Image(image: AssetImage('common/icontaxi.png'), width: 200, height: 60, ),
+              Image(image: AssetImage('assets/common/icontaxi.png'), width: 200, height: 60, ),
               Padding(
                 padding: EdgeInsets.only(top: 40, bottom: 6),
                 child: Text(
