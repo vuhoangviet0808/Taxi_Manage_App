@@ -6,7 +6,7 @@ import '../models/account.dart';
 class AuthenticationService {
   final String baseUrl = 'http://10.0.2.2:5000';
 
-  Future<Account?> login(String username, String password) async {
+  Future<Account?> login(String sdt, String password) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
@@ -14,7 +14,7 @@ class AuthenticationService {
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
-          'username': username,
+          'SDT': sdt,
           'password': password,
         }),
       );

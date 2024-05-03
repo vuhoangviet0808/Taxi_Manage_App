@@ -1,8 +1,12 @@
 import "package:flutter/material.dart";
 import "../widget/home_menu.dart";
 import "../widget/ride_picker.dart";
+import '../../models/user.dart';
 
 class HomePage extends StatefulWidget {
+  final User user;
+  
+  HomePage({Key? key, required this.user}) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -41,8 +45,8 @@ class _HomePageState extends State<HomePage> {
                       //    Scaffold.of(context).openDrawer(); 
                         _scaffoldKey.currentState?.openDrawer();
                       },
-                      child: Image.asset("menu.png")),
-                    actions: <Widget>[Image.asset("bell.png")],
+                      child: Image.asset("assets/user/menu.png")),
+                    actions: <Widget>[Image.asset("assets/user/bell.png")],
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 20, left: 20, right: 20),
@@ -55,7 +59,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       drawer: Drawer(
-        child: HomeMenu(),
+        child: HomeMenu(user: widget.user),
       ),
     );
   }

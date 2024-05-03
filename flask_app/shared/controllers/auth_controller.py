@@ -4,15 +4,16 @@ from flask import request, jsonify
 auth_service = AuthService()
 
 def login():
-    username = request.json.get('username')
+    sdt = request.json.get('SDT')
     password = request.json.get('password')
-    account = auth_service.authenticate(username, password)
+    account = auth_service.authenticate(sdt, password)
     if account:
         return jsonify({
             'message': 'Login successful',
-            'id': account['id'], 
-            'username': username,
-            'email': account['email']
+            'SDT': account['SDT'], 
+            'password': account['password'],
+            'role': account['roles'],
+            'status': account['status']
             }), 200
     return jsonify({'message': 'Invalid username or password'}), 401
 

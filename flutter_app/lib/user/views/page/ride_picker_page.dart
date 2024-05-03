@@ -36,7 +36,7 @@ class _RiderPickerPageState extends State<RiderPickerPage> {
                         width: 40,
                         height: 60,
                         child: Center(
-                          child: Image.asset("mappointer.png"),
+                          child: Image.asset("assets/user/mappointer.png"),
                         ),
                       ),
                       Positioned(
@@ -49,7 +49,7 @@ class _RiderPickerPageState extends State<RiderPickerPage> {
                             onPressed: () {
                               _addressController.text = "";
                             },
-                            child: Image.asset("x.png")),
+                            child: Image.asset("assets/user/x.png")),
                         ),
                       ),
                       Padding(

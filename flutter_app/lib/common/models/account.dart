@@ -1,22 +1,25 @@
 class Account{
-  final String id;
-  final String username;
-  final String email;
+  final String SDT;
+  final String password;
+  final String role;
+  final String status;
 
-  Account({required this.id, required this.username, required this.email});
+  Account({required this.SDT, required this.password, required this.role, required this.status});
 
   factory Account.fromJson(Map<String, dynamic> json){
     return Account(
-      id: json['id'],
-      username: json['username'],
-      email: json['email']
+      SDT: json["SDT"],
+      password: json["password"],
+      role: json["role"],
+      status: json["status"]
   );
   }
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'username': username,
-      'email': email
+      'SDT': SDT,
+      'password': password,
+      'role': role,
+      'status': status
     };
   }
 
