@@ -1,14 +1,20 @@
 import "package:flutter/material.dart";
 import "../widget/home_menu.dart";
-import "../widget/user.dart";
+import "../widget/user_widget.dart";
+import '../../models/user.dart';
 
 class UserPage extends StatefulWidget {
+  final User user;
+
+  UserPage({Key? key, required this.user}) : super(key: key);
+
   @override
+  // ignore: library_private_types_in_public_api
   _UserPageState createState() => _UserPageState();
 }
 
 class _UserPageState extends State<UserPage> {
-  var _scaffoldKey = new GlobalKey<ScaffoldState>();
+  var _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,8 +24,6 @@ class _UserPageState extends State<UserPage> {
         color: Colors.white,
         child: Stack(
           children: <Widget>[
-
-
             Positioned(
               left: 0,
               top: 0,
@@ -39,12 +43,12 @@ class _UserPageState extends State<UserPage> {
                       //    Scaffold.of(context).openDrawer(); 
                         _scaffoldKey.currentState?.openDrawer();
                       },
-                      child: Image.asset("menu.png")),
-                      actions: <Widget>[Image.asset("bell.png")],
+                      child: Image.asset("assets/user/menu.png")),
+                      actions: <Widget>[Image.asset("assets/user/bell.png")],
                   ),
                   Padding(
                     padding: EdgeInsets.only(top:20, left:20, right:20),
-                    child: User(),
+                    child: UserWidget(user: widget.user),
                   )
                 ],
               ),
@@ -54,7 +58,7 @@ class _UserPageState extends State<UserPage> {
         
       ),
       drawer: Drawer(
-        child: HomeMenu(),
+        child: HomeMenu(user: widget.user),
       ),
     );
   }

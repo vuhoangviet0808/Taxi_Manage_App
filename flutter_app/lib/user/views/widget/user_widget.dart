@@ -1,13 +1,20 @@
 import "package:flutter/material.dart";
+import '../../models/user.dart';
 
-class User extends StatefulWidget {
+class UserWidget extends StatefulWidget {
+  final User user;
+
+  UserWidget({Key? key, required this.user}) : super(key: key);
+
   @override
   _UserState createState() => _UserState();
 }
 
-class _UserState extends State<User> {
+class _UserState extends State<UserWidget> {
   @override
   Widget build(BuildContext context) {
+    User user = widget.user;
+
     return Container(
       child: SingleChildScrollView(
         child: Column(
@@ -17,9 +24,9 @@ class _UserState extends State<User> {
                 child: TextField(
                   style: TextStyle(fontSize: 18,color: Colors.black),
                   decoration: InputDecoration(
-                    labelText: "Name",
-                    prefixIcon: Container(
-                        width: 50, child: Image.asset("user/user.png")),
+                    labelText: "${user.firstname} ${user.lastname}",
+                    prefixIcon: SizedBox(
+                        width: 50, child: Image.asset("assets/user/user.png")),
                         border: OutlineInputBorder(
                           borderSide: 
                           BorderSide(color: Color(0xffCED0D2), width: 1),
@@ -29,9 +36,9 @@ class _UserState extends State<User> {
               TextField(
                   style: TextStyle(fontSize: 18,color: Colors.black),
                   decoration: InputDecoration(
-                    labelText: "Phone number",
-                    prefixIcon: Container(
-                        width: 50, child: Image.asset("user/phone.png")),
+                    labelText: user.SDT,
+                    prefixIcon: SizedBox(
+                        width: 50, child: Image.asset("assets/user/phone.png")),
                         border: OutlineInputBorder(
                           borderSide: 
                           BorderSide(color: Color(0xffCED0D2), width: 1),
@@ -42,9 +49,9 @@ class _UserState extends State<User> {
                 child: TextField(
                   style: TextStyle(fontSize: 18,color: Colors.black),
                   decoration: InputDecoration(
-                    labelText: "Email",
-                    prefixIcon: Container(
-                        width: 50, child: Image.asset("user/mail.png")),
+                    labelText: user.DOB.toString(),
+                    prefixIcon: SizedBox(
+                        width: 50, child: Image.asset("assets/user/mail.png")),
                         border: OutlineInputBorder(
                           borderSide: 
                           BorderSide(color: Color(0xffCED0D2), width: 1),
@@ -54,9 +61,20 @@ class _UserState extends State<User> {
             TextField(
                   style: TextStyle(fontSize: 18,color: Colors.black),
                   decoration: InputDecoration(
-                    labelText: "Password",
-                    prefixIcon: Container(
-                        width: 50, child: Image.asset("user/lock.png")),
+                    labelText: user.Address,
+                    prefixIcon: SizedBox(
+                        width: 50, child: Image.asset("assets/user/lock.png")),
+                        border: OutlineInputBorder(
+                          borderSide: 
+                          BorderSide(color: Color(0xffCED0D2), width: 1),
+                          borderRadius: BorderRadius.all(Radius.circular(6)))),
+                ),
+              TextField(
+                  style: TextStyle(fontSize: 18,color: Colors.black),
+                  decoration: InputDecoration(
+                    labelText: user.gender,
+                    prefixIcon: SizedBox(
+                        width: 50, child: Image.asset("assets/user/lock.png")),
                         border: OutlineInputBorder(
                           borderSide: 
                           BorderSide(color: Color(0xffCED0D2), width: 1),

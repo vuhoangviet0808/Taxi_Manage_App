@@ -40,7 +40,7 @@ class _RidePickerState extends State<RidePicker> {
                       width: 40,
                       height: 50,
                       child: Center(
-                        child: Image.asset("user/mappointer.png"),
+                        child: Image.asset("assets/user/mappointer.png"),
                       ),
                     ),
                     Positioned(
@@ -53,7 +53,7 @@ class _RidePickerState extends State<RidePicker> {
                           onPressed: () {
                             
                           },
-                          child: Image.asset("user/x.png")),
+                          child: Image.asset("assets/user/x.png")),
                       ),
                     ),
                     Padding(
@@ -84,7 +84,7 @@ class _RidePickerState extends State<RidePicker> {
                       width: 40,
                       height: 50,
                       child: Center(
-                        child: Image.asset("user/navigation.png"),
+                        child: Image.asset("assets/user/navigation.png"),
                       ),
                     ),
                     Positioned(
@@ -93,7 +93,7 @@ class _RidePickerState extends State<RidePicker> {
                       width: 40,
                       height: 50,
                       child: Center(
-                        child: Image.asset("user/x.png"),
+                        child: Image.asset("assets/user/x.png"),
                       ),
                     ),
                     Padding(

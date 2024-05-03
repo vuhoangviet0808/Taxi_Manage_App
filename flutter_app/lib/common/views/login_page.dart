@@ -13,7 +13,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _sdtController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -53,10 +53,10 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: EdgeInsets.only(bottom: 15),
                 child: TextField(
-                  controller: _usernameController,
+                  controller: _sdtController,
                   style: TextStyle(color: Colors.black.withOpacity(0.8), fontSize: 18),
                   decoration: InputDecoration(
-                    labelText: "Username",
+                    labelText: "SDT",
                     prefixIcon: Container(
                       width: 50,
                       child: Icon(Icons.person, color: Colors.grey.withOpacity(0.6),),
@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: viewModel.isLoading ? null : () async {
-                  bool success = await viewModel.login(_usernameController.text, _passwordController.text);
+                  bool success = await viewModel.login(_sdtController.text, _passwordController.text);
                   if(!success) {
                     _showDialog(context, viewModel.errorMessage);
                   } else {
@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                         break;
                       case "user":
                         Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => UserPage()));
+                      MaterialPageRoute(builder: (context) => UserPage(sdt: viewModel.sdt)));
                         break;
                       default:
                         _showDialog(context, "Access Denied");
