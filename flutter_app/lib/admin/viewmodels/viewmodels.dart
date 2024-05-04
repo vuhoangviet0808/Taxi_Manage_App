@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison, sized_box_for_whitespace
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/services/services.dart';
 
