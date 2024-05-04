@@ -21,3 +21,4 @@ flutter:
   assets:
   - assets/common/
   - assets/user/
+  - assets/driver/
