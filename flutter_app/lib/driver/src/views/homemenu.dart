@@ -121,7 +121,7 @@ class _HomeMenuState extends State<HomeMenu> {
                     ),
                     Card(
                       child: ListTile(
-                        leading: Image(image: AssetImage('assets/images/notif-icon.png'), width: 20, height: 20,),
+                        leading: Image(image: AssetImage('assets/driver/notif-icon.png'), width: 20, height: 20,),
                         title: Text('Thông báo',
                         style: TextStyle(
                           fontSize: 16,
