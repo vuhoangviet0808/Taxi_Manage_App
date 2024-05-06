@@ -1,10 +1,13 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sized_box_for_whitespace, use_build_context_synchronously
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sized_box_for_whitespace
 
+import 'package:flutter_app/common/viewmodels/account_register_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import '../viewmodels/account_login_view_model.dart';
 import '../../../../user/user_main.dart';
 import '../../../../admin/admin_main.dart';
+import '../../../../driver/driver_main.dart';
+import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
 
@@ -15,6 +18,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _sdtController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  Color _textColor = Colors.grey.shade700;
+  Color _backgroundColor = Colors.grey.shade700;
 
   @override
   Widget build(BuildContext context) {
@@ -84,40 +89,105 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: viewModel.isLoading ? null : () async {
-                  bool success = await viewModel.login(_sdtController.text, _passwordController.text);
-                  if(!success) {
-                    _showDialog(context, viewModel.errorMessage);
-                  } else {
-                    switch(viewModel.role) {
-                      case "admin":
-                        Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AdminPage()));
-                        break;
-                      case "driver":
-                        Navigator.pushReplacementNamed(context, '/driver');
-                        break;
-                      case "user":
-                        Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => UserPage(sdt: viewModel.sdt)));
-                        break;
-                      default:
-                        _showDialog(context, "Access Denied");
-                        break;
-                    }
-                  }
-                },
-                child: Text("Login"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:<Widget> [
+                  ElevatedButton(
+                    onPressed: viewModel.isLoading ? null : () async {
+                      bool success = await viewModel.login(_sdtController.text, _passwordController.text);
+                      if(!success) {
+                        // ignore: use_build_context_synchronously
+                        _showDialog(context, viewModel.errorMessage);
+                      } else {
+                        switch(viewModel.role) {
+                          case "admin":
+                            Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => AdminPage()));
+                            break;
+                          case "driver":
+                            Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => DriverPage(sdt: viewModel.sdt)));
+                            break;
+                          case "user":
+                            Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => UserPage(sdt: viewModel.sdt)));
+                            break;
+                          default:
+                            _showDialog(context, "Access Denied");
+                            break;
+                        }
+                      }
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                        if (states.contains(MaterialState.pressed)) return Colors.black; 
+                        return Colors.blue; 
+                      }),  
+                      foregroundColor: MaterialStateProperty.all(Colors.white),
+                      elevation: MaterialStateProperty.all(5), 
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
+                      ),
+                    ),
+                    child: Text("Login"),
+                  ),
+                  SizedBox(width: 10),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                        MaterialPageRoute(
+                          builder:(context) => ChangeNotifierProvider(
+                            create: (context) => AccountRegisterViewModel(),
+                            child: RegisterPage(),
+                          ),
+                        ),
+                      );
+                    },
+                    onHighlightChanged: (value) {
+                      setState(() {
+                        if (value) {
+                          _textColor = Colors.red; // Thay đổi sang màu đỏ khi nhấn
+                        } else {
+                          _textColor = Colors.grey.shade700; // Trở lại màu ban đầu khi không nhấn nữa
+                        }
+                      });
+                    },
+                    child: Text(
+                      "New user?",
+                      style: TextStyle(
+                        color: _textColor, // Màu ban đầu
+                        decoration: TextDecoration.underline, // Thêm gạch chân để giống liên kết
+                      ),
+                    ),
+                  ),
+                ]
               ),
               Padding(
                 padding: EdgeInsets.only(top: 15),
                 child: Container(
                   alignment: AlignmentDirectional.centerEnd,
                   constraints: BoxConstraints.loose(Size(double.infinity, 40)),
-                  child: Text(
-                    "Forgot My Password",
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                      MaterialPageRoute(builder:(context) => RegisterPage()));
+                    },
+                    onHighlightChanged: (value) {
+                      setState(() {
+                        if (value) {
+                          _backgroundColor = Colors.red; // Thay đổi sang màu đỏ khi nhấn
+                        } else {
+                          _backgroundColor = Colors.grey.shade700; // Trở lại màu ban đầu khi không nhấn nữa
+                        }
+                      });
+                    },
+                    child: Text(
+                      "Forgot my password",
+                      style: TextStyle(
+                        color: _backgroundColor, // Màu ban đầu
+                        decoration: TextDecoration.underline, // Thêm gạch chân để giống liên kết
+                      ),
+                    ),
                   ),
                 ),
               ),

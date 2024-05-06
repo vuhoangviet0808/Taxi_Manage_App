@@ -3,6 +3,7 @@ from flask import request, jsonify
 
 auth_service = AuthService()
 
+
 def login():
     sdt = request.json.get('SDT')
     password = request.json.get('password')
@@ -16,4 +17,8 @@ def login():
             'status': account['status']
             }), 200
     return jsonify({'message': 'Invalid username or password'}), 401
+
+
+
+
 

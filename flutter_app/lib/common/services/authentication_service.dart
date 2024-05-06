@@ -29,4 +29,28 @@ class AuthenticationService {
       throw Exception('Failed to login: $e');
     }
   }
+  Future<String?> register(String sdt, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/register'),
+        headers: <String, String> {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'SDT': sdt,
+          'password': password,
+          'roles': 'user'
+        }),
+      );
+
+      if(response.statusCode == 200) {
+        return sdt;
+      } else {
+        throw Exception('Failed to register. Error code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to resgister. Error code: $e');
+    }
+  }
+  
 }
