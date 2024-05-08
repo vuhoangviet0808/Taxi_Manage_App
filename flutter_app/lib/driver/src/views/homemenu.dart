@@ -1,11 +1,13 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 
+import '../../models/driver.dart';
+import 'driver_infor.dart';
 
 class HomeMenu extends StatefulWidget {
-
-
+  final Driver driver;
+  HomeMenu({required this.driver});
   @override
   State<HomeMenu> createState() => _HomeMenuState();
 }
@@ -14,40 +16,39 @@ class _HomeMenuState extends State<HomeMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
+      body: SafeArea(
+        child: Container(
+          constraints: BoxConstraints.expand(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            children:<Widget> [
+            children: <Widget>[
               Center(
                 child: Container(
                   padding: EdgeInsets.all(8),
                   color: Colors.black54,
                   width: double.infinity,
-                  height: 150,
+                  height: 120,
                   child: Row(
-                    children:<Widget> [
+                    children: <Widget>[
                       CircleAvatar(
                         radius: 40,
-                        backgroundImage: AssetImage('assets/images/anhthe.jpg'),
+                        backgroundImage: AssetImage('assets/driver/anhthe.jpg'),
                       ),
-                      SizedBox(width: 10,),
-                      Expanded(child: Column(
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
-                        children:<Widget> [
+                        children: <Widget>[
                           Text(
-                            'Nguyễn Khánh Duy',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white
-                            ),
+                            '${widget.driver.firstname} ${widget.driver.lastname}',
+                            style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
                           Text(
-                            'ID: 20225830',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white
-                            ),
+                            'CCCD: ${widget.driver.CCCD}',
+                            style: TextStyle(fontSize: 18, color: Colors.white),
                           )
                         ],
                       ))
@@ -56,9 +57,9 @@ class _HomeMenuState extends State<HomeMenu> {
                 ),
               ),
               Divider(
-                height: 20,
+                height: 10,
                 thickness: 0,
-                color: Colors.black,
+                color: Colors.white,
               ),
               Expanded(
                 child: ListView(
@@ -66,78 +67,85 @@ class _HomeMenuState extends State<HomeMenu> {
                   children: <Widget>[
                     Card(
                       child: ListTile(
+                        leading: Icon(Icons.person),
+                        title: Text(
+                          'Thông tin cá nhân',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  DriverInfor(driver: widget.driver)));
+                        },
+                      ),
+                    ),
+                    Card(
+                      child: ListTile(
                         leading: Icon(Icons.wallet),
-                        title: Text('Ví tài khoản',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black
+                        title: Text(
+                          'Ví tài khoản',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
-                        ),
+                        onTap: () {
+                          show_wallet();
+                        },
                       ),
                     ),
                     Card(
                       child: ListTile(
                         leading: Icon(Icons.attach_money),
-                        title: Text('Tổng hợp doanh thu',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black
-                        ),
+                        title: Text(
+                          'Tổng hợp doanh thu',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                       ),
                     ),
                     Card(
                       child: ListTile(
                         leading: Icon(Icons.percent),
-                        title: Text('Tỷ lệ hoạt động',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black
-                        ),
+                        title: Text(
+                          'Tỷ lệ hoạt động',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                       ),
                     ),
                     Card(
                       child: ListTile(
                         leading: Icon(Icons.history_rounded),
-                        title: Text('Lịch sử',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black
-                        ),
+                        title: Text(
+                          'Lịch sử chuyến đi',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                       ),
                     ),
                     Card(
                       child: ListTile(
                         leading: Icon(Icons.message_rounded),
-                        title: Text('Tin nhắn từ tổng đài',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black
-                        ),
+                        title: Text(
+                          'Tin nhắn từ tổng đài',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                       ),
                     ),
                     Card(
                       child: ListTile(
-                        leading: Image(image: AssetImage('assets/driver/notif-icon.png'), width: 20, height: 20,),
-                        title: Text('Thông báo',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black
+                        leading: Image(
+                          image: AssetImage('assets/driver/notif-icon.png'),
+                          width: 20,
+                          height: 20,
                         ),
+                        title: Text(
+                          'Thông báo',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                       ),
                     ),
                     Card(
                       child: ListTile(
                         leading: Icon(Icons.logout_outlined),
-                        title: Text('Đăng xuất',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black
-                        ),
+                        title: Text(
+                          'Đăng xuất',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                       ),
                     ),
@@ -147,6 +155,127 @@ class _HomeMenuState extends State<HomeMenu> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  // void driver_infor() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text("Thông tin cá nhân"),
+  //         content: SizedBox(
+  //           width: 1500,
+  //           height: 900,
+  //           child: ListView(
+  //             scrollDirection: Axis.vertical,
+  //             children: <Widget>[
+  //               Card(
+  //                 child: ListTile(
+  //                   title: Text(
+  //                     'First Name: ${widget.driver.firstname}',
+  //                     style: TextStyle(fontSize: 16, color: Colors.black),
+  //                   ),
+  //                 ),
+  //               ),
+  //               Card(
+  //                 child: ListTile(
+  //                   title: Text(
+  //                     'Last Name: ${widget.driver.lastname}',
+  //                     style: TextStyle(fontSize: 16, color: Colors.black),
+  //                   ),
+  //                 ),
+  //               ),
+  //               Card(
+  //                 child: ListTile(
+  //                   title: Text(
+  //                     'SDT: ${widget.driver.SDT}',
+  //                     style: TextStyle(fontSize: 16, color: Colors.black),
+  //                   ),
+  //                 ),
+  //               ),
+  //               Card(
+  //                 child: ListTile(
+  //                   title: Text(
+  //                     'DOB: ${widget.driver.DOB}',
+  //                     style: TextStyle(fontSize: 16, color: Colors.black),
+  //                   ),
+  //                 ),
+  //               ),
+  //               Card(
+  //                 child: ListTile(
+  //                   title: Text(
+  //                     'Gender: ${widget.driver.gender}',
+  //                     style: TextStyle(fontSize: 16, color: Colors.black),
+  //                   ),
+  //                 ),
+  //               ),
+  //               Card(
+  //                 child: ListTile(
+  //                   title: Text(
+  //                     'Address: ${widget.driver.Address}',
+  //                     style: TextStyle(fontSize: 16, color: Colors.black),
+  //                   ),
+  //                 ),
+  //               ),
+  //               Card(
+  //                 child: ListTile(
+  //                   title: Text(
+  //                     'CCCD: ${widget.driver.CCCD}',
+  //                     style: TextStyle(fontSize: 16, color: Colors.black),
+  //                   ),
+  //                 ),
+  //               ),
+  //               Card(
+  //                 child: ListTile(
+  //                   title: Text(
+  //                     'Driving_license: ${widget.driver.Driving_license}',
+  //                     style: TextStyle(fontSize: 16, color: Colors.black),
+  //                   ),
+  //                 ),
+  //               ),
+  //               Card(
+  //                 child: ListTile(
+  //                   title: Text(
+  //                     'Working_experiment: ${widget.driver.Working_experiment}',
+  //                     style: TextStyle(fontSize: 16, color: Colors.black),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
+  void show_wallet() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Tiền hiện có"),
+          content: SizedBox(
+            width: 300,
+            height: 100,
+            child: ListView(
+              scrollDirection: Axis.vertical,
+              children: <Widget>[
+                Card(
+                  child: ListTile(
+                    title: Text(
+                      'Wallet: ${widget.driver.Wallet} \$',
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
