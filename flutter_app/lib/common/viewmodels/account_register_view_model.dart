@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:flutter/foundation.dart';
 import '../services/authentication_service.dart';
 
@@ -6,7 +8,7 @@ class AccountRegisterViewModel extends ChangeNotifier {
   String _errorMessage = "";
   String phone = "";
   bool _isLoading = false;
-  String? _account ;
+  String? _account;
 
   String get errorMessage => _errorMessage;
   bool get isLoading => _isLoading;
@@ -23,10 +25,11 @@ class AccountRegisterViewModel extends ChangeNotifier {
     try {
       final _account = await _authenticationService.register(sdt, password);
       setBusy(false);
-      if(_account != null) {
+      if (_account != null) {
         return true;
       } else {
-        _errorMessage = 'Register failed: The phone number is incorrect or already in use';
+        _errorMessage =
+            'Register failed: The phone number is incorrect or already in use';
         return false;
       }
     } catch (e) {
@@ -34,6 +37,5 @@ class AccountRegisterViewModel extends ChangeNotifier {
       setBusy(false);
       return false;
     }
-
   }
 }

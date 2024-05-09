@@ -11,3 +11,6 @@ def driver_index():
 @driver_blueprint.route('/getinfo', methods=['GET'])
 def driver_getinfo():
     return DriverController.get_driver_info()
+@driver_blueprint.route('/update_driver_infor', methods = ['POST'])
+def driver_updateinfo():    
+    return DriverController.update_info()
