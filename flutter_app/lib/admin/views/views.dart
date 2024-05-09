@@ -30,7 +30,7 @@ class AdminDashboardView extends StatelessWidget {
                 leading: Icon(Icons.star),
                 title: Text('Quản lí đơn hàng'),
                 onTap: () {
-                  viewModel.fetchOrders(context);
+                  //viewModel.fetchOrders(context);
                 },
               ),
               ListTile(

@@ -8,7 +8,7 @@ import 'user/user_main.dart';
 import 'admin/admin_main.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(AdminPage());
 }
 
 class MyApp extends StatelessWidget {
