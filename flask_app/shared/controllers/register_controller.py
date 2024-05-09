@@ -10,8 +10,7 @@ def register():
         account = register_service.register_new_user(sdt, password)
         if account:
             return jsonify({
-                'Message': 'Registration successful',
-                'sdt': sdt
+                'Message': 'Registration successful'
             }), 200
     return jsonify({
         'Message': 'Phone number already registered'

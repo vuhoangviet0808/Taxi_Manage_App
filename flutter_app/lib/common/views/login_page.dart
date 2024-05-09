@@ -146,9 +146,9 @@ class _LoginPageState extends State<LoginPage> {
                     onHighlightChanged: (value) {
                       setState(() {
                         if (value) {
-                          _textColor = Colors.red; // Thay đổi sang màu đỏ khi nhấn
+                          _textColor = Colors.red; 
                         } else {
-                          _textColor = Colors.grey.shade700; // Trở lại màu ban đầu khi không nhấn nữa
+                          _textColor = Colors.grey.shade700; 
                         }
                       });
                     },

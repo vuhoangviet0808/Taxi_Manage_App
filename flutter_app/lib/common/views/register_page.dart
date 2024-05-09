@@ -85,7 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     String sdt = _sdtController.text, password = _passwordController.text;
                     bool hasError = false;
 
@@ -111,14 +111,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       hasError = true;
                     }
                     if(!hasError && !view.isLoading) {
-                      () async {
                         bool success = await view.register(sdt, password);
                         if(!success) {
-                          _showDialog(context, view.errorMessage);
+                          _showDialog(context,false, view.errorMessage);
                         } else {
-                          _showDialog(context, "Register success");
-                        }
-                      };
+                          _showDialog(context,true, "Register success");
+                      }
                     }
 
                    
@@ -170,12 +168,12 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void _showDialog(BuildContext context, String message) {
+  void _showDialog(BuildContext context,bool success, String message) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Error"),
+          title: success ?  Text(""):Text("Error"),
           content: Text(message),
           actions: <Widget>[
             TextButton(

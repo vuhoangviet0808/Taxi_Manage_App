@@ -6,7 +6,7 @@ import '../models/account.dart';
 class AuthenticationService {
   final String baseUrl = 'http://10.0.2.2:5000';
 
-  Future<Account?> login(String sdt, String password) async {
+  Future<Map<String, dynamic>> login(String sdt, String password) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
@@ -21,15 +21,16 @@ class AuthenticationService {
 
       if(response.statusCode == 200) {
         final Account account = Account.fromJson(jsonDecode(response.body));
-        return account;
+        return {'success': true, 'account': account};
       } else {
-        throw Exception('Failed to login. Error code: ${response.statusCode}');
+        return {'success': false, 'account': 'Login Failed: Invalid SDT or password'};
       }
     } catch (e) {
-      throw Exception('Failed to login: $e');
+      return {'success': false, 'account': 'Login Failed: Exception occurred during login'};
     }
   }
-  Future<String?> register(String sdt, String password) async {
+
+  Future<Map<String, dynamic>> register(String sdt, String password) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/register'),
@@ -39,17 +40,15 @@ class AuthenticationService {
         body: jsonEncode({
           'SDT': sdt,
           'password': password,
-          'roles': 'user'
         }),
       );
-
       if(response.statusCode == 200) {
-        return sdt;
+        return {'success': true, 'message': sdt};
       } else {
-        throw Exception('Failed to register. Error code: ${response.statusCode}');
+        return {'success': false, 'message': 'Register failed: The phone number is incorrect or already in use'};
       }
     } catch (e) {
-      throw Exception('Failed to resgister. Error code: $e');
+      return {'sccess': false, 'message':'Exception occurred during registration' };
     }
   }
   
