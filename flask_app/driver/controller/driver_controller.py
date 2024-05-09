@@ -11,7 +11,7 @@ class DriverController:
         if not phone:
             abort(400, description="Bad request: No phone number provided.")
         
-        driver = driver_service.get_user_by_phone(phone)
+        driver = driver_service.get_driver_by_phone(phone)
         if driver:
             return jsonify({
                 'firstname': driver["Firstname"],
@@ -22,7 +22,7 @@ class DriverController:
                 'gender': driver['Gender'],
                 'Address': driver['Address'],
                 'CCCD': driver['CCCD'],
-                'Driving_license': driver['Driving_license_number'],
+                'Driving_license': driver['Driving_licence_number'],
                 'Working_experiment': driver['Working_experiment']
             }), 200
         else:

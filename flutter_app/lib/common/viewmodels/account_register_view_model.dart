@@ -6,34 +6,34 @@ class AccountRegisterViewModel extends ChangeNotifier {
   String _errorMessage = "";
   String phone = "";
   bool _isLoading = false;
-  String? _account ;
+  late Map<String, dynamic> _account ;
 
   String get errorMessage => _errorMessage;
   bool get isLoading => _isLoading;
   String get sdt => phone;
-  String? get account => _account;
+
 
   void setBusy(bool isBusy) {
     _isLoading = isBusy;
     notifyListeners();
   }
 
-  Future<bool> register(String sdt, String password) async {
+  // ignore: non_constant_identifier_names
+  Future<bool> register(String SDT, String password) async {
     setBusy(true);
     try {
-      final _account = await _authenticationService.register(sdt, password);
+      _account = await _authenticationService.register(SDT, password);
       setBusy(false);
-      if(_account != null) {
+      if(_account['success'] == true) {
         return true;
       } else {
-        _errorMessage = 'Register failed: The phone number is incorrect or already in use';
+        _errorMessage = _account['message'];
         return false;
       }
     } catch (e) {
-      _errorMessage = 'Register Failed: Exception occurred during register ';
+      _errorMessage = 'Register Failed: Exception occurred during register';
       setBusy(false);
       return false;
     }
-
   }
 }

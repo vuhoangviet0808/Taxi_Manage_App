@@ -26,18 +26,19 @@ class AccountLoginViewModel extends ChangeNotifier {
   Future<bool> login(String sdt, String password) async {
     setBusy(true);
     try {
-      final _account = await _authenticationService.login(sdt, password);
+      final Map<String, dynamic> result = await _authenticationService.login(sdt, password);
       setBusy(false);
-      if(_account != null) {
+      if(result['success'] == true) {
+        final _account = result['account'];
         _role = _account.role;
         phone = _account.SDT;
         return true;
       } else  {
-        _errorMessage = 'Login Failed: Invalid SDT or password';
+        _errorMessage = result['account'];
         return false;
       }
     } catch (e) {
-      _errorMessage = 'Login Failed: Exception occurred during login ';
+      _errorMessage = 'Login Failed: Exception occurred during login';
       setBusy(false);
       return false;
     }
