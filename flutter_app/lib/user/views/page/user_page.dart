@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import "package:flutter_app/user/views/page/update_user_page.dart";
+
 import "../widget/home_menu.dart";
 import "../widget/user_widget.dart";
 import '../../models/user.dart';
@@ -44,7 +46,18 @@ class _UserPageState extends State<UserPage> {
                         _scaffoldKey.currentState?.openDrawer();
                       },
                       child: Image.asset("assets/user/menu.png")),
-                      actions: <Widget>[Image.asset("assets/user/bell.png")],
+                      actions: <Widget>[ 
+                        TextButton(
+                          child: Text ("chinh sua",
+                           style: TextStyle(color: Colors.black, fontSize: 12),
+                           ),
+                           onPressed: () {
+                             Navigator.of(context).push(
+                             MaterialPageRoute(builder: (context) => UpdateUserPage())
+                              );
+                           },
+                           )
+                      ],
                   ),
                   Padding(
                     padding: EdgeInsets.only(top:20, left:20, right:20),
