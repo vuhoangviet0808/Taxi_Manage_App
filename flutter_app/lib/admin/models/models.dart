@@ -1,13 +1,34 @@
 class Driver {
-  final String name;
-  final String dob;
+  final String Firstname;
+  final String Lastname;
+  final String Driver_ID;
 
-  Driver(this.name, this.dob);
+  Driver(this.Firstname, this.Lastname, this.Driver_ID);
 }
 
-class Order {
-  final String time;
-  final String date;
+class FullDriver {
+  final String Firstname;
+  final String Lastname;
+  final String Driver_ID;
+  final String SDT;
+  final String Wallet;
+  final String DOB;
+  final String Gender;
+  final String Address;
+  final String CCCD;
+  final String Driving_licence_number;
+  final String Working_experiment;
 
-  Order(this.time, this.date);
+  FullDriver(
+      this.Firstname,
+      this.Lastname,
+      this.Driver_ID,
+      this.SDT,
+      this.Wallet,
+      this.DOB,
+      this.Gender,
+      this.Address,
+      this.CCCD,
+      this.Driving_licence_number,
+      this.Working_experiment);
 }

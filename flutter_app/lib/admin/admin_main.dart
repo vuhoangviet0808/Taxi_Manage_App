@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/views/views.dart';
 import 'package:flutter_app/admin/viewmodels/viewmodels.dart';
 
-
-
 class AdminPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,6 +16,7 @@ class AdminPage extends StatelessWidget {
               viewModel: AdminDashboardViewModel(),
             ),
         '/report': (context) => ReportScreenView(),
+//        '/detail': (context) => DriverDitailPage(),
       },
     );
   }
