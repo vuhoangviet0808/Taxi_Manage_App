@@ -19,6 +19,7 @@ class DriverService():
     def update_driver_info(self, driver):
         cursor = db.cursor()
         try:
+            print(f"Updating driver with ID {driver.driver_id}: {driver.firstname}, {driver.lastname}, {driver.gender}, etc.")
             cursor.execute("""
                 UPDATE driver SET
                 Firstname = %s, Lastname = %s, DOB = %s, Gender = %s, Address = %s, 

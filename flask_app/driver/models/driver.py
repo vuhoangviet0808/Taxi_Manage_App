@@ -13,17 +13,20 @@ class Driver:
         self.working_experiment = working_experiment
     @staticmethod
     def from_dict(source):
+        print("Data received for Driver:", source)
         # Convert from dictionary to Driver object
-        return Driver(
-            driver_id=source.get('Driver_ID'),
-            firstname=source.get('Firstname'),
-            lastname=source.get('Lastname'),
-            sdt=source.get('SDT'),
-            wallet=source.get('Wallet'),
-            dob=source.get('DOB'),
-            gender=source.get('Gender'),
-            address=source.get('Address'),
-            cccd=source.get('CCCD'),
-            driving_license=source.get('Driving_licence_number'),
-            working_experiment=source.get('Working_experiment')
+        driver = Driver(
+        driver_id=source.get('Driver_ID'),
+        firstname=source.get('firstname'),
+        lastname=source.get('lastname'),
+        sdt=source.get('SDT'),
+        wallet=source.get('Wallet'),
+        dob=source.get('DOB'),
+        gender=source.get('gender'),
+        address=source.get('Address'),
+        cccd=source.get('CCCD'),
+        driving_license=source.get('Driving_license'),
+        working_experiment=source.get('Working_experiment')
         )
+        print(f"Created driver object: {driver}")
+        return driver

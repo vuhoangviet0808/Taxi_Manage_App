@@ -1,17 +1,17 @@
 // ignore_for_file: non_constant_identifier_names
 
 class Driver {
-  final int Driver_ID;
-  final String firstname;
-  final String lastname;
-  final String SDT;
-  final int Wallet;
-  final String DOB;
-  final String gender;
-  final String Address;
-  final String CCCD;
-  final String Driving_license;
-  final int Working_experiment;
+  int Driver_ID;
+  String firstname;
+  String lastname;
+  String SDT;
+  int Wallet;
+  String DOB;
+  String gender;
+  String Address;
+  String CCCD;
+  String Driving_license;
+  int Working_experiment;
 
   Driver(
       {required this.Driver_ID,

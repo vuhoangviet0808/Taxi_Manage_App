@@ -29,10 +29,12 @@ class DriverInfoService {
 class DriverUpdateService {
   Future<bool> updateDriverInfo(Driver driver) async {
     try {
+      print("Sending Data: ${driver.toJson()}");
       final response = await http.post(
           Uri.parse('$baseUrl/driver/update_driver_infor'),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(driver.toJson()));
+      print('Received response: ${response.statusCode} ${response.body}');
       if (response.statusCode == 200) {
         print("Update Success");
         return true;

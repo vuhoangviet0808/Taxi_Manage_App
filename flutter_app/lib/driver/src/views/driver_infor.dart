@@ -7,27 +7,27 @@ import '../../models/driver.dart';
 class DriverInfor extends StatefulWidget {
   final Driver driver;
   DriverInfor({required this.driver});
+
   @override
   State<DriverInfor> createState() => _DriverInforState();
 }
 
 class _DriverInforState extends State<DriverInfor> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _firstNameController = TextEditingController();
-  TextEditingController _lastNameController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
-  TextEditingController _dobController = TextEditingController();
-  TextEditingController _genderController = TextEditingController();
-  TextEditingController _cccdController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
-  TextEditingController _licenseController = TextEditingController();
+
+  late TextEditingController _firstNameController;
+  late TextEditingController _lastNameController;
+  late TextEditingController _dobController;
+  late TextEditingController _genderController;
+  late TextEditingController _cccdController;
+  late TextEditingController _addressController;
+  late TextEditingController _licenseController;
 
   @override
   void initState() {
     super.initState();
     _firstNameController = TextEditingController(text: widget.driver.firstname);
     _lastNameController = TextEditingController(text: widget.driver.lastname);
-    _phoneController = TextEditingController(text: widget.driver.SDT);
     _dobController = TextEditingController(text: widget.driver.DOB);
     _genderController = TextEditingController(text: widget.driver.gender);
     _cccdController = TextEditingController(text: widget.driver.CCCD);
@@ -40,7 +40,6 @@ class _DriverInforState extends State<DriverInfor> {
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
-    _phoneController.dispose();
     _dobController.dispose();
     _genderController.dispose();
     _cccdController.dispose();
@@ -52,6 +51,7 @@ class _DriverInforState extends State<DriverInfor> {
   @override
   Widget build(BuildContext context) {
     final driverViewModel = Provider.of<DriverViewModel>(context);
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -93,7 +93,31 @@ class _DriverInforState extends State<DriverInfor> {
                                 Driving_license: _licenseController.text,
                                 Working_experiment:
                                     widget.driver.Working_experiment);
-                            driverViewModel.updateDriverInfo(updateDriver);
+
+                            driverViewModel
+                                .updateDriverInfo(updateDriver)
+                                .then((_) {
+                              setState(() {
+                                widget.driver.firstname =
+                                    _firstNameController.text;
+                                widget.driver.lastname =
+                                    _lastNameController.text;
+                                widget.driver.DOB = _dobController.text;
+                                widget.driver.gender = _genderController.text;
+                                widget.driver.CCCD = _cccdController.text;
+                                widget.driver.Address = _addressController.text;
+                                widget.driver.Driving_license =
+                                    _licenseController.text;
+                              });
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'Thông tin tài xế đã được cập nhật!'),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            });
                           }
                         },
                       ),
@@ -108,24 +132,17 @@ class _DriverInforState extends State<DriverInfor> {
                         child: TextFormField(
                           controller: _firstNameController,
                           decoration: InputDecoration(
-                              labelText:
-                                  "First Name: ${widget.driver.firstname}",
+                              labelText: "First Name",
                               labelStyle:
                                   TextStyle(color: Colors.black, fontSize: 16),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:
-                                        Colors.grey), // Màu của viền khi focus
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors
-                                        .grey), // Màu của viền khi chưa focus
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
                               focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:
-                                        Colors.red), // Màu của viền khi có lỗi
+                                borderSide: BorderSide(color: Colors.red),
                               ),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
@@ -139,23 +156,17 @@ class _DriverInforState extends State<DriverInfor> {
                         child: TextFormField(
                           controller: _lastNameController,
                           decoration: InputDecoration(
-                              labelText: "Last Name: ${widget.driver.lastname}",
+                              labelText: "Last Name",
                               labelStyle:
                                   TextStyle(color: Colors.black, fontSize: 16),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:
-                                        Colors.grey), // Màu của viền khi focus
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors
-                                        .grey), // Màu của viền khi chưa focus
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
                               focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:
-                                        Colors.red), // Màu của viền khi có lỗi
+                                borderSide: BorderSide(color: Colors.red),
                               ),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
@@ -168,23 +179,19 @@ class _DriverInforState extends State<DriverInfor> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                     child: TextFormField(
-                      controller: _phoneController,
                       decoration: InputDecoration(
-                          labelText: "SĐT: ${widget.driver.SDT}",
+                          labelText: "SĐT:${widget.driver.SDT}",
+                          hintText: "Cannot Change Phone Number",
                           labelStyle:
                               TextStyle(color: Colors.black, fontSize: 16),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.grey), // Màu của viền khi focus
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    Colors.grey), // Màu của viền khi chưa focus
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
                           focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.red), // Màu của viền khi có lỗi
+                            borderSide: BorderSide(color: Colors.red),
                           ),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
@@ -197,22 +204,18 @@ class _DriverInforState extends State<DriverInfor> {
                     child: TextFormField(
                       controller: _dobController,
                       decoration: InputDecoration(
-                          labelText: "DOB: ${widget.driver.DOB}",
+                          labelText: "DOB",
                           labelStyle:
                               TextStyle(color: Colors.black, fontSize: 16),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.grey), // Màu của viền khi focus
-                          ),
                           hintText: "YYYY-MM-DD",
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    Colors.grey), // Màu của viền khi chưa focus
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
                           focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.red), // Màu của viền khi có lỗi
+                            borderSide: BorderSide(color: Colors.red),
                           ),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
@@ -229,24 +232,18 @@ class _DriverInforState extends State<DriverInfor> {
                         child: TextFormField(
                           controller: _genderController,
                           decoration: InputDecoration(
-                              labelText: "Sex: ${widget.driver.gender}",
+                              labelText: "Sex",
                               labelStyle:
                                   TextStyle(color: Colors.black, fontSize: 16),
                               hintText: "Nam/Nữ",
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:
-                                        Colors.grey), // Màu của viền khi focus
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors
-                                        .grey), // Màu của viền khi chưa focus
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
                               focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:
-                                        Colors.red), // Màu của viền khi có lỗi
+                                borderSide: BorderSide(color: Colors.red),
                               ),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
@@ -260,23 +257,17 @@ class _DriverInforState extends State<DriverInfor> {
                         child: TextFormField(
                           controller: _cccdController,
                           decoration: InputDecoration(
-                              labelText: "CCCD: ${widget.driver.CCCD}",
+                              labelText: "CCCD",
                               labelStyle:
                                   TextStyle(color: Colors.black, fontSize: 16),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:
-                                        Colors.grey), // Màu của viền khi focus
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors
-                                        .grey), // Màu của viền khi chưa focus
+                                borderSide: BorderSide(color: Colors.grey),
                               ),
                               focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:
-                                        Colors.red), // Màu của viền khi có lỗi
+                                borderSide: BorderSide(color: Colors.red),
                               ),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5),
@@ -291,21 +282,17 @@ class _DriverInforState extends State<DriverInfor> {
                     child: TextFormField(
                       controller: _addressController,
                       decoration: InputDecoration(
-                          labelText: "Address: ${widget.driver.Address}",
+                          labelText: "Address",
                           labelStyle:
                               TextStyle(color: Colors.black, fontSize: 16),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.grey), // Màu của viền khi focus
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    Colors.grey), // Màu của viền khi chưa focus
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
                           focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.red), // Màu của viền khi có lỗi
+                            borderSide: BorderSide(color: Colors.red),
                           ),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),
@@ -318,22 +305,17 @@ class _DriverInforState extends State<DriverInfor> {
                     child: TextFormField(
                       controller: _licenseController,
                       decoration: InputDecoration(
-                          labelText:
-                              "Driver's License Number: ${widget.driver.Driving_license}",
+                          labelText: "Driver's License Number",
                           labelStyle:
                               TextStyle(color: Colors.black, fontSize: 16),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.grey), // Màu của viền khi focus
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    Colors.grey), // Màu của viền khi chưa focus
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
                           focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.red), // Màu của viền khi có lỗi
+                            borderSide: BorderSide(color: Colors.red),
                           ),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5),

@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/driver.dart';
+import '../../viewmodels/driver_viewmodel.dart';
 import 'driver_infor.dart';
 
 class HomeMenu extends StatefulWidget {
@@ -43,7 +45,7 @@ class _HomeMenuState extends State<HomeMenu> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text(
-                            '${widget.driver.firstname} ${widget.driver.lastname}',
+                            ' ${widget.driver.lastname} ${widget.driver.firstname}',
                             style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
                           Text(
@@ -73,9 +75,12 @@ class _HomeMenuState extends State<HomeMenu> {
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  DriverInfor(driver: widget.driver)));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => ChangeNotifierProvider(
+                                    create: (context) => DriverViewModel(),
+                                    child: DriverInfor(driver: widget.driver))),
+                          );
                         },
                       ),
                     ),
@@ -158,98 +163,6 @@ class _HomeMenuState extends State<HomeMenu> {
       ),
     );
   }
-
-  // void driver_infor() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text("Thông tin cá nhân"),
-  //         content: SizedBox(
-  //           width: 1500,
-  //           height: 900,
-  //           child: ListView(
-  //             scrollDirection: Axis.vertical,
-  //             children: <Widget>[
-  //               Card(
-  //                 child: ListTile(
-  //                   title: Text(
-  //                     'First Name: ${widget.driver.firstname}',
-  //                     style: TextStyle(fontSize: 16, color: Colors.black),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Card(
-  //                 child: ListTile(
-  //                   title: Text(
-  //                     'Last Name: ${widget.driver.lastname}',
-  //                     style: TextStyle(fontSize: 16, color: Colors.black),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Card(
-  //                 child: ListTile(
-  //                   title: Text(
-  //                     'SDT: ${widget.driver.SDT}',
-  //                     style: TextStyle(fontSize: 16, color: Colors.black),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Card(
-  //                 child: ListTile(
-  //                   title: Text(
-  //                     'DOB: ${widget.driver.DOB}',
-  //                     style: TextStyle(fontSize: 16, color: Colors.black),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Card(
-  //                 child: ListTile(
-  //                   title: Text(
-  //                     'Gender: ${widget.driver.gender}',
-  //                     style: TextStyle(fontSize: 16, color: Colors.black),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Card(
-  //                 child: ListTile(
-  //                   title: Text(
-  //                     'Address: ${widget.driver.Address}',
-  //                     style: TextStyle(fontSize: 16, color: Colors.black),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Card(
-  //                 child: ListTile(
-  //                   title: Text(
-  //                     'CCCD: ${widget.driver.CCCD}',
-  //                     style: TextStyle(fontSize: 16, color: Colors.black),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Card(
-  //                 child: ListTile(
-  //                   title: Text(
-  //                     'Driving_license: ${widget.driver.Driving_license}',
-  //                     style: TextStyle(fontSize: 16, color: Colors.black),
-  //                   ),
-  //                 ),
-  //               ),
-  //               Card(
-  //                 child: ListTile(
-  //                   title: Text(
-  //                     'Working_experiment: ${widget.driver.Working_experiment}',
-  //                     style: TextStyle(fontSize: 16, color: Colors.black),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
   void show_wallet() {
     showDialog(
