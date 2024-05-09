@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "../widget/home_menu.dart";
 import "../widget/ride_picker.dart";
 import '../../models/user.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomePage extends StatefulWidget {
   final User user;
@@ -24,6 +25,13 @@ class _HomePageState extends State<HomePage> {
         color: Colors.white,
         child: Stack(
           children: <Widget>[
+            GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(10.7915178, 106.7271422),
+                zoom: 14.4746,
+              ),
+              ),
+              
             Positioned(
               left: 0,
               top: 0,
