@@ -53,7 +53,7 @@ class _UserPageState extends State<UserPage> {
                            ),
                            onPressed: () {
                              Navigator.of(context).push(
-                             MaterialPageRoute(builder: (context) => UpdateUserPage())
+                             MaterialPageRoute(builder: (context) => UpdateUserPage(user: widget.user))
                               );
                            },
                            )

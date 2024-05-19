@@ -40,8 +40,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              SizedBox(height: 80,
-              ),
+              SizedBox(height: 80),
               Image(image: AssetImage('assets/common/icontaxi.png'), width: 200, height: 60, ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 40, 0, 6),
