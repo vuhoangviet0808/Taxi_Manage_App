@@ -1,5 +1,5 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sized_box_for_whitespace
-
+/*
 import 'package:flutter_app/common/viewmodels/account_register_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -218,3 +218,4 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+*/

@@ -1,5 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api
-
+/*
 import "package:flutter/material.dart";
 import "../page/user_page.dart";
 import "../../../common/views/login_page.dart";
@@ -78,3 +78,4 @@ class _HomeMenuState extends State<HomeMenu> {
     );
   }
 }
+*/
