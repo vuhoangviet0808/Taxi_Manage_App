@@ -1,7 +1,8 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/account.dart';
-
 
 class AuthenticationService {
   final String baseUrl = 'http://10.0.2.2:5000';
@@ -19,14 +20,20 @@ class AuthenticationService {
         }),
       );
 
-      if(response.statusCode == 200) {
+      if (response.statusCode == 200) {
         final Account account = Account.fromJson(jsonDecode(response.body));
         return {'success': true, 'account': account};
       } else {
-        return {'success': false, 'account': 'Login Failed: Invalid SDT or password'};
+        return {
+          'success': false,
+          'account': 'Login Failed: Invalid SDT or password'
+        };
       }
     } catch (e) {
-      return {'success': false, 'account': 'Login Failed: Exception occurred during login'};
+      return {
+        'success': false,
+        'account': 'Login Failed: Exception occurred during login'
+      };
     }
   }
 
@@ -34,7 +41,7 @@ class AuthenticationService {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/register'),
-        headers: <String, String> {
+        headers: <String, String>{
           'Content-Type': 'application/json',
         },
         body: jsonEncode({
@@ -42,14 +49,50 @@ class AuthenticationService {
           'password': password,
         }),
       );
-      if(response.statusCode == 200) {
+      if (response.statusCode == 200) {
         return {'success': true, 'message': sdt};
       } else {
-        return {'success': false, 'message': 'Register failed: The phone number is incorrect or already in use'};
+        return {
+          'success': false,
+          'message':
+              'Register failed: The phone number is incorrect or already in use'
+        };
       }
     } catch (e) {
-      return {'sccess': false, 'message':'Exception occurred during registration' };
+      return {
+        'success': false,
+        'message': 'Exception occurred during registration'
+      };
     }
   }
-  
+
+  Future<Map<String, dynamic>> infoinput(String sdt, String firstname,
+      String lastname, String sex, String DOB, String CCCD) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/infoinput'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'SDT': sdt,
+          'firstname': firstname,
+          'lastname': lastname,
+          'sex': sex,
+          'DOB': DOB,
+          'CCCD': CCCD,
+        }),
+      );
+      if (response.statusCode == 200) {
+        return {'success': true, 'message': sdt};
+      } else {
+        return {'success': false, 'message': 'Error during store information'};
+      }
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Exception occurred during store information'
+      };
+    }
+  }
 }
