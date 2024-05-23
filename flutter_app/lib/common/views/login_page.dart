@@ -7,7 +7,7 @@ import '../viewmodels/account_login_view_model.dart';
 import '../../../../user/user_main.dart';
 import '../../../../admin/admin_main.dart';
 import '../../../../driver/driver_main.dart';
-import 'register_page.dart';
+import 'register_views/register_page.dart';
 
 class LoginPage extends StatefulWidget {
 

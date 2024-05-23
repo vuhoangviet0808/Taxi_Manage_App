@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './sexinput_page.dart';
+import 'sexinput_page.dart';
 
 class NameInputPage extends StatefulWidget {
   final String phoneNumber;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './DOBinput_page.dart';
+import 'DOBinput_page.dart';
 
 class SexInputPage extends StatefulWidget {
   final String phoneNumber;
