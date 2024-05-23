@@ -8,6 +8,7 @@ import 'user/user_main.dart';
 import 'admin/admin_main.dart';
 import 'common/views/nameinput_page.dart';
 
+
 void main() {
   runApp(MyApp());
 }
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       create: (context) => AccountLoginViewModel(),
       child: MaterialApp(
         title: 'MVVM Demo',
-        home: NameInputPage(phoneNumber: '012912992',),
+        home: LoginPage(),
         debugShowCheckedModeBanner: false,
       ),
     );

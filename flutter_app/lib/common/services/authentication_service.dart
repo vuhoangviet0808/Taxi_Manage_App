@@ -48,8 +48,33 @@ class AuthenticationService {
         return {'success': false, 'message': 'Register failed: The phone number is incorrect or already in use'};
       }
     } catch (e) {
-      return {'sccess': false, 'message':'Exception occurred during registration' };
+      return {'success': false, 'message':'Exception occurred during registration' };
     }
   }
-  
+
+  Future<Map<String, dynamic>> infoinput(String sdt, String firstname, String lastname, String sex, String DOB, String CCCD) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/infoinput'),
+        headers: <String, String> {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'SDT': sdt,
+          'firstname': firstname,
+          'lastname': lastname,
+          'sex': sex,
+          'DOB': DOB,
+          'CCCD': CCCD,
+        }),
+      );
+      if(response.statusCode == 200) {
+        return {'success': true, 'message': sdt};
+      } else {
+        return {'success': false, 'message': 'Error during store information'};
+      }
+      } catch (e) {
+        return {'success': false, 'message':'Exception occurred during store information' };
+    }
+  }
 }

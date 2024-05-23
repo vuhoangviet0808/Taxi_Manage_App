@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'login_page.dart';
 import '../viewmodels/account_register_view_model.dart';
-
+import './nameinput_page.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -69,6 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
               TextField(
                 controller: _passwordController,
                   style: TextStyle(fontSize: 18,color: Colors.black),
+                  obscureText: true,
                   decoration: InputDecoration(
                     labelText: "Password",
                     prefixIcon: SizedBox(
@@ -115,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           _showDialog(context,false, view.errorMessage);
                         } else {
                           _showDialog(context,true, "Register success");
-                      }
+                        }
                     }
 
                    
@@ -179,6 +180,12 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Text("Close"),
               onPressed: () {
                 Navigator.of(context).pop();
+                if (success) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NameInputPage(phoneNumber: _sdtController.text,)),
+                );
+              }
               },
             ),
           ],

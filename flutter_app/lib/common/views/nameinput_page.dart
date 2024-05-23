@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './sexinput_page.dart';
 
 class NameInputPage extends StatefulWidget {
   final String phoneNumber;
@@ -15,6 +16,7 @@ class _NameInputPageState extends State<NameInputPage> {
 
   String _nameError = "";
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,20 +32,20 @@ class _NameInputPageState extends State<NameInputPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Text(
+              "Chào mừng bạn đến với ...",
+            style: TextStyle(color: Colors.purple, fontSize: 20, fontWeight: FontWeight.bold ),
+            ),
             SizedBox(
               height: 80,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image(
-                    image: AssetImage('assets/commnon/user.png'),
-                    width: 200,
-                    height: 60,
-                    ),
-                    SizedBox(width: 10),
                     Text(
-                      'Bạn là...',
+                      'Tên của bạn là...',
                       style: TextStyle(
                       fontSize: 16,
+                      color: Colors.purple,
                       fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -76,14 +78,12 @@ class _NameInputPageState extends State<NameInputPage> {
                 ),
               ),
             ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                if (firstnameController.text.isNotEmpty || lastnameController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Thành công"),
-                    ),
-                  );
+                if (firstnameController.text.isNotEmpty && lastnameController.text.isNotEmpty) {
+                  Navigator.push(context,
+                MaterialPageRoute(builder: (context) => SexInputPage(phoneNumber: widget.phoneNumber, firstname: firstnameController.text, lastname: lastnameController.text )));
                 } else {
                   setState(() {
                     _nameError = "Vui lòng không để trống tên";
