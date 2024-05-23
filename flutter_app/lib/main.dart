@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       create: (context) => AccountLoginViewModel(),
       child: MaterialApp(
         title: 'MVVM Demo',
-        //       home: LoginPage(),
+        home: LoginPage(),
         debugShowCheckedModeBanner: false,
       ),
     );

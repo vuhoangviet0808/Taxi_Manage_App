@@ -1,5 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api, unnecessary_new
-/*
+
 import "package:flutter/material.dart";
 import "../widget/home_menu.dart";
 import "../widget/ride_picker.dart";
@@ -69,4 +69,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-*/
