@@ -36,3 +36,21 @@ class RegisterService:
         finally:
             cursor.close()
 
+    def input_info_new_user(self, sdt, firstname, lastname, sex, DOB, CCCD):
+        query = "Insert into user values(null,%s, %s, %s, 0, %s, %s, '', %s)"
+        cursor = db.cursor()
+        try:
+            cursor.execute(query, (sdt,firstname,lastname,DOB,sex,CCCD))
+            db.commit()
+            if cursor.rowcount > 0:
+                print("Input information was successfully")
+                return True
+            else:
+                print("Input information failed")
+                return False
+        except Exception as e:
+            db.rollback() 
+            print(f"An error occurred: {e}")
+            return False
+        finally:
+            cursor.close()
