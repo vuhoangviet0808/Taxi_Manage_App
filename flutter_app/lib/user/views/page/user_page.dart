@@ -22,54 +22,53 @@ class _UserPageState extends State<UserPage> {
     return Scaffold(
       key: _scaffoldKey,
       body: Container(
-        constraints: BoxConstraints.expand(),
-        color: Colors.white,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              left: 0,
-              top: 0,
-              right: 0,
-              child: Column(
-                children: <Widget>[
-                  AppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0.0,
-                    title: Text(
-                      "Taxi app",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    leading: TextButton(
-                      onPressed: () {
-                          print("Click menu");
-                      //    Scaffold.of(context).openDrawer(); 
-                        _scaffoldKey.currentState?.openDrawer();
-                      },
-                      child: Image.asset("assets/user/menu.png")),
-                      actions: <Widget>[ 
+          constraints: BoxConstraints.expand(),
+          color: Colors.white,
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                left: 0,
+                top: 0,
+                right: 0,
+                child: Column(
+                  children: <Widget>[
+                    AppBar(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0.0,
+                      title: Text(
+                        "Taxi app",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      leading: TextButton(
+                          onPressed: () {
+                            print("Click menu");
+                            //    Scaffold.of(context).openDrawer();
+                            _scaffoldKey.currentState?.openDrawer();
+                          },
+                          child: Image.asset("assets/user/menu.png")),
+                      actions: <Widget>[
                         TextButton(
-                          child: Text ("chinh sua",
-                           style: TextStyle(color: Colors.black, fontSize: 12),
-                           ),
-                           onPressed: () {
-                             Navigator.of(context).push(
-                             MaterialPageRoute(builder: (context) => UpdateUserPage())
-                              );
-                           },
-                           )
+                          child: Text(
+                            "chinh sua",
+                            style: TextStyle(color: Colors.black, fontSize: 12),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    UpdateUserPage(user: widget.user)));
+                          },
+                        )
                       ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top:20, left:20, right:20),
-                    child: UserWidget(user: widget.user),
-                  )
-                ],
-              ),
-            )
-          ],
-        )
-        
-      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                      child: UserWidget(user: widget.user),
+                    )
+                  ],
+                ),
+              )
+            ],
+          )),
       drawer: Drawer(
         child: HomeMenu(user: widget.user),
       ),
