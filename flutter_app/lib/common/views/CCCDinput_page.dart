@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api, file_names
 
 import 'package:flutter/material.dart';
 import '../viewmodels/account_input_infor_view_model.dart';
@@ -27,7 +27,7 @@ class CCCDInputPage extends StatefulWidget {
 class _CCDDInputPageState extends State<CCCDInputPage> {
   final TextEditingController cccdController = TextEditingController();
   String _cccdError = "";
-  
+
   @override
   Widget build(BuildContext context) {
     final view = Provider.of<AccountInputInforViewModel>(context);
@@ -54,13 +54,14 @@ class _CCDDInputPageState extends State<CCCDInputPage> {
               ),
             ),
             SizedBox(height: 20),
-            if(_cccdError.isNotEmpty) Text (
-              _cccdError,
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 14,
+            if (_cccdError.isNotEmpty)
+              Text(
+                _cccdError,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 14,
+                ),
               ),
-            ),
             SizedBox(height: 10),
             TextField(
               controller: cccdController,
@@ -91,19 +92,29 @@ class _CCDDInputPageState extends State<CCCDInputPage> {
                   setState(() {
                     _cccdError = "Vui lòng nhập số CCCD của bạn";
                   });
-                } else if (cccd.length != 10 || !cccd.contains(RegExp(r'^[0-9]+$'))) {
+                } else if (cccd.length != 10 ||
+                    !cccd.contains(RegExp(r'^[0-9]+$'))) {
                   setState(() {
                     _cccdError = "Số CCCD không hợp lệ";
                   });
                 } else {
-                  if(!view.isLoading) {
-                    cccd = '${cccd.substring(0,3)}-${cccd.substring(3,6)}-${cccd.substring(6)}';
-                    bool success = await view.inputinfor(widget.phoneNumber, widget.firstname, widget.lastname, widget.sex, widget.dob, cccd);
-                    
-                    if(!success) {
-                      _showDialog(context,false, view.errorMessage, widget.phoneNumber);
+                  if (!view.isLoading) {
+                    cccd =
+                        '${cccd.substring(0, 3)}-${cccd.substring(3, 6)}-${cccd.substring(6)}';
+                    bool success = await view.inputinfor(
+                        widget.phoneNumber,
+                        widget.firstname,
+                        widget.lastname,
+                        widget.sex,
+                        widget.dob,
+                        cccd);
+
+                    if (!success) {
+                      _showDialog(context, false, view.errorMessage,
+                          widget.phoneNumber);
                     } else {
-                      _showDialog(context,true, "Input Infor success", widget.phoneNumber);
+                      _showDialog(context, true, "Input Infor success",
+                          widget.phoneNumber);
                     }
                   }
                 }
@@ -117,7 +128,8 @@ class _CCDDInputPageState extends State<CCCDInputPage> {
   }
 }
 
-void _showDialog(BuildContext context, bool success, String message, String sdt) {
+void _showDialog(
+    BuildContext context, bool success, String message, String sdt) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -129,10 +141,13 @@ void _showDialog(BuildContext context, bool success, String message, String sdt)
             child: Text('Close'),
             onPressed: () {
               Navigator.of(context).pop();
-                if (success) {
+              if (success) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => UserPage(sdt: sdt,)),
+                  MaterialPageRoute(
+                      builder: (context) => UserPage(
+                            sdt: sdt,
+                          )),
                 );
               }
             },

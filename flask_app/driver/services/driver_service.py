@@ -1,5 +1,5 @@
 from shared.services.database_service import db
-from ..models.driver import Driver
+from ..models.driver import CarModel, Driver, Shift, cabModel
 
 class DriverService():
     def get_driver_by_phone(self, phone):
@@ -19,7 +19,6 @@ class DriverService():
     def update_driver_info(self, driver):
         cursor = db.cursor()
         try:
-            print(f"Updating driver with ID {driver.driver_id}: {driver.firstname}, {driver.lastname}, {driver.gender}, etc.")
             cursor.execute("""
                 UPDATE driver SET
                 Firstname = %s, Lastname = %s, DOB = %s, Gender = %s, Address = %s, 
@@ -36,5 +35,42 @@ class DriverService():
             db.rollback()
             print(f"Error occurred: {e}")
             return 0
+        finally:
+            cursor.close()
+
+    def get_shift(self, driver_id):
+        query = "SELECT * FROM shift WHERE Driver_id = %s"
+        cursor = db.cursor(dictionary= True)
+        try:
+            cursor.execute(query, (driver_id,))
+            result = cursor.fetchall()
+            return [Shift.from_dict(row) for row in result]
+        except Exception as e:
+            print("Error: ", e)
+            return None
+        finally:
+            cursor.close()
+    def get_car_model(self, car_id):
+        query = "SELECT * FROM car_model WHERE ID = %s"
+        cursor = db.cursor(dictionary= True)
+        try:
+            cursor.execute(query, (car_id,))
+            result = cursor.fetchone()
+            return CarModel.from_dict(result)
+        except Exception as e:
+            print("Error: ", e)
+            return None
+        finally:
+            cursor.close()
+    def get_cab(self):
+        query = "SELECT * FROM Cab"
+        cursor = db.cursor(dictionary= True)
+        try:
+            cursor.execute(query, ())
+            result = cursor.fetchall()
+            return [cabModel.from_dict(row) for row in result]
+        except Exception as e:
+            print("Error: ", e)
+            return None
         finally:
             cursor.close()

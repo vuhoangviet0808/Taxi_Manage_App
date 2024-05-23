@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, non_constant_identifier_names, prefer_const_declarations
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -28,20 +30,19 @@ class Bloc {
 
     // Dữ liệu cần gửi đi
     var body = {'data': data};
-    
-    // Gửi HTTP post 
+
+    // Gửi HTTP post
     var response = await http.post(Uri.parse(baseUrl), body: body);
 
     // Kiểm tra kết quả
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       print('Gửi số điện thoại thành công');
     } else {
       print('Gửi số điện thoại thất bại. Lỗi: ${response.reasonPhrase}');
     }
   }
 
-  
-  void senSDTtoFlask(TextEditingController controller){
+  void senSDTtoFlask(TextEditingController controller) {
     String SDT = controller.text;
     sendSdtToFlask(SDT);
   }

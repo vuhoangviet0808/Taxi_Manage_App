@@ -11,6 +11,19 @@ def driver_index():
 @driver_blueprint.route('/getinfo', methods=['GET'])
 def driver_getinfo():
     return DriverController.get_driver_info()
+
 @driver_blueprint.route('/update_driver_infor', methods = ['POST'])
 def driver_updateinfo():    
     return DriverController.update_info()
+
+@driver_blueprint.route('/getShift', methods = ['GET'])
+def shift_get_info():
+    return DriverController.shift_info()
+
+@driver_blueprint.route('/getCarModel', methods = ['GET'])
+def get_car_model():
+    return DriverController.car_model()
+
+@driver_blueprint.route('/getCab', methods = ['GET'])
+def get_cab():
+    return DriverController.cab()
