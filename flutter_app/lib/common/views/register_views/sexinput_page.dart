@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'DOBinput_page.dart';
 
@@ -6,7 +8,10 @@ class SexInputPage extends StatefulWidget {
   final String firstname;
   final String lastname;
 
-  SexInputPage({required this.phoneNumber,required this.firstname,required this.lastname});
+  SexInputPage(
+      {required this.phoneNumber,
+      required this.firstname,
+      required this.lastname});
 
   @override
   _SexInputPageState createState() => _SexInputPageState();
@@ -51,14 +56,20 @@ class _SexInputPageState extends State<SexInputPage> {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     decoration: BoxDecoration(
-                      border: Border.all(color: selectedSex == "Nam" ? Colors.purple : Colors.grey),
+                      border: Border.all(
+                          color: selectedSex == "Nam"
+                              ? Colors.purple
+                              : Colors.grey),
                       borderRadius: BorderRadius.circular(20),
-                      color: selectedSex == "Nam" ? Colors.purple : Colors.transparent,
+                      color: selectedSex == "Nam"
+                          ? Colors.purple
+                          : Colors.transparent,
                     ),
                     child: Text(
                       "Nam",
                       style: TextStyle(
-                        color: selectedSex == "Nam" ? Colors.white : Colors.black,
+                        color:
+                            selectedSex == "Nam" ? Colors.white : Colors.black,
                       ),
                     ),
                   ),
@@ -73,27 +84,39 @@ class _SexInputPageState extends State<SexInputPage> {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     decoration: BoxDecoration(
-                      border: Border.all(color: selectedSex == "Nữ" ? Colors.purple : Colors.grey),
+                      border: Border.all(
+                          color: selectedSex == "Nữ"
+                              ? Colors.purple
+                              : Colors.grey),
                       borderRadius: BorderRadius.circular(20),
-                      color: selectedSex == "Nữ" ? Colors.purple : Colors.transparent,
+                      color: selectedSex == "Nữ"
+                          ? Colors.purple
+                          : Colors.transparent,
                     ),
                     child: Text(
                       "Nữ",
                       style: TextStyle(
-                        color: selectedSex == "Nữ" ? Colors.white : Colors.black,
+                        color:
+                            selectedSex == "Nữ" ? Colors.white : Colors.black,
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context,
-                MaterialPageRoute(
-                  builder: (context) => 
-                    DOBInputPage(phoneNumber: widget.phoneNumber, firstname: widget.firstname, lastname: widget.lastname, sex: selectedSex )));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DOBInputPage(
+                            phoneNumber: widget.phoneNumber,
+                            firstname: widget.firstname,
+                            lastname: widget.lastname,
+                            sex: selectedSex)));
               },
               child: Text("Tiếp tục"),
             ),

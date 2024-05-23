@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/driver.dart';
-import '../../viewmodels/driver_viewmodel.dart';
+import '../models/driver.dart';
+import '../viewmodels/driver_viewmodel.dart';
 import 'driver_infor.dart';
 
 class HomeMenu extends StatefulWidget {

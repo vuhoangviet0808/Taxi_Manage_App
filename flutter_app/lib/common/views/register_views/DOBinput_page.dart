@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'CCCDinput_page.dart';
@@ -9,7 +11,11 @@ class DOBInputPage extends StatefulWidget {
   final String lastname;
   final String sex;
 
-  DOBInputPage({required this.phoneNumber, required this.firstname, required this.lastname, required this.sex});
+  DOBInputPage(
+      {required this.phoneNumber,
+      required this.firstname,
+      required this.lastname,
+      required this.sex});
 
   @override
   _DOBInputPageState createState() => _DOBInputPageState();
@@ -79,14 +85,20 @@ class _DOBInputPageState extends State<DOBInputPage> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(context,
-                MaterialPageRoute(
-                  builder: (context) => ChangeNotifierProvider(
-                    create: (context) => AccountInputInforViewModel(),
-                    child: CCCDInputPage(phoneNumber: widget.phoneNumber, firstname: widget.firstname, lastname: widget.lastname, sex: widget.sex, dob: "${selectedDate.year}-${selectedDate.month}-${selectedDate.day}",),
-                  )
-                )
-                );
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChangeNotifierProvider(
+                              create: (context) => AccountInputInforViewModel(),
+                              child: CCCDInputPage(
+                                phoneNumber: widget.phoneNumber,
+                                firstname: widget.firstname,
+                                lastname: widget.lastname,
+                                sex: widget.sex,
+                                dob:
+                                    "${selectedDate.year}-${selectedDate.month}-${selectedDate.day}",
+                              ),
+                            )));
               },
               child: Text("Tiếp tục"),
             ),

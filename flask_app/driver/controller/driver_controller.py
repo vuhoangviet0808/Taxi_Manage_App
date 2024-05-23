@@ -1,4 +1,4 @@
-from ..models.driver import Driver
+from ..models.driver import CarModel, Driver
 from ..services.driver_service import DriverService
 from flask import request, jsonify , abort
 
@@ -33,13 +33,38 @@ class DriverController:
     @staticmethod
     def update_info():
         driver_data = request.json
-        print("Received data for update:", driver_data)
         if not driver_data:
             abort(400, description = "No data provided.")
         driver = Driver.from_dict(driver_data)
-        print("Updating driver:", driver.firstname, driver.lastname, driver.gender, driver.driving_license)
         updated_rows = driver_service.update_driver_info(driver)
         if updated_rows:
             return jsonify({"message": "Driver info updated successfully!"}), 200
         else:
             return jsonify({"message": "Failed to update driver info."}), 404
+    @staticmethod
+    def shift_info():
+        driver_id = request.args.get('driver_id')
+        print(driver_id)
+        if not driver_id:
+            abort(400, "Bad request: No driver_id provided")
+        shift = driver_service.get_shift(driver_id)
+        if shift is None:
+            abort(404, "No shift infomation found for this driver_id")
+        return jsonify([s.__dict__ for s in shift])
+    @staticmethod
+    def car_model():
+        car_id = request.args.get('car_model_id')
+        if not car_id:
+            abort(400, "Bad request: No car_model_id provided")
+        car_model =  driver_service.get_car_model(car_id)
+        if car_model is None:
+            abort(404, "No Information")
+        return jsonify(car_model.__dict__)
+    @staticmethod
+    def cab():
+        cabs = driver_service.get_cab()
+        if cabs is None:
+            abort(404, "No cab")
+        return jsonify([c.__dict__ for c in cabs]) 
+
+    
