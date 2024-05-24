@@ -5,7 +5,7 @@ class Cab_rideService():
     def get_cab_ride_by_ID_and_startTime(self):
         cursor = db.cursor(dictionary=True)
         try:
-            cursor.execute("SELECT ID, ride_start_time FROM cab_ride WHERE canceled = 0 ORDER BY ride_start_time ASC")
+            cursor.execute("SELECT ID, ride_start_time FROM cab_ride WHERE canceled = 0 ORDER BY ride_start_time DESC")
             result = cursor.fetchall()
             if result:
                 return result
