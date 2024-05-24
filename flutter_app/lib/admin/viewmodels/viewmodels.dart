@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/admin/services/services.dart';
+import 'package:flutter_app/admin/services/Driver_services.dart';
 import 'package:flutter_app/admin/models/models.dart';
 import 'package:flutter_app/admin/models/cab_ride_model.dart';
-import 'package:flutter_app/admin/views/views.dart';
+import 'package:flutter_app/admin/views/driver_report_view.dart';
 import 'package:flutter_app/admin/services/cab_ride_services.dart';
 
 class AdminDashboardViewModel {
