@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/admin/viewmodels/viewmodels.dart';
+import 'package:flutter_app/admin/viewmodels/cab_ride_viewmodels.dart';
 import 'package:flutter_app/admin/models/cab_ride_model.dart';
 
 class CabRideListScreen extends StatefulWidget {
   final List<Cab_ride> cabRides;
-  final AdminDashboardViewModel viewModel;
+  final CabRideDashboardViewModel viewModel;
 
   const CabRideListScreen(
       {Key? key, required this.cabRides, required this.viewModel})
@@ -95,9 +95,15 @@ class _CabRideListScreenState extends State<CabRideListScreen> {
                         Container(
                           alignment: Alignment.centerLeft,
                           padding: EdgeInsets.all(8),
-                          child: Text(
-                            cabRide.ID,
-                            style: TextStyle(fontSize: 16),
+                          child: GestureDetector(
+                            onTap: () {
+                              widget.viewModel
+                                  .fetchEachCabRide(context, cabRide.ID);
+                            },
+                            child: Text(
+                              cabRide.ID,
+                              style: TextStyle(fontSize: 16),
+                            ),
                           ),
                         ),
                       ),
@@ -118,6 +124,62 @@ class _CabRideListScreenState extends State<CabRideListScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CabRideDetailScreen extends StatelessWidget {
+  final FullCabRide cabRide;
+
+  const CabRideDetailScreen({Key? key, required this.cabRide})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Thông tin chi tiết chuyến đi'),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 20),
+            Text(
+              'ID chuyến đi: ${cabRide.ID}',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text('ID ca làm việc: ${cabRide.shift_id}'),
+            SizedBox(height: 8),
+            Text('ID người dùng: ${cabRide.user_id}'),
+            SizedBox(height: 8),
+            Text('Thời gian bắt đầu: ${cabRide.ride_start_time.toString()}'),
+            SizedBox(height: 8),
+            Text('Thời gian kết thúc: ${cabRide.ride_end_time.toString()}'),
+            SizedBox(height: 8),
+            Text('Điểm khởi hành: ${cabRide.address_starting_point}'),
+            SizedBox(height: 8),
+            Text('GPS khởi hành: ${cabRide.GPS_starting_point}'),
+            SizedBox(height: 8),
+            Text('Điểm đến: ${cabRide.address_destination}'),
+            SizedBox(height: 8),
+            Text('GPS điểm đến: ${cabRide.GPS_destination}'),
+            SizedBox(height: 8),
+            Text('Bị hủy: ${cabRide.canceled}'),
+            SizedBox(height: 8),
+            Text('ID loại thanh toán: ${cabRide.payment_type_id}'),
+            SizedBox(height: 8),
+            Text('Giá: ${cabRide.price}'),
+            SizedBox(height: 8),
+            Text('Phản hồi: ${cabRide.response}'),
+            SizedBox(height: 8),
+            Text('Đánh giá: ${cabRide.evaluate}'),
+            SizedBox(height: 8),
+          ],
+        ),
       ),
     );
   }

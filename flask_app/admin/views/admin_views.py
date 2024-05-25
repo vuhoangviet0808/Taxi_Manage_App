@@ -18,3 +18,7 @@ def each_driver_by_id_info(Driver_ID):
 @admin_blueprint.route('/cab_rides', methods=['GET'])
 def cab_ride_get_2_info():
     return Cab_rideController().get_2_cab_ride_info()
+
+@admin_blueprint.route('/cab_rides/<int:Cab_Ride_ID>', methods=['GET'])
+def each_cab_ride_by_id_info(Cab_Ride_ID):
+    return Cab_rideController().get_full_cab_ride_info(Cab_Ride_ID)

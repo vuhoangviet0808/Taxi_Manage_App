@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/services/Driver_services.dart';
 import 'package:flutter_app/admin/models/models.dart';
-import 'package:flutter_app/admin/models/cab_ride_model.dart';
 import 'package:flutter_app/admin/views/driver_report_view.dart';
-import 'package:flutter_app/admin/services/cab_ride_services.dart';
 
 class AdminDashboardViewModel {
   final AdminDashboardService service = AdminDashboardService();
-  final CabRideService cabRideService;
-
-  AdminDashboardViewModel(this.cabRideService);
 
   Future<List<Driver>> fetchDrivers() async {
     return await service.fetchDrivers();
@@ -43,9 +38,5 @@ class AdminDashboardViewModel {
         },
       );
     });
-  }
-
-  Future<List<Cab_ride>> fetchCabRides() async {
-    return cabRideService.fetchCabRide();
   }
 }

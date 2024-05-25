@@ -26,4 +26,53 @@ class CabRideService {
       throw Exception('Failed to parse cab rides data');
     }
   }
+
+  Future<FullCabRide> fetchEachCabRide(String cabRideID) async {
+    final response = await http
+        .get(Uri.parse('http://10.0.2.2:5000/admin/cab_rides/$cabRideID'));
+
+    if (response.statusCode == 200) {
+      dynamic responseBody = json.decode(response.body);
+
+      if (responseBody is List) {
+        // Nếu response body là một danh sách, lấy phần tử đầu tiên
+        if (responseBody.isNotEmpty) {
+          responseBody = responseBody.first;
+        } else {
+          print('Empty list received for the cab ride with ID: $cabRideID');
+          throw Exception('Empty list received for the cab ride');
+        }
+      }
+
+      if (responseBody is Map<String, dynamic>) {
+        // Tiếp tục giải mã body của response
+        if (responseBody['ID'] != null) {
+          return FullCabRide(
+              responseBody['ID'].toString(),
+              responseBody['shift_ID'].toString() ?? '',
+              responseBody['user_ID']?.toString() ?? '',
+              responseBody['ride_start_time']?.toString() ?? '',
+              responseBody['ride_end_time']?.toString() ?? '',
+              responseBody['address_starting_point']?.toString() ?? '',
+              responseBody['GPS_starting_point']?.toString() ?? '',
+              responseBody['address_destination']?.toString() ?? '',
+              responseBody['GPS_destination']?.toString() ?? '',
+              responseBody['canceled']?.toString() ?? '',
+              responseBody['payment_type_id']?.toString() ?? '',
+              responseBody['price']?.toString() ?? '',
+              responseBody['response']?.toString() ?? '',
+              responseBody['evaluate']?.toString() ?? '');
+        } else {
+          print('Null data received for the cab ride with ID: $cabRideID');
+          throw Exception('Null data received for the cab ride');
+        }
+      } else {
+        print(
+            'Invalid data type received for the cab ride with ID: $cabRideID');
+        throw Exception('Invalid data type received for the cab ride');
+      }
+    } else {
+      throw Exception('Failed to load cab ride with ID: $cabRideID');
+    }
+  }
 }

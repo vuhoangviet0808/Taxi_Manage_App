@@ -17,3 +17,20 @@ class Cab_rideService():
             return None
         finally:
             cursor.close()
+
+    def get_cab_ride_by_all(self, ID):
+        query = "SELECT * FROM cab_ride WHERE ID = %s"
+        cursor =db.cursor(dictionary=True)
+        try:
+            cursor.execute(query, (ID,))
+            result = cursor.fetchall()
+            if result:
+                return result
+            else:
+                print("No result found.")
+                return None
+        except Exception as e:
+            print("Error occurred: ", e)
+            return None
+        finally:
+            cursor.close()

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/viewmodels/viewmodels.dart';
+import 'package:flutter_app/admin/viewmodels/cab_ride_viewmodels.dart';
 import 'package:flutter_app/admin/models/models.dart';
 import 'package:flutter_app/admin/models/cab_ride_model.dart';
 import 'package:flutter_app/admin/views/driver_report_view.dart';
@@ -7,9 +8,13 @@ import 'package:flutter_app/admin/views/cab_ride_list_screen_view.dart';
 
 class AdminDashboardView extends StatelessWidget {
   final AdminDashboardViewModel viewModel;
+  final CabRideDashboardViewModel CabRideViewModel;
 
-  const AdminDashboardView({Key? key, required this.viewModel})
-      : super(key: key);
+  AdminDashboardView({
+    Key? key,
+    required this.viewModel,
+    required this.CabRideViewModel,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +48,14 @@ class AdminDashboardView extends StatelessWidget {
                 leading: Icon(Icons.star),
                 title: Text('Quản lí chuyến đi'),
                 onTap: () async {
-                  List<Cab_ride> cabRides = await viewModel.fetchCabRides();
+                  List<Cab_ride> cabRides =
+                      await CabRideViewModel.fetchCabRides();
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CabRideListScreen(
                         cabRides: cabRides,
-                        viewModel: viewModel,
+                        viewModel: CabRideViewModel,
                       ),
                     ),
                   );
