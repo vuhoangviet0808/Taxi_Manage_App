@@ -102,14 +102,18 @@ class _CabRideListScreenState extends State<CabRideListScreen> {
                             },
                             child: Text(
                               cabRide.ID,
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                         ),
                       ),
                       DataCell(
                         Container(
-                          alignment: Alignment.centerRight,
+                          alignment: Alignment.centerLeft, // Căn lề trái
                           padding: EdgeInsets.all(8),
                           child: Text(
                             cabRide.ride_start_time,
@@ -137,6 +141,9 @@ class CabRideDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double baseFontSize = 16.0;
+    final double increasedFontSize = baseFontSize * 1;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Thông tin chi tiết chuyến đi'),
@@ -147,37 +154,271 @@ class CabRideDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            Text(
-              'ID chuyến đi: ${cabRide.ID}',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'ID chuyến đi: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.ID}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 8),
-            Text('ID ca làm việc: ${cabRide.shift_id}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'ID ca làm việc: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.shift_id}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('ID người dùng: ${cabRide.user_id}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'ID người dùng: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.user_id}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Thời gian bắt đầu: ${cabRide.ride_start_time.toString()}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Thời gian bắt đầu: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.ride_start_time.toString()}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Thời gian kết thúc: ${cabRide.ride_end_time.toString()}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Thời gian kết thúc: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.ride_end_time.toString()}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Điểm khởi hành: ${cabRide.address_starting_point}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Điểm khởi hành: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.address_starting_point}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('GPS khởi hành: ${cabRide.GPS_starting_point}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'GPS khởi hành: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.GPS_starting_point}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Điểm đến: ${cabRide.address_destination}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Điểm đến: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.address_destination}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('GPS điểm đến: ${cabRide.GPS_destination}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'GPS điểm đến: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.GPS_destination}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Bị hủy: ${cabRide.canceled}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Bị hủy: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.canceled}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('ID loại thanh toán: ${cabRide.payment_type_id}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'ID loại thanh toán: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.payment_type_id}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Giá: ${cabRide.price}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Giá: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.price}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Phản hồi: ${cabRide.response}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Phản hồi: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.response}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Đánh giá: ${cabRide.evaluate}'),
-            SizedBox(height: 8),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Đánh giá: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: increasedFontSize),
+                  ),
+                  TextSpan(
+                    text: '${cabRide.evaluate}',
+                    style: TextStyle(
+                        color: Colors.black, fontSize: increasedFontSize),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

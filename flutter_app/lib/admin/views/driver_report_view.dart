@@ -80,14 +80,14 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
                   columns: [
                     DataColumn(
                       label: Text(
-                        'Họ tên',
+                        'ID',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                     ),
                     DataColumn(
                       label: Text(
-                        'ID',
+                        'Họ tên',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
@@ -98,16 +98,6 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
                       DataCell(
                         Container(
                           alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            "${driver.Firstname} ${driver.Lastname}",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Container(
-                          alignment: Alignment.centerRight,
                           padding: EdgeInsets.all(8),
                           child: GestureDetector(
                             onTap: () {
@@ -122,6 +112,16 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
                                 decoration: TextDecoration.underline,
                               ),
                             ),
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.all(8), // Căn lề trái
+                          child: Text(
+                            "${driver.Firstname} ${driver.Lastname}",
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
                       ),
@@ -144,6 +144,8 @@ class DriverDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double fontSize = 16.0;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Thông tin chi tiết tài xế'),
@@ -154,28 +156,225 @@ class DriverDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            Text(
-              'Họ và tên: ${driver.Firstname} ${driver.Lastname}',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Họ và tên: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${driver.Firstname} ${driver.Lastname}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(height: 8),
-            Text('ID: ${driver.Driver_ID}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'ID: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${driver.Driver_ID}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Số điện thoại: ${driver.SDT}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Số điện thoại: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${driver.SDT}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Ví: ${driver.Wallet}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Ví: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${driver.Wallet}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Ngày sinh: ${driver.DOB}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Ngày sinh: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${driver.DOB}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Giới tính: ${driver.Gender}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Giới tính: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${driver.Gender}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Địa chỉ: ${driver.Address}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Địa chỉ: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${driver.Address}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('CCCD: ${driver.CCCD}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'CCCD: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${driver.CCCD}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            Text('Số bằng lái: ${driver.Driving_licence_number}'),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Số bằng lái: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${driver.Driving_licence_number}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 8),
-            //Thieu kinh nghiem
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Kinh nghiệm làm việc: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${driver.Working_experiment}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
