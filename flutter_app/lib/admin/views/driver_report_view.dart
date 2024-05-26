@@ -43,11 +43,11 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
                 child: TextField(
                   onChanged: (value) {
                     setState(() {
-                      nameFilter = value;
+                      idFilter = value;
                     });
                   },
                   decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo tên',
+                    labelText: 'Tìm kiếm theo ID',
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(),
                   ),
@@ -58,14 +58,26 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
                 child: TextField(
                   onChanged: (value) {
                     setState(() {
-                      idFilter = value;
+                      nameFilter = value;
                     });
                   },
                   decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo ID',
+                    labelText: 'Tìm kiếm theo tên',
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(),
                   ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Số lượng: ${filteredDrivers.length}',
+                  style: TextStyle(fontSize: 18),
                 ),
               ),
             ],

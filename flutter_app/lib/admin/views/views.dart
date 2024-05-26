@@ -25,8 +25,8 @@ class AdminDashboardView extends StatelessWidget {
       body: Column(
         children: [
           ExpansionTile(
-            leading: Icon(Icons.bar_chart),
-            title: Text('Stats'),
+            leading: Icon(Icons.supervisor_account),
+            title: Text('Quản lí'),
             children: [
               ListTile(
                 leading: Icon(Icons.star),
@@ -63,12 +63,16 @@ class AdminDashboardView extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(Icons.star),
-                title: Text('Báo cáo và thống kê'),
+                title: Text('Quản lí người dùng'),
                 onTap: () {
                   //Navigator.pushNamed(context, '/report');
                 },
               ),
             ],
+          ),
+          ListTile(
+            leading: Icon(Icons.business_center),
+            title: Text('Doanh Thu'),
           ),
           ListTile(
             leading: Icon(Icons.person),

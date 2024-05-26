@@ -59,10 +59,22 @@ class _CabRideListScreenState extends State<CabRideListScreen> {
                     });
                   },
                   decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo thời gian bắt đầu',
+                    labelText: 'Tìm kiếm theo thời gian khởi hành',
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(),
                   ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Số lượng: ${filteredCabRides.length}',
+                  style: TextStyle(fontSize: 18),
                 ),
               ),
             ],
@@ -83,7 +95,7 @@ class _CabRideListScreenState extends State<CabRideListScreen> {
                     ),
                     DataColumn(
                       label: Text(
-                        'Start Time',
+                        'Thời gian khởi hành',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),

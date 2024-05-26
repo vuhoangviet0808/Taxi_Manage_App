@@ -49,7 +49,7 @@ class CabRideService {
         if (responseBody['ID'] != null) {
           return FullCabRide(
               responseBody['ID'].toString(),
-              responseBody['shift_ID'].toString() ?? '',
+              responseBody['shift_ID'].toString(),
               responseBody['user_ID']?.toString() ?? '',
               responseBody['ride_start_time']?.toString() ?? '',
               responseBody['ride_end_time']?.toString() ?? '',
