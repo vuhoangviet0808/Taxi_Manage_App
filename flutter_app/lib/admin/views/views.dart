@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/viewmodels/viewmodels.dart';
 import 'package:flutter_app/admin/viewmodels/cab_ride_viewmodels.dart';
+import 'package:flutter_app/admin/viewmodels/user_viewmodels.dart';
 import 'package:flutter_app/admin/models/models.dart';
 import 'package:flutter_app/admin/models/cab_ride_model.dart';
+import 'package:flutter_app/admin/models/user_model.dart';
 import 'package:flutter_app/admin/views/driver_report_view.dart';
 import 'package:flutter_app/admin/views/cab_ride_list_screen_view.dart';
+import 'package:flutter_app/admin/views/user_report_view.dart';
 
 class AdminDashboardView extends StatelessWidget {
   final AdminDashboardViewModel viewModel;
   final CabRideDashboardViewModel CabRideViewModel;
+  final UserDashboardViewModel UserViewModel;
 
   AdminDashboardView({
     Key? key,
     required this.viewModel,
     required this.CabRideViewModel,
+    required this.UserViewModel,
   }) : super(key: key);
 
   @override
@@ -64,8 +69,17 @@ class AdminDashboardView extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.star),
                 title: Text('Quản lí người dùng'),
-                onTap: () {
-                  //Navigator.pushNamed(context, '/report');
+                onTap: () async {
+                  List<User> users = await UserViewModel.fetchUsers();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UserReportScreenView(
+                        users: users,
+                        viewModel: UserViewModel,
+                      ),
+                    ),
+                  );
                 },
               ),
             ],
