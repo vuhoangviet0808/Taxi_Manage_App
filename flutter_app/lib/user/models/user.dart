@@ -1,19 +1,31 @@
 // ignore_for_file: non_constant_identifier_names
 
-class User{
-  final String firstname;
-  final String lastname;
-  final String SDT;
-  final int Wallet;
-  final String DOB;
-  final String gender;
-  final String Address;
-  final String CCCD;
+class User {
+  int User_ID;
+  String firstname;
+  String lastname;
+  String SDT;
+  int Wallet;
+  String DOB;
+  String gender;
+  String Address;
+  String CCCD;
 
-  User({required this.firstname,required this.lastname,required this.SDT,required this.Wallet,required this.DOB,required this.gender,required this.Address,required this.CCCD});
+  User({
+    required this.User_ID,
+    required this.firstname,
+    required this.lastname,
+    required this.SDT,
+    required this.Wallet,
+    required this.DOB,
+    required this.gender,
+    required this.Address,
+    required this.CCCD,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
+      User_ID: json['User_ID'],
       firstname: json['firstname'],
       lastname: json['lastname'],
       SDT: json['SDT'],
@@ -27,6 +39,7 @@ class User{
 
   Map<String, dynamic> toJson() {
     return {
+      'User_ID': User_ID,
       'firstname': firstname,
       'lastname': lastname,
       'SDT': SDT,
@@ -37,6 +50,4 @@ class User{
       'CCCD': CCCD,
     };
   }
-
-
 }

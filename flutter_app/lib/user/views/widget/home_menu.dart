@@ -1,9 +1,12 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import "package:flutter/material.dart";
-import "../page/user_page.dart";
+import "package:flutter_app/user/viewmodels/user_view_model.dart";
+import "package:flutter_app/user/views/page/update_user_page.dart";
+import "package:provider/provider.dart";
 import "../../../common/views/login_page.dart";
 import "../../models/user.dart";
+
 
 class HomeMenu extends StatefulWidget {
   final User user;
@@ -21,7 +24,12 @@ class _HomeMenuState extends State<HomeMenu> {
         TextButton(
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => UserPage(user: widget.user))
+              MaterialPageRoute(
+                builder: (context) => ChangeNotifierProvider(
+                  create: (context) => UserViewModel(),
+                  child: UpdateUserPage(user: widget.user),
+                ),
+              )
             );
           },
           child: ListTile(

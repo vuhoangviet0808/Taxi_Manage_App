@@ -7,7 +7,8 @@ import '../viewmodels/account_login_view_model.dart';
 import '../../../../user/user_main.dart';
 import '../../../../admin/admin_main.dart';
 import '../../../../driver/driver_main.dart';
-import 'register_page.dart';
+import 'register_views/register_page.dart';
+import './forgot_password_views/forgot_page.dart';
 
 class LoginPage extends StatefulWidget {
 
@@ -51,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: EdgeInsets.only(bottom: 100),
                 child: Text(
-                  "Login to continue",
+                  "Đăng nhập để tiếp tục",
                   style: TextStyle(fontSize: 15, color: Colors.black.withOpacity(0.5)),
                 ),
               ),
@@ -61,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                   controller: _sdtController,
                   style: TextStyle(color: Colors.black.withOpacity(0.8), fontSize: 18),
                   decoration: InputDecoration(
-                    labelText: "SDT",
+                    labelText: "Số di động",
                     prefixIcon: Container(
                       width: 50,
                       child: Icon(Icons.person, color: Colors.grey.withOpacity(0.6),),
@@ -78,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontSize: 18, color: Colors.black.withOpacity(0.8)),
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: "Password",
+                  labelText: "Mật khẩu",
                   prefixIcon: Container(
                     width: 50,
                     child: Icon(Icons.lock, color: Colors.grey.withOpacity(0.6)),
@@ -130,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                         RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
                       ),
                     ),
-                    child: Text("Login"),
+                    child: Text("Đăng nhập"),
                   ),
                   SizedBox(width: 10),
                   InkWell(
@@ -154,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
                       });
                     },
                     child: Text(
-                      "New user?",
+                      "Tạo tài khoản mới",
                       style: TextStyle(
                         color: _textColor, // Màu ban đầu
                         decoration: TextDecoration.underline, // Thêm gạch chân để giống liên kết
@@ -171,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: InkWell(
                     onTap: () {
                       Navigator.push(context,
-                      MaterialPageRoute(builder:(context) => RegisterPage()));
+                      MaterialPageRoute(builder:(context) => ForgotPasswordPage()));
                     },
                     onHighlightChanged: (value) {
                       setState(() {
@@ -183,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                       });
                     },
                     child: Text(
-                      "Forgot my password",
+                      "Bạn quên mật khẩu ư?",
                       style: TextStyle(
                         color: _backgroundColor, // Màu ban đầu
                         decoration: TextDecoration.underline, // Thêm gạch chân để giống liên kết

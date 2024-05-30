@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './CCCDinput_page.dart';
-import '../viewmodels/account_input_infor_view_model.dart';
+import 'CCCDinput_page.dart';
+import '../../viewmodels/account_input_infor_view_model.dart';
 
 class DOBInputPage extends StatefulWidget {
   final String phoneNumber;
