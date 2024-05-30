@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify
 from ..controllers.admin_controller import AdminController
 from ..controllers.cab_ride_controller import Cab_rideController
 from ..controllers.user_controller import UserController
+from ..controllers.shift_controller import ShiftController
 admin_blueprint = Blueprint('admin', __name__)
 
 @admin_blueprint.route('/')
@@ -31,3 +32,11 @@ def user_get_2_info():
 @admin_blueprint.route('/users/<int:User_ID>', methods=['GET'])
 def each_user_by_id_info(User_ID):
     return UserController().get_full_user_info(User_ID)
+
+@admin_blueprint.route('/shifts', methods = ['GET'])
+def shift_get_2_info():
+    return ShiftController().get_2_shift_info()
+
+@admin_blueprint.route('/shifts/<int:ID>', methods=['GET'])
+def each_shift_by_id_info(ID):
+    return ShiftController().get_full_shift_info(ID)

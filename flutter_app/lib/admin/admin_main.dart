@@ -3,6 +3,7 @@ import 'package:flutter_app/admin/views/views.dart';
 import 'package:flutter_app/admin/viewmodels/viewmodels.dart';
 import 'package:flutter_app/admin/viewmodels/cab_ride_viewmodels.dart';
 import 'package:flutter_app/admin/viewmodels/user_viewmodels.dart';
+import 'package:flutter_app/admin/viewmodels/shift_viewmodels.dart';
 
 class AdminPage extends StatelessWidget {
   @override
@@ -10,6 +11,7 @@ class AdminPage extends StatelessWidget {
     final adminDashboardViewModel = AdminDashboardViewModel();
     final cabRideDashboardViewModel = CabRideDashboardViewModel();
     final userDashboardViewModel = UserDashboardViewModel();
+    final shiftDashboardViewModel = ShiftDashboardViewModel();
 
     return MaterialApp(
       title: 'My App',
@@ -22,6 +24,7 @@ class AdminPage extends StatelessWidget {
               viewModel: adminDashboardViewModel,
               CabRideViewModel: cabRideDashboardViewModel,
               UserViewModel: userDashboardViewModel,
+              ShiftViewModel: shiftDashboardViewModel,
             ),
       },
     );
