@@ -18,7 +18,7 @@ class RegisterService:
             cursor.close()
     
     def register_new_user(self, phone, password):
-        query = "Insert into account values(%s, %s, %s, %s)"
+        query = "Insert into account(SDT, password, roles, status) values(%s, %s, %s, %s)"
         cursor = db.cursor()
         try:
             cursor.execute(query, (phone, password,'user','active'))

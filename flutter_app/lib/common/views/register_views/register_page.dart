@@ -3,9 +3,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'login_page.dart';
-import '../viewmodels/account_register_view_model.dart';
-import './nameinput_page.dart';
+import '../login_page.dart';
+import '../../viewmodels/account_register_view_model.dart';
+import 'nameinput_page.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
