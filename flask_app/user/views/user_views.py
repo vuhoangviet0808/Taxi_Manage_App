@@ -11,4 +11,6 @@ def user_index():
 @user_blueprint.route('/getinfo', methods=['Get'])
 def user_get_info():
     return UserController.get_user_info()
-
+@user_blueprint.route('/update_user_infor', methods = ['POST'])
+def user_updateinfo():    
+    return UserController.update_info()

@@ -2,13 +2,19 @@
 
 import "package:flutter/material.dart";
 import "../page/ride_picker_page.dart";
-
+import "../../models/place_item_res.dart";
 class RidePicker extends StatefulWidget {
-  @override
+ 
+  final Function(PlaceItemRes, bool) onSelected;
+   RidePicker(this.onSelected);
+
+   @override
   _RidePickerState createState() => _RidePickerState();
 }
 
 class _RidePickerState extends State<RidePicker> {
+   PlaceItemRes? fromAddress;
+   PlaceItemRes? toAddress;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,8 +35,18 @@ class _RidePickerState extends State<RidePicker> {
             height: 50,
             child: TextButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context)=> RiderPickerPage()));
+                  String address = fromAddress?.name ?? "";
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => RiderPickerPage(
+                      address,
+                      (place, isFrom){
+                        widget.onSelected(place, isFrom);
+                        fromAddress = place;
+                        setState(() {});
+                      },
+                      true
+                    )
+                  ));
               },
               child: SizedBox(
                 width: double.infinity,
@@ -101,7 +117,7 @@ class _RidePickerState extends State<RidePicker> {
                     Padding(
                       padding: EdgeInsets.only(left: 40, right: 50),
                       child: Text(
-                        "Home",
+                        fromAddress?.name ?? "From",
                         overflow: TextOverflow.ellipsis,
                         style: 
                         TextStyle(fontSize: 16, color: Color(0xff323643)),
