@@ -1,36 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/admin/viewmodels/viewmodels.dart';
-import 'package:flutter_app/admin/models/models.dart';
+import 'package:flutter_app/admin/viewmodels/user_viewmodels.dart';
+import 'package:flutter_app/admin/models/user_model.dart';
 
-class DriverReportScreenView extends StatefulWidget {
-  final List<Driver> drivers;
-  final AdminDashboardViewModel viewModel;
+class UserReportScreenView extends StatefulWidget {
+  final List<User> users;
+  final UserDashboardViewModel viewModel;
 
-  const DriverReportScreenView(
-      {Key? key, required this.drivers, required this.viewModel})
-      : super(key: key);
+  const UserReportScreenView({
+    Key? key,
+    required this.users,
+    required this.viewModel,
+  }) : super(key: key);
 
   @override
-  _DriverReportScreenViewState createState() => _DriverReportScreenViewState();
+  _UserReportScreenViewState createState() => _UserReportScreenViewState();
 }
 
-class _DriverReportScreenViewState extends State<DriverReportScreenView> {
+class _UserReportScreenViewState extends State<UserReportScreenView> {
   String nameFilter = '';
   String idFilter = '';
 
   @override
   Widget build(BuildContext context) {
-    List<Driver> filteredDrivers = widget.drivers.where((driver) {
-      return (driver.Firstname.toLowerCase()
-                  .contains(nameFilter.toLowerCase()) ||
-              driver.Lastname.toLowerCase()
-                  .contains(nameFilter.toLowerCase())) &&
-          driver.Driver_ID.contains(idFilter);
+    List<User> filteredUsers = widget.users.where((user) {
+      return (user.Firstname.toLowerCase().contains(nameFilter.toLowerCase()) ||
+              user.Lastname.toLowerCase().contains(nameFilter.toLowerCase())) &&
+          user.User_ID.contains(idFilter);
     }).toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin tài xế'),
+        title: Text('Thông tin người dùng'),
       ),
       body: Column(
         children: [
@@ -76,7 +76,7 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Số lượng: ${filteredDrivers.length}',
+                  'Số lượng: ${filteredUsers.length}',
                   style: TextStyle(fontSize: 18),
                 ),
               ),
@@ -94,18 +94,22 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
                       label: Text(
                         'ID',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                     DataColumn(
                       label: Text(
                         'Họ tên',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   ],
-                  rows: filteredDrivers.map((driver) {
+                  rows: filteredUsers.map((user) {
                     return DataRow(cells: [
                       DataCell(
                         Container(
@@ -114,10 +118,10 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
                           child: GestureDetector(
                             onTap: () {
                               widget.viewModel
-                                  .fetchEachDriver(context, driver.Driver_ID);
+                                  .fetchEachUser(context, user.User_ID);
                             },
                             child: Text(
-                              driver.Driver_ID,
+                              user.User_ID,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -130,9 +134,9 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
                       DataCell(
                         Container(
                           alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.all(8), // Căn lề trái
+                          padding: EdgeInsets.all(8),
                           child: Text(
-                            "${driver.Firstname} ${driver.Lastname}",
+                            "${user.Firstname} ${user.Lastname}",
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
@@ -149,10 +153,10 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
   }
 }
 
-class DriverDetailScreen extends StatelessWidget {
-  final FullDriver driver;
+class UserDetailScreen extends StatelessWidget {
+  final FullUser user;
 
-  const DriverDetailScreen({Key? key, required this.driver}) : super(key: key);
+  const UserDetailScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +164,7 @@ class DriverDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin chi tiết tài xế'),
+        title: Text('Thông tin chi tiết người dùng'),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -172,7 +176,7 @@ class DriverDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Họ và tên: ',
+                    text: 'ID: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -180,7 +184,7 @@ class DriverDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${driver.Firstname} ${driver.Lastname}',
+                    text: '${user.User_ID}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -194,7 +198,7 @@ class DriverDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'ID: ',
+                    text: 'Họ và tên: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -202,7 +206,7 @@ class DriverDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${driver.Driver_ID}',
+                    text: '${user.Firstname} ${user.Lastname}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -224,7 +228,7 @@ class DriverDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${driver.SDT}',
+                    text: '${user.SDT}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -246,7 +250,7 @@ class DriverDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${driver.Wallet}',
+                    text: '${user.Wallet}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -268,7 +272,7 @@ class DriverDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${driver.DOB}',
+                    text: '${user.DOB}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -290,7 +294,7 @@ class DriverDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${driver.Gender}',
+                    text: '${user.Gender}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -312,7 +316,7 @@ class DriverDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${driver.Address}',
+                    text: '${user.Address}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -334,7 +338,7 @@ class DriverDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${driver.CCCD}',
+                    text: '${user.CCCD}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -348,7 +352,7 @@ class DriverDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Số bằng lái: ',
+                    text: 'Ngày tạo: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -356,29 +360,7 @@ class DriverDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${driver.Driving_licence_number}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Kinh nghiệm làm việc: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${driver.Working_experiment}',
+                    text: '${user.created_at}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,

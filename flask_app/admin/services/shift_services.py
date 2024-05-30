@@ -1,11 +1,11 @@
 from shared.services.database_service import db
-from ..models.cab_ride import cab_ride
+from ..models.shift import Shift
 
-class Cab_rideService():
-    def get_cab_ride_by_ID_and_startTime(self):
+class ShiftService():
+    def get_shift_by_ID_and_shift_start_time(self):
         cursor = db.cursor(dictionary=True)
         try:
-            cursor.execute("SELECT ID, ride_start_time FROM cab_ride WHERE canceled = 0 ORDER BY ride_start_time DESC")
+            cursor.execute("SELECT ID, shift_start_time FROM Shift ORDER BY shift_start_time DESC")
             result = cursor.fetchall()
             if result:
                 return result
@@ -17,20 +17,20 @@ class Cab_rideService():
             return None
         finally:
             cursor.close()
-
-    def get_cab_ride_by_all(self, ID):
-        query = "SELECT * FROM cab_ride WHERE ID = %s"
-        cursor =db.cursor(dictionary=True)
+            
+    def get_shift_by_all(self, ID):
+        query = "SELECT * FROM Shift WHERE ID = %s"
+        cursor = db.cursor(dictionary=True)
         try:
             cursor.execute(query, (ID,))
             result = cursor.fetchall()
             if result:
                 return result
             else:
-                print("No result found.")
+                print("No results found")
                 return None
         except Exception as e:
-            print("Error occurred: ", e)
+            print("Error occurred:", e)
             return None
         finally:
-            cursor.close()
+            cursor.close()  
