@@ -48,3 +48,27 @@ class DriverUpdateService {
     }
   }
 }
+
+class CabRideInfoService {
+  Future<List<CabRide>> getCabRide(int driverID) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/driver/getCabRide?driver_id=$driverID'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return data.map((json) => CabRide.fromJson(json)).toList();
+      } else if (response.statusCode == 404) {
+        return [];
+      } else {
+        throw Exception(
+            'Failed to get information. Error code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('$e');
+    }
+  }
+}

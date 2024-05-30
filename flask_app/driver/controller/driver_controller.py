@@ -1,4 +1,4 @@
-from ..models.driver import CarModel, Driver
+from ..models.driver import Driver
 from ..services.driver_service import DriverService
 from flask import request, jsonify , abort
 
@@ -66,5 +66,12 @@ class DriverController:
         if cabs is None:
             abort(404, "No cab")
         return jsonify([c.__dict__ for c in cabs]) 
-
-    
+    @staticmethod
+    def cab_ride():
+        driver_id = request.args.get('driver_id')
+        if not driver_id:
+            abort(400, "Bad request: No driver_id provided")
+        cab_ride = driver_service.get_cab_ride(driver_id)
+        if not cab_ride:
+            abort(404, "No cab ride found for this driver_id")
+        return jsonify([ride.__dict__ for ride in cab_ride])
