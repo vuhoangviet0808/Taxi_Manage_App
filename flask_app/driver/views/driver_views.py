@@ -27,3 +27,6 @@ def get_car_model():
 @driver_blueprint.route('/getCab', methods = ['GET'])
 def get_cab():
     return DriverController.cab()
+@driver_blueprint.route('/getCabRide', methods = ['GET'])
+def get_cab_ride():
+    return DriverController.cab_ride()

@@ -1,14 +1,10 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, file_names
-
 import 'package:flutter/material.dart';
-
 import '../models/driver.dart';
 import 'homemenu.dart';
 import 'riderpicker.dart';
 
 class HomePage extends StatefulWidget {
   final Driver driver;
-
   HomePage({Key? key, required this.driver}) : super(key: key);
 
   @override
@@ -18,71 +14,95 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool online = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      drawer: Drawer(
+        child: HomeMenu(driver: widget.driver),
+      ),
       body: SafeArea(
-        child: Container(
-          constraints: BoxConstraints.expand(),
-          color: Colors.white,
-          child: Column(
-            children: <Widget>[
-              AppBar(
-                backgroundColor: Colors.black87,
-                elevation: 0,
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'HUST DRIVER',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      'Feliz - 29BK01405',
-                      style: TextStyle(fontSize: 12, color: Colors.white),
-                    )
-                  ],
-                ),
-                leading: TextButton(
+        child: Column(
+          children: <Widget>[
+            Container(
+              color: Colors.black87,
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              child: Row(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.menu, color: Colors.white, size: 40),
                     onPressed: () {
                       _scaffoldKey.currentState?.openDrawer();
                     },
-                    child: Icon(
-                      Icons.menu,
-                      size: 30,
-                      color: Colors.white,
-                    )),
-                actions: <Widget>[
+                  ),
+                  SizedBox(width: 10),
+                  Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'HUST DRIVER',
+                          style: TextStyle(
+                            fontSize: 30,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Spacer(),
                   Transform.scale(
-                    scale: 1, // Thay đổi kích thước của switch
-                    child: Container(
-                      margin: EdgeInsets.symmetric(
-                          vertical: 10), // Thêm khoảng cách trên dưới
-                      child: Switch(
-                        value: online,
-                        onChanged: toggleSwitch,
-                        activeColor: Colors.green,
-                        activeTrackColor:
-                            Colors.green[200], // Màu sắc khi switch bật
-                        inactiveThumbColor: Colors.grey,
-                        inactiveTrackColor:
-                            Colors.grey[400], // Màu sắc khi switch tắt
-                        splashRadius: 10, // Kích thước vùng chạm nước khi bật
-                      ),
+                    scale: 1.2,
+                    child: Switch(
+                      value: online,
+                      onChanged: toggleSwitch,
+                      activeColor: Colors.green,
+                      activeTrackColor: Colors.green[200],
+                      inactiveThumbColor: Colors.grey,
+                      inactiveTrackColor: Colors.grey[400],
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    online ? "Online" : "Offline",
+                    style: TextStyle(
+                      color: online ? Colors.green : Colors.red,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.directions_car,
+                      size: 100,
+                      color: Colors.grey[400],
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Waiting for ride requests...',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-      ),
-      drawer: Drawer(
-        child: HomeMenu(driver: widget.driver),
       ),
     );
   }
@@ -93,7 +113,8 @@ class _HomePageState extends State<HomePage> {
     });
     if (online) {
       Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => RiderPicker(driver: widget.driver)));
+        builder: (context) => RiderPicker(driver: widget.driver),
+      ));
     }
   }
 }
