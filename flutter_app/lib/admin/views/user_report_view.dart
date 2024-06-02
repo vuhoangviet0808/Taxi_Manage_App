@@ -176,7 +176,7 @@ class UserDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'ID: ',
+                    text: 'ID người dùng: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
