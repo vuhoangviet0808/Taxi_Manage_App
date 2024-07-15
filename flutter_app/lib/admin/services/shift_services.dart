@@ -34,7 +34,6 @@ class ShiftService {
       dynamic responseBody = json.decode(response.body);
 
       if (responseBody is List) {
-        // Nếu response body là một danh sách, lấy phần tử đầu tiên
         if (responseBody.isNotEmpty) {
           responseBody = responseBody.first;
         } else {
@@ -44,7 +43,6 @@ class ShiftService {
       }
 
       if (responseBody is Map<String, dynamic>) {
-        // Tiếp tục giải mã body của response
         if (responseBody['ID'] != null) {
           return FullShift(
             responseBody['ID'].toString(),

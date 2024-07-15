@@ -1,39 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/admin/viewmodels/shift_viewmodels.dart';
-import 'package:flutter_app/admin/viewmodels/viewmodels.dart';
 import 'package:flutter_app/admin/viewmodels/cab_viewmodels.dart';
-import 'package:flutter_app/admin/models/shift_model.dart';
+import 'package:flutter_app/admin/models/cab_model.dart';
 
-class ShiftReportScreenView extends StatefulWidget {
-  final List<Shift> shifts;
-  final ShiftDashboardViewModel viewModel;
+class CabReportScreenView extends StatefulWidget {
+  final List<Cab> cabs;
+  final CabDashboardViewModel viewModel;
 
-  const ShiftReportScreenView({
+  const CabReportScreenView({
     Key? key,
-    required this.shifts,
+    required this.cabs,
     required this.viewModel,
   }) : super(key: key);
 
   @override
-  _ShiftReportScreenViewState createState() => _ShiftReportScreenViewState();
+  _CabReportScreenViewState createState() => _CabReportScreenViewState();
 }
 
-class _ShiftReportScreenViewState extends State<ShiftReportScreenView> {
+class _CabReportScreenViewState extends State<CabReportScreenView> {
+  String licencePlateFilter = '';
   String idFilter = '';
-  String startTimeFilter = '';
 
   @override
   Widget build(BuildContext context) {
-    List<Shift> filteredShifts = widget.shifts.where((shift) {
-      return shift.ID.contains(idFilter) &&
-          shift.shift_start_time
+    List<Cab> filteredCabs = widget.cabs.where((cab) {
+      return cab.licence_plate
               .toLowerCase()
-              .contains(startTimeFilter.toLowerCase());
+              .contains(licencePlateFilter.toLowerCase()) &&
+          cab.ID.contains(idFilter);
     }).toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Báo cáo ca làm việc'),
+        title: Text('Thông tin xe'),
       ),
       body: Column(
         children: [
@@ -61,11 +59,11 @@ class _ShiftReportScreenViewState extends State<ShiftReportScreenView> {
                 child: TextField(
                   onChanged: (value) {
                     setState(() {
-                      startTimeFilter = value;
+                      licencePlateFilter = value;
                     });
                   },
                   decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo thời gian bắt đầu',
+                    labelText: 'Tìm kiếm theo biển số xe',
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(),
                   ),
@@ -79,7 +77,7 @@ class _ShiftReportScreenViewState extends State<ShiftReportScreenView> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Số lượng: ${filteredShifts.length}',
+                  'Số lượng: ${filteredCabs.length}',
                   style: TextStyle(fontSize: 18),
                 ),
               ),
@@ -91,6 +89,7 @@ class _ShiftReportScreenViewState extends State<ShiftReportScreenView> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
+                  columnSpacing: MediaQuery.of(context).size.width - 200,
                   columns: [
                     DataColumn(
                       label: Text(
@@ -103,7 +102,7 @@ class _ShiftReportScreenViewState extends State<ShiftReportScreenView> {
                     ),
                     DataColumn(
                       label: Text(
-                        'Thời gian bắt đầu',
+                        'Biển số xe',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -111,7 +110,7 @@ class _ShiftReportScreenViewState extends State<ShiftReportScreenView> {
                       ),
                     ),
                   ],
-                  rows: filteredShifts.map((shift) {
+                  rows: filteredCabs.map((cab) {
                     return DataRow(cells: [
                       DataCell(
                         Container(
@@ -119,11 +118,10 @@ class _ShiftReportScreenViewState extends State<ShiftReportScreenView> {
                           padding: EdgeInsets.all(8),
                           child: GestureDetector(
                             onTap: () {
-                              widget.viewModel
-                                  .fetchEachShift(context, shift.ID);
+                              widget.viewModel.fetchEachCab(context, cab.ID);
                             },
                             child: Text(
-                              shift.ID,
+                              cab.ID,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -135,10 +133,10 @@ class _ShiftReportScreenViewState extends State<ShiftReportScreenView> {
                       ),
                       DataCell(
                         Container(
-                          alignment: Alignment.centerLeft, // Căn lề trái
+                          alignment: Alignment.centerLeft,
                           padding: EdgeInsets.all(8),
                           child: Text(
-                            shift.shift_start_time,
+                            cab.licence_plate,
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
@@ -155,20 +153,18 @@ class _ShiftReportScreenViewState extends State<ShiftReportScreenView> {
   }
 }
 
-class ShiftDetailScreen extends StatelessWidget {
-  final FullShift shift;
-  final AdminDashboardViewModel driverViewModel = AdminDashboardViewModel();
-  final CabDashboardViewModel cabViewModel = CabDashboardViewModel();
-  ShiftDetailScreen({Key? key, required this.shift}) : super(key: key);
+class CabDetailScreen extends StatelessWidget {
+  final FullCab cab;
+
+  const CabDetailScreen({Key? key, required this.cab}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final double fontSize = 16.0;
-    final double increasedFontSize = fontSize * 1;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin chi tiết ca làm việc'),
+        title: Text('Thông tin chi tiết xe'),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -180,60 +176,6 @@ class ShiftDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'ID ca làm việc: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${shift.ID}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'ID tài xế: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  WidgetSpan(
-                    child: GestureDetector(
-                      onTap: () {
-                        driverViewModel.fetchEachDriver(
-                            context, shift.Driver_id);
-                      },
-                      child: Text(
-                        '${shift.Driver_id}',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: increasedFontSize,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Add more fields as needed
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
                     text: 'ID xe: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -241,38 +183,8 @@ class ShiftDetailScreen extends StatelessWidget {
                       fontSize: fontSize,
                     ),
                   ),
-                  WidgetSpan(
-                    child: GestureDetector(
-                      onTap: () {
-                        cabViewModel.fetchEachCab(context, shift.cab_id);
-                      },
-                      child: Text(
-                        '${shift.cab_id}',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: increasedFontSize,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
                   TextSpan(
-                    text: 'Thời gian ca làm việc bắt đầu: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${shift.shift_start_time}',
+                    text: '${cab.ID}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -286,7 +198,7 @@ class ShiftDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Thời gian ca làm việc kết thúc: ',
+                    text: 'Biển số xe: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -294,7 +206,7 @@ class ShiftDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${shift.shift_end_time}',
+                    text: '${cab.licence_plate}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -308,7 +220,7 @@ class ShiftDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Thời gian đăng nhập ',
+                    text: 'ID model xe: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -316,7 +228,7 @@ class ShiftDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${shift.login_time}',
+                    text: '${cab.car_model_id}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -330,7 +242,7 @@ class ShiftDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Thời gian đăng xuất ',
+                    text: 'Năm sản xuất: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -338,7 +250,73 @@ class ShiftDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${shift.logout_time}',
+                    text: '${cab.manufacture_year}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 8),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Hoạt động: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${cab.active}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 8),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Tên model: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${cab.model_name}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 8),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Mô tả model: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${cab.model_description}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
