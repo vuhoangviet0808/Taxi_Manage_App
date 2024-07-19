@@ -4,7 +4,6 @@ import 'package:flutter_app/admin/services/cab_ride_services.dart';
 import 'package:flutter_app/admin/views/cab_ride_list_screen_view.dart';
 
 class CabRideDashboardViewModel {
-  //final AdminDashboardService service = AdminDashboardService();
   final CabRideService service = CabRideService();
 
   Future<List<Cab_ride>> fetchCabRides() async {

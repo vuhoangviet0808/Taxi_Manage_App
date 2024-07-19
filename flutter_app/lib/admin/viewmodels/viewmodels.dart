@@ -39,4 +39,6 @@ class AdminDashboardViewModel {
       );
     });
   }
+
+  void logout() {}
 }

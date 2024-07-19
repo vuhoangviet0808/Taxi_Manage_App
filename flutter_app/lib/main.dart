@@ -7,8 +7,6 @@ import 'common/views/login_page.dart';
 import 'user/user_main.dart';
 import 'admin/admin_main.dart';
 
-
-
 void main() {
   runApp(MyApp());
 }

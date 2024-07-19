@@ -34,7 +34,6 @@ class UserService {
       dynamic responseBody = json.decode(response.body);
 
       if (responseBody is List) {
-        // If the response body is a list, take the first item
         if (responseBody.isNotEmpty) {
           responseBody = responseBody.first;
         } else {
@@ -44,7 +43,6 @@ class UserService {
       }
 
       if (responseBody is Map<String, dynamic>) {
-        // Proceed with decoding the response body
         if (responseBody['User_ID'] != null) {
           String userID = responseBody['User_ID'].toString();
           String userWallet = responseBody['Wallet'].toString();

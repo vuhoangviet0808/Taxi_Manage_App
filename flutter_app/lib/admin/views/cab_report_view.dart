@@ -1,36 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/admin/viewmodels/user_viewmodels.dart';
-import 'package:flutter_app/admin/models/user_model.dart';
+import 'package:flutter_app/admin/viewmodels/cab_viewmodels.dart';
+import 'package:flutter_app/admin/models/cab_model.dart';
 
-class UserReportScreenView extends StatefulWidget {
-  final List<User> users;
-  final UserDashboardViewModel viewModel;
+class CabReportScreenView extends StatefulWidget {
+  final List<Cab> cabs;
+  final CabDashboardViewModel viewModel;
 
-  const UserReportScreenView({
+  const CabReportScreenView({
     Key? key,
-    required this.users,
+    required this.cabs,
     required this.viewModel,
   }) : super(key: key);
 
   @override
-  _UserReportScreenViewState createState() => _UserReportScreenViewState();
+  _CabReportScreenViewState createState() => _CabReportScreenViewState();
 }
 
-class _UserReportScreenViewState extends State<UserReportScreenView> {
-  String nameFilter = '';
+class _CabReportScreenViewState extends State<CabReportScreenView> {
+  String licencePlateFilter = '';
   String idFilter = '';
 
   @override
   Widget build(BuildContext context) {
-    List<User> filteredUsers = widget.users.where((user) {
-      return (user.Firstname.toLowerCase().contains(nameFilter.toLowerCase()) ||
-              user.Lastname.toLowerCase().contains(nameFilter.toLowerCase())) &&
-          user.User_ID.contains(idFilter);
+    List<Cab> filteredCabs = widget.cabs.where((cab) {
+      return cab.licence_plate
+              .toLowerCase()
+              .contains(licencePlateFilter.toLowerCase()) &&
+          cab.ID.contains(idFilter);
     }).toList();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin người dùng'),
+        title: Text('Thông tin xe'),
       ),
       body: Column(
         children: [
@@ -58,11 +59,11 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
                 child: TextField(
                   onChanged: (value) {
                     setState(() {
-                      nameFilter = value;
+                      licencePlateFilter = value;
                     });
                   },
                   decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo tên',
+                    labelText: 'Tìm kiếm theo biển số xe',
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(),
                   ),
@@ -76,7 +77,7 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Số lượng: ${filteredUsers.length}',
+                  'Số lượng: ${filteredCabs.length}',
                   style: TextStyle(fontSize: 18),
                 ),
               ),
@@ -101,7 +102,7 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
                     ),
                     DataColumn(
                       label: Text(
-                        'Họ tên',
+                        'Biển số xe',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -109,7 +110,7 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
                       ),
                     ),
                   ],
-                  rows: filteredUsers.map((user) {
+                  rows: filteredCabs.map((cab) {
                     return DataRow(cells: [
                       DataCell(
                         Container(
@@ -117,11 +118,10 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
                           padding: EdgeInsets.all(8),
                           child: GestureDetector(
                             onTap: () {
-                              widget.viewModel
-                                  .fetchEachUser(context, user.User_ID);
+                              widget.viewModel.fetchEachCab(context, cab.ID);
                             },
                             child: Text(
-                              user.User_ID,
+                              cab.ID,
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -136,7 +136,7 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
                           alignment: Alignment.centerLeft,
                           padding: EdgeInsets.all(8),
                           child: Text(
-                            "${user.Firstname} ${user.Lastname}",
+                            cab.licence_plate,
                             style: TextStyle(fontSize: 16),
                           ),
                         ),
@@ -153,10 +153,10 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
   }
 }
 
-class UserDetailScreen extends StatelessWidget {
-  final FullUser user;
+class CabDetailScreen extends StatelessWidget {
+  final FullCab cab;
 
-  const UserDetailScreen({Key? key, required this.user}) : super(key: key);
+  const CabDetailScreen({Key? key, required this.cab}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +164,7 @@ class UserDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin chi tiết người dùng'),
+        title: Text('Thông tin chi tiết xe'),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -176,7 +176,7 @@ class UserDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'ID người dùng: ',
+                    text: 'ID xe: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -184,7 +184,7 @@ class UserDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${user.User_ID}',
+                    text: '${cab.ID}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -198,7 +198,7 @@ class UserDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Họ và tên: ',
+                    text: 'Biển số xe: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -206,7 +206,7 @@ class UserDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${user.Firstname} ${user.Lastname}',
+                    text: '${cab.licence_plate}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -220,7 +220,7 @@ class UserDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Số điện thoại: ',
+                    text: 'ID model xe: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -228,7 +228,7 @@ class UserDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${user.SDT}',
+                    text: '${cab.car_model_id}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -242,7 +242,7 @@ class UserDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Ví: ',
+                    text: 'Năm sản xuất: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -250,7 +250,7 @@ class UserDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${user.Wallet}',
+                    text: '${cab.manufacture_year}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -264,7 +264,7 @@ class UserDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Ngày sinh: ',
+                    text: 'Hoạt động: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -272,7 +272,7 @@ class UserDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${user.DOB}',
+                    text: '${cab.active}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -286,7 +286,7 @@ class UserDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Giới tính: ',
+                    text: 'Tên model: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -294,7 +294,7 @@ class UserDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${user.Gender}',
+                    text: '${cab.model_name}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,
@@ -308,7 +308,7 @@ class UserDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Địa chỉ: ',
+                    text: 'Mô tả model: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -316,51 +316,7 @@ class UserDetailScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: '${user.Address}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'CCCD: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${user.CCCD}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Ngày tạo: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${user.created_at}',
+                    text: '${cab.model_description}',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: fontSize,

@@ -4,7 +4,6 @@ import 'package:flutter_app/admin/services/shift_services.dart';
 import 'package:flutter_app/admin/views/shift_report_view.dart';
 
 class ShiftDashboardViewModel {
-  //final AdminDashboardService service = AdminDashboardService();
   final ShiftService service = ShiftService();
 
   Future<List<Shift>> fetchShift() async {
