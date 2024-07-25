@@ -41,3 +41,28 @@ class UserController:
             return jsonify({"message": "User info updated successfully!"}), 200
         else:
             return jsonify({"message": "Failed to update user info."}), 404
+   
+    @staticmethod
+    def car_model():
+        car_id = request.args.get('car_model_id')
+        if not car_id:
+            abort(400, "Bad request: No car_model_id provided")
+        car_model =  user_service.get_car_model(car_id)
+        if car_model is None:
+            abort(404, "No Information")
+        return jsonify(car_model.__dict__)
+    @staticmethod
+    def cab():
+        cabs = user_service.get_cab()
+        if cabs is None:
+            abort(404, "No cab")
+        return jsonify([c.__dict__ for c in cabs]) 
+    @staticmethod
+    def cab_ride():
+        user_id = request.args.get('user_id')
+        if not user_id:
+            abort(400, "Bad request: No user_id provided")
+        cab_ride = user_service.get_cab_ride(user_id)
+        if not cab_ride:
+            abort(404, "No cab ride found for this user_id")
+        return jsonify([ride.__dict__ for ride in cab_ride])

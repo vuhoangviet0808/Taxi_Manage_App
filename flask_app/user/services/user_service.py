@@ -1,5 +1,6 @@
+from flask import logging
 from shared.services.database_service import db
-from ..models.user import User
+from ..models.user import User, CarModel, CabRide, cabModel, Shift
 
 class UserService():
     def get_user_by_phone(self, phone):
@@ -35,5 +36,41 @@ class UserService():
             db.rollback()
             print(f"Error occurred: {e}")
             return 0
+        finally:
+            cursor.close()
+    def get_car_model(self, car_id):
+        query = "SELECT * FROM car_model WHERE ID = %s"
+        cursor = db.cursor(dictionary= True)
+        try:
+            cursor.execute(query, (car_id,))
+            result = cursor.fetchone()
+            return CarModel.from_dict(result)
+        except Exception as e:
+            print("Error: ", e)
+            return None
+        finally:
+            cursor.close()
+    def get_cab(self):
+        query = "SELECT * FROM Cab"
+        cursor = db.cursor(dictionary= True)
+        try:
+            cursor.execute(query, ())
+            result = cursor.fetchall()
+            return [cabModel.from_dict(row) for row in result]
+        except Exception as e:
+            print("Error: ", e)
+            return None
+        finally:
+            cursor.close()
+    def get_cab_ride(self, user_id):
+        query = "SELECT * FROM cab_ride WHERE user_id = %s"
+        cursor = db.cursor(dictionary=True)
+        try:
+            cursor.execute(query, (user_id,))
+            result = cursor.fetchall()
+            return [CabRide.from_dict(row) for row in result]
+        except Exception as e:
+            logging.error(f"Error retrieving cab rides: {e}")
+            return None
         finally:
             cursor.close()

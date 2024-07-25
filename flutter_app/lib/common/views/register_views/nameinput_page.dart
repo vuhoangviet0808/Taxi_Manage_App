@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import './sexinput_page.dart';
+import 'sexinput_page.dart';
 
 class NameInputPage extends StatefulWidget {
   final String phoneNumber;

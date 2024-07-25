@@ -1,20 +1,15 @@
 // ignore_for_file: library_private_types_in_public_api, sized_box_for_whitespace
 
-import "package:flutter/material.dart";
-import "../page/ride_picker_page.dart";
-import "../../models/place_item_res.dart";
-class RidePicker extends StatefulWidget {
- 
-  final Function(PlaceItemRes, bool) onSelected;
-   RidePicker(this.onSelected);
+import 'package:flutter/material.dart';
+import '../page/ride_picker_page.dart';
+import '../page/find_location_page.dart';
 
-   @override
+class RidePicker extends StatefulWidget {
+  @override
   _RidePickerState createState() => _RidePickerState();
 }
 
 class _RidePickerState extends State<RidePicker> {
-   PlaceItemRes? fromAddress;
-   PlaceItemRes? toAddress;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,112 +19,68 @@ class _RidePickerState extends State<RidePicker> {
         boxShadow: [
           BoxShadow(
             color: Color(0x88999999),
-            offset: Offset(0,5),
+            offset: Offset(0, 5),
             blurRadius: 5.0,
-          )
-        ]),
+          ),
+        ],
+      ),
       child: Column(
         children: <Widget>[
           Container(
             width: double.infinity,
             height: 50,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.teal), // Viền xanh
+              borderRadius: BorderRadius.circular(8.0),
+            ),
             child: TextButton(
               onPressed: () {
-                  String address = fromAddress?.name ?? "";
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => RiderPickerPage(
-                      address,
-                      (place, isFrom){
-                        widget.onSelected(place, isFrom);
-                        fromAddress = place;
-                        setState(() {});
-                      },
-                      true
-                    )
-                  ));
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => FindLocationPage(),
+                ));
               },
-              child: SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-                child: Stack(
-                  alignment: AlignmentDirectional.centerStart,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 40,
-                      height: 50,
-                      child: Center(
-                        child: Image.asset("assets/user/mappointer.png"),
+              child: Row(
+                children: [
+                  Icon(Icons.location_on, color: Colors.orange),
+                  SizedBox(width: 8.0),
+                  Expanded(
+                    child: Text(
+                      "Bạn muốn đi đâu?",
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color(0xff323643),
                       ),
                     ),
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      width: 40,
-                      height: 50,
-                      child: Center(
-                        child: TextButton(
-                          onPressed: () {
-                            
-                          },
-                          child: Image.asset("assets/user/x.png")),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 40, right: 50),
-                      child: TextField(
-                        
-                        style: 
-                        TextStyle(fontSize: 16, color: Color(0xff323643)),
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
-          Container(
-            width: double.infinity,
-            height: 50,
-            child: TextButton(
-              onPressed: () {},
-              child: SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-                child: Stack(
-                  alignment: AlignmentDirectional.centerStart,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 40,
-                      height: 50,
-                      child: Center(
-                        child: Image.asset("assets/user/navigation.png"),
-                      ),
-                    ),
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      width: 40,
-                      height: 50,
-                      child: Center(
-                        child: Image.asset("assets/user/x.png"),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 40, right: 50),
-                      child: Text(
-                        fromAddress?.name ?? "From",
-                        overflow: TextOverflow.ellipsis,
-                        style: 
-                        TextStyle(fontSize: 16, color: Color(0xff323643)),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          )
+          SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              _buildCategoryButton(Icons.home, 'Thêm Nhà'),
+              _buildCategoryButton(Icons.business, 'Thêm Công ty'),
+              _buildCategoryButton(Icons.location_city, 'Thêm địa chỉ'),
+            ],
+          ),
         ],
-        )
+      ),
+    );
+  }
+
+  Widget _buildCategoryButton(IconData icon, String label) {
+    return Column(
+      children: [
+        CircleAvatar(
+          backgroundColor: Colors.teal.withOpacity(0.1),
+          child: Icon(icon, color: Colors.teal),
+        ),
+        SizedBox(height: 4.0),
+        Text(label, style: TextStyle(fontSize: 14.0)),
+      ],
     );
   }
 }
