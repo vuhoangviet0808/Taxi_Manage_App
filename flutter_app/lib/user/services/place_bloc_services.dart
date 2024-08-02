@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings, argument_type_not_assignable_to_error_handler
+
 import 'dart:async';
 import '../services/place_services.dart';
 

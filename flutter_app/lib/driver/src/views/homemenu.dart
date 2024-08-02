@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/driver/src/services/driver_info_services.dart';
+import 'package:flutter_app/driver/src/services/logout.dart';
+import 'package:flutter_app/driver/src/views/revenue_summary.dart';
 import 'package:provider/provider.dart';
 
 import '../models/driver.dart';
@@ -40,7 +42,7 @@ class _HomeMenuState extends State<HomeMenu> {
                   padding: EdgeInsets.all(8),
                   color: Colors.black54,
                   width: double.infinity,
-                  height: 120,
+                  height: 180,
                   child: Row(
                     children: <Widget>[
                       CircleAvatar(
@@ -73,7 +75,7 @@ class _HomeMenuState extends State<HomeMenu> {
                 ),
               ),
               Divider(
-                height: 10,
+                height: 20,
                 thickness: 0,
                 color: Colors.white,
               ),
@@ -100,6 +102,10 @@ class _HomeMenuState extends State<HomeMenu> {
                         },
                       ),
                     ),
+                    SizedBox(
+                      width: 40,
+                      height: 15,
+                    ),
                     Card(
                       child: ListTile(
                         leading: Icon(Icons.wallet),
@@ -112,14 +118,30 @@ class _HomeMenuState extends State<HomeMenu> {
                         },
                       ),
                     ),
+                    SizedBox(
+                      width: 40,
+                      height: 15,
+                    ),
                     Card(
                       child: ListTile(
-                          leading: Icon(Icons.attach_money),
-                          title: Text(
-                            'Tổng hợp doanh thu',
-                            style: TextStyle(fontSize: 16, color: Colors.black),
-                          ),
-                          onTap: () {}),
+                        leading: Icon(Icons.attach_money),
+                        title: Text(
+                          'Tổng hợp doanh thu',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => DailyRevenueSummary(
+                                  driverId: widget.driver.Driver_ID),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 40,
+                      height: 15,
                     ),
                     Card(
                       child: ListTile(
@@ -138,23 +160,9 @@ class _HomeMenuState extends State<HomeMenu> {
                         },
                       ),
                     ),
-                    Card(
-                      child: ListTile(
-                        leading: Icon(Icons.percent),
-                        title: Text(
-                          'Tỷ lệ hoạt động',
-                          style: TextStyle(fontSize: 16, color: Colors.black),
-                        ),
-                      ),
-                    ),
-                    Card(
-                      child: ListTile(
-                        leading: Icon(Icons.message_rounded),
-                        title: Text(
-                          'Tin nhắn từ tổng đài',
-                          style: TextStyle(fontSize: 16, color: Colors.black),
-                        ),
-                      ),
+                    SizedBox(
+                      width: 40,
+                      height: 15,
                     ),
                     Card(
                       child: ListTile(
@@ -169,6 +177,10 @@ class _HomeMenuState extends State<HomeMenu> {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      width: 40,
+                      height: 15,
+                    ),
                     Card(
                       child: ListTile(
                         leading: Icon(Icons.logout_outlined),
@@ -176,6 +188,9 @@ class _HomeMenuState extends State<HomeMenu> {
                           'Đăng xuất',
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
+                        onTap: () async {
+                          LogOutService().logout(context); // gọi hàm logout
+                        },
                       ),
                     ),
                   ],

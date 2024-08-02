@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_new
+
 class PlaceItemRes {
   String name;
   String address;
@@ -7,9 +9,9 @@ class PlaceItemRes {
 
   static List<PlaceItemRes> fromJson(Map<String, dynamic> json) {
     print("parse data");
-     var results = json['results'] as List;
+    var results = json['results'] as List;
     List<PlaceItemRes> rs = [];
-   
+
     for (var item in results) {
       var p = new PlaceItemRes(
           item['name'],

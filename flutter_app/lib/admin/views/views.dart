@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/viewmodels/viewmodels.dart';
 import 'package:flutter_app/admin/viewmodels/cab_ride_viewmodels.dart';

@@ -20,6 +20,6 @@ class MarkerGenerator {
         await image.toByteData(format: ui.ImageByteFormat.png);
     final Uint8List pngBytes = byteData!.buffer.asUint8List();
 
-    return BitmapDescriptor.fromBytes(pngBytes);
+    return BitmapDescriptor.bytes(pngBytes);
   }
 }
