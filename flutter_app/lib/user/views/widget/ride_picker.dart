@@ -1,10 +1,14 @@
 // ignore_for_file: library_private_types_in_public_api, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/user/views/page/map_page.dart';
+import 'package:flutter_app/user/views/page/trip_info_panel.dart';
 import '../page/ride_picker_page.dart';
-import '../page/find_location_page.dart';
-
+import '../page/trip_info_panel.dart';
+import '../../models/user.dart';
 class RidePicker extends StatefulWidget {
+  final User user;
+  RidePicker({Key? key, required this.user}) : super(key: key);
   @override
   _RidePickerState createState() => _RidePickerState();
 }
@@ -36,7 +40,7 @@ class _RidePickerState extends State<RidePicker> {
             child: TextButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => FindLocationPage(),
+                  builder: (context) => MapPage(user: widget.user),
                 ));
               },
               child: Row(

@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                    child: RidePicker(),
+                    child: RidePicker(user: widget.user),
                   ),
                 ],
               ),
