@@ -30,6 +30,7 @@ class _RiderPickerState extends State<RiderPicker> {
   Marker? _currentLocationMarker;
   Marker? _pickupMarker;
   Marker? _destinationMarker;
+  bool _isExpanded = false;
 
   void getLocation() async {
     try {
@@ -182,43 +183,93 @@ class _RiderPickerState extends State<RiderPicker> {
             ],
           ),
           Positioned(
-            top: 0,
-            right: 0,
-            left: 0,
-            child: Column(
-              children: [
-                AppBar(
-                  backgroundColor: Colors.transparent,
-                  leading: TextButton(
-                    child: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.black,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => HomePage(driver: widget.driver),
-                      ));
-                    },
+            top: 35,
+            left: 10,
+            child: FloatingActionButton.extended(
+              heroTag: 'stopRideButton',
+              icon: Image.asset('assets/driver/icon_power_off.png'),
+              label: Text(
+                'Tắt nhận chuyến',
+                style: TextStyle(color: Colors.black),
+              ),
+              backgroundColor: Colors.white.withOpacity(0.75),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => HomePage(driver: widget.driver)));
+              },
+            ),
+          ),
+          Positioned(
+            top: 40,
+            right: 15,
+            child: Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.white, // Màu nền cho thông tin
+                borderRadius: BorderRadius.circular(24), // Bo tròn góc
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26, // Màu đổ bóng
+                    blurRadius: 4,
+                    offset: Offset(2, 2), // Vị trí đổ bóng
                   ),
-                  centerTitle: true,
-                  title: TextButton(
-                    onPressed: getLocation,
-                    child: const Icon(
-                      Icons.location_on,
-                      color: Colors.black,
-                    ),
-                  ),
-                  actions: [
-                    IconButton(
-                      icon: Icon(Icons.my_location),
-                      color: Colors.black,
-                      onPressed: getLocation,
+                ],
+              ),
+              child: IconButton(
+                icon: Icon(
+                  Icons.info_outline,
+                  color: Colors.blueAccent,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isExpanded = !_isExpanded; // Thay đổi trạng thái mở rộng
+                  });
+                },
+              ),
+            ),
+          ),
+          if (_isExpanded)
+            Positioned(
+              top: 100,
+              right: 15,
+              child: Container(
+                width: 200,
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(2, 2),
                     ),
                   ],
                 ),
-              ],
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Quãng đường: ${_totalDistance.toStringAsFixed(2)} km",
+                      style: TextStyle(color: Colors.black87),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      "Giá tiền: 100,000 VNĐ",
+                      style: TextStyle(color: Colors.black87),
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      "Số điện thoại: 0335413585",
+                      style: TextStyle(color: Colors.black87),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
           Positioned(
             bottom: 120,
             right: 16,
@@ -238,32 +289,6 @@ class _RiderPickerState extends State<RiderPicker> {
                   child: Icon(Icons.zoom_out),
                 ),
               ],
-            ),
-          ),
-          Positioned(
-            top: 35,
-            left: 110,
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    spreadRadius: 4,
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              child: Text(
-                'Quãng đường: ${_totalDistance.toStringAsFixed(2)} km',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
             ),
           ),
           SlidingUpPanel(

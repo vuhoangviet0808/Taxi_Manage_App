@@ -170,7 +170,7 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
             SizedBox(height: 16.0),
             Center(
               child: Text(
-                "Thông tin chuyến đi",
+                "Chỉ Đường",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20.0,

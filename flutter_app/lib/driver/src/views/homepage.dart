@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../models/driver.dart';
 import 'homemenu.dart';
 import 'riderpicker.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:geolocator/geolocator.dart';
 
 class HomePage extends StatefulWidget {
   final Driver driver;
@@ -14,87 +17,180 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool online = false;
+  late LatLng _initialLocation = LatLng(0, 0);
+  MapController _mapController = MapController();
+  List<Marker> _markers = [];
+  Marker? _currentLocationMarker;
+  double _heading = 0.0;
+
+  void getLocation() async {
+    try {
+      await Geolocator.checkPermission();
+      await Geolocator.requestPermission();
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        _initialLocation = LatLng(position.latitude, position.longitude);
+        _currentLocationMarker = _createMarker();
+        _updateMarkers();
+      });
+      _mapController.move(_initialLocation, 15.0);
+    } catch (e) {
+      print("Lỗi khi lấy vị trí: $e");
+    }
+  }
+
+  void _updateMarkers() {
+    setState(() {
+      _markers.clear();
+      if (_currentLocationMarker != null) _markers.add(_currentLocationMarker!);
+    });
+  }
+
+  Marker _createMarker() {
+    return Marker(
+      point: _initialLocation,
+      builder: (ctx) => Transform.rotate(
+        angle: _heading * (3.1415927 / 180), // Convert degrees to radians
+        child: AnimatedContainer(
+          duration: Duration(seconds: 1),
+          width: 25,
+          height: 25,
+          child: Image.asset(
+            'assets/driver/icons8-taxi-48.png',
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _updateHeading(Position position) {
+    setState(() {
+      _heading = position.heading;
+      _currentLocationMarker = _createMarker();
+      _updateMarkers();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    getLocation();
+    Geolocator.getPositionStream(
+      locationSettings: LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 10,
+      ),
+    ).listen((Position position) {
+      _updateHeading(position);
+    }, onError: (error) {
+      print("Lỗi khi lắng nghe vị trí: $error");
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      drawer: Drawer(
-        child: HomeMenu(driver: widget.driver),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Container(
-              color: Colors.black87,
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-              child: Row(
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.menu, color: Colors.white, size: 40),
-                    onPressed: () {
-                      _scaffoldKey.currentState?.openDrawer();
-                    },
-                  ),
-                  SizedBox(width: 10),
-                  Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'HUST DRIVER',
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Spacer(),
-                  Transform.scale(
-                    scale: 1.2,
-                    child: Switch(
-                      value: online,
-                      onChanged: toggleSwitch,
-                      activeColor: Colors.green,
-                      activeTrackColor: Colors.green[200],
-                      inactiveThumbColor: Colors.grey,
-                      inactiveTrackColor: Colors.grey[400],
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    online ? "Online" : "Offline",
-                    style: TextStyle(
-                      color: online ? Colors.green : Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+        key: _scaffoldKey,
+        drawer: Drawer(
+          child: HomeMenu(driver: widget.driver),
+        ),
+        body: Stack(
+          children: [
+            FlutterMap(
+              mapController: _mapController,
+              options: MapOptions(
+                center: _initialLocation,
+                zoom: 15,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate:
+                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  subdomains: ['a', 'b', 'c'],
+                ),
+                MarkerLayer(
+                  markers: _markers,
+                ),
+              ],
+            ),
+            Positioned(
+              top: 50,
+              left: 15,
+              child: FloatingActionButton(
+                heroTag: 'menuButton',
+                onPressed: () {
+                  _scaffoldKey.currentState?.openDrawer();
+                },
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
+                mini: true,
+                child: Icon(
+                  Icons.menu,
+                  color: Colors.black,
+                  size: 25,
+                ),
               ),
             ),
-            Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.directions_car,
-                      size: 100,
-                      color: Colors.grey[400],
+            Positioned(
+              bottom: 120,
+              left: MediaQuery.of(context).size.width * 0.3,
+              child: FloatingActionButton.extended(
+                heroTag: 'rideButton',
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          RiderPicker(driver: widget.driver)));
+                },
+                backgroundColor: Colors.black.withOpacity(0.6),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12), // Bo tròn góc nút
+                ),
+                icon: Icon(
+                  Icons.power_settings_new,
+                  color: Colors.white,
+                ),
+                label: Text(
+                  'Mở nhận chuyến',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 60,
+              left: MediaQuery.of(context).size.width * 0.21,
+              child: Container(
+                width: 250,
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(12), // Bo góc
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
                     ),
-                    SizedBox(height: 20),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.circle,
+                      color: Colors.red,
+                      size: 10,
+                    ),
+                    SizedBox(width: 8),
                     Text(
-                      'Waiting for ride requests...',
+                      'Đang ngoại tuyến',
                       style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[700],
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
@@ -102,9 +198,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
-        ),
-      ),
-    );
+        ));
   }
 
   void toggleSwitch(bool value) {
