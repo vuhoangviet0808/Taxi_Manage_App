@@ -126,7 +126,7 @@ for _ in range(100):
     location_dropoff = random_hanoi_location()
     price = round(random.uniform(50, 500), 2)
     status = random.choice(statuses_booking)
-    driver_id = random.choice([random.randint(1, 50), None])
+    driver_id = random.randint(1, 50) if status != 'pending' else None
 
     print(
         f"INSERT INTO booking_requests (user_id, requested_car_type, pickup_location, dropoff_location, gps_pick_up_location, gps_destination_location, price, status, driver_id) VALUES ({user_id}, '{requested_car_type}', '{location_pickup['address']}', '{location_dropoff['address']}', ST_GeomFromText('{location_pickup['gps']}'), ST_GeomFromText('{location_dropoff['gps']}'), {price}, '{status}', {'NULL' if driver_id is None else driver_id});")
