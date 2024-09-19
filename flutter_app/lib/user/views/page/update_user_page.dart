@@ -28,7 +28,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
     _firstNameController = TextEditingController(text: widget.user.firstname);
     _lastNameController = TextEditingController(text: widget.user.lastname);
     _dobController = TextEditingController(text: _formatDate(widget.user.DOB));
-    _genderController = TextEditingController(text: widget.user.gender);
+    _genderController = TextEditingController(text: widget.user.Gender);
     _cccdController = TextEditingController(text: widget.user.CCCD);
     _addressController = TextEditingController(text: widget.user.Address);
   }
@@ -54,8 +54,16 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
     _genderController.dispose();
     _addressController.dispose();
     _cccdController.dispose();
-
     super.dispose();
+  }
+
+  // Hàm kiểm tra hợp lệ cho giới tính
+  String? _validateGender(String? value) {
+    List<String> validGenders = ['Nam', 'Nữ'];
+    if (value == null || !validGenders.contains(value.trim())) {
+      return 'Giới tính không hợp lệ. Vui lòng nhập "Nam" hoặc "Nữ".';
+    }
+    return null; // Không có lỗi
   }
 
   @override
@@ -94,9 +102,10 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                               SDT: widget.user.SDT,
                               Wallet: widget.user.Wallet,
                               DOB: _dobController.text,
-                              gender: _genderController.text,
+                              Gender: _genderController.text,
                               Address: _addressController.text,
                               CCCD: _cccdController.text,
+                              user_token: widget.user.user_token, // Giữ nguyên giá trị user_token
                             );
 
                             userViewModel.updateUSerInfo(updateUser).then((_) {
@@ -104,9 +113,10 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                                 widget.user.firstname = _firstNameController.text;
                                 widget.user.lastname = _lastNameController.text;
                                 widget.user.DOB = _dobController.text;
-                                widget.user.gender = _genderController.text;
+                                widget.user.Gender = _genderController.text;
                                 widget.user.CCCD = _cccdController.text;
                                 widget.user.Address = _addressController.text;
+                                // Không thay đổi user_token vì không hiển thị trong form
                               });
 
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -241,6 +251,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                         height: 60,
                         child: TextFormField(
                           controller: _genderController,
+                          validator: _validateGender, // Thêm kiểm tra hợp lệ cho Gender
                           decoration: InputDecoration(
                             labelText: "Sex",
                             labelStyle: TextStyle(color: Colors.black, fontSize: 16),
@@ -305,16 +316,8 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                           borderSide: BorderSide(color: Colors.teal),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15), // Bo tròn góc
-                          borderSide: BorderSide(color: Colors.teal),
-                        ),
-                        focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15), // Bo tròn góc
-                          borderSide: BorderSide(color: Colors.red),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15), // Bo tròn góc
-                          borderSide: BorderSide(color: Colors.teal, width: 0.5),
+                           borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                           borderSide: BorderSide(color: Colors.teal),
                         ),
                       ),
                     ),
@@ -328,3 +331,4 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
     );
   }
 }
+

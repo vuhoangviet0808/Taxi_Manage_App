@@ -5,16 +5,19 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:latlong2/latlong.dart';
+import 'pick_type_ride.dart';
+import '../../models/user.dart';
 
 class TripInfoPanel extends StatefulWidget {
   final TextEditingController pickupLocationController;
   final TextEditingController destinationLocationController;
   final Function(LatLng, LatLng) onLocationsChanged;
-
+  final User user;
   TripInfoPanel({
     required this.onLocationsChanged,
     required this.pickupLocationController,
     required this.destinationLocationController,
+    required this.user,
   });
 
   @override
@@ -70,6 +73,33 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
 
     if (pickupLatLng != null && destinationLatLng != null) {
       widget.onLocationsChanged(pickupLatLng, destinationLatLng);
+    }
+  }
+
+  Future<void> _navigateToPickTypeRide(BuildContext context) async {
+    LatLng? pickupLatLng = await _fetchLatLng(widget.pickupLocationController.text);
+    LatLng? destinationLatLng = await _fetchLatLng(widget.destinationLocationController.text);
+
+    if (pickupLatLng != null && destinationLatLng != null) {
+      widget.onLocationsChanged(pickupLatLng, destinationLatLng);
+      final result = await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => PickTypeRide(
+            pickupLocation: pickupLatLng,
+            destinationLocation: destinationLatLng,
+            pickupAddress: widget.pickupLocationController.text,  // Truyền địa chỉ đón
+            destinationAddress: widget.destinationLocationController.text, 
+            user: widget.user,
+             // Truyền địa chỉ đến
+          ),
+        ),
+      );
+
+      if (result != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Bạn đã chọn $result')),
+        );
+      }
     }
   }
 
@@ -195,7 +225,7 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
             SizedBox(height: 10.0),
             Center(
               child: ElevatedButton(
-                onPressed: _updateLocations,
+                onPressed: () => _navigateToPickTypeRide(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal,
                   foregroundColor: Colors.white,

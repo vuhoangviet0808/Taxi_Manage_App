@@ -23,3 +23,6 @@ def get_cab():
 @user_blueprint.route('/getCabRide', methods = ['GET'])
 def get_cab_ride():
     return UserController.cab_ride()
+@user_blueprint.route('/sendBookingRequest', methods=['POST'])
+def send_booking_request():
+    return UserController.send_booking_request()

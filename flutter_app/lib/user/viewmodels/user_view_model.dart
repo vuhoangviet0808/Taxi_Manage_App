@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../services/user_info_services.dart';
+import 'package:latlong2/latlong.dart';
+
 
 class UserViewModel with ChangeNotifier {
   final UserUpdateService _userService = UserUpdateService();
@@ -40,3 +42,45 @@ class CabRidesViewModel with ChangeNotifier {
     }
   }
 }
+
+class BookingViewModel with ChangeNotifier {
+  final BookingService _bookingService = BookingService();
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  Future<void> sendBookingRequest({
+    required int userId,
+    required String requestedCarType,
+    required String pickupAddress,
+    required String dropoffAddress,
+    required LatLng pickupLocation,
+    required LatLng dropoffLocation,
+    required double price, // Thêm biến price vào đây
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    final success = await _bookingService.sendBookingRequest(
+      user_id: userId,
+      requestedCarType: requestedCarType,
+      pickupAddress: pickupAddress,
+      dropoffAddress: dropoffAddress,
+      pickupLocation: pickupLocation,
+      dropoffLocation: dropoffLocation,
+      price: price, // Truyền giá trị price vào đây
+      
+    );
+
+    if (success) {
+      print('Booking request sent successfully');
+    } else {
+      print('Failed to send booking request');
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+}
+
+
+
