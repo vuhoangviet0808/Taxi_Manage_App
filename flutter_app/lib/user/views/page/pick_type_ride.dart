@@ -9,6 +9,7 @@ import '../../services/user_info_services.dart'; // Import service mới
 import '../../models/user.dart';
 import '../../viewmodels/user_view_model.dart';
 import 'package:provider/provider.dart';
+import 'waitting_cab.dart'; // Import trang WaitingCab
 
 class PickTypeRide extends StatefulWidget {
   final LatLng pickupLocation;
@@ -24,8 +25,6 @@ class PickTypeRide extends StatefulWidget {
     required this.destinationAddress,
     required this.user,
   });
-  
-  
 
   @override
   State<PickTypeRide> createState() => _PickTypeRideState();
@@ -40,7 +39,6 @@ class _PickTypeRideState extends State<PickTypeRide> {
   double _totalPrice = 0.0; // Biến để lưu trữ giá tiền
   String? _selectedCarType; // Biến lưu loại xe được chọn
   final BookingService bookingService = BookingService(); // Khởi tạo service
-
 
   void getLocation() async {
     try {
@@ -73,7 +71,7 @@ class _PickTypeRideState extends State<PickTypeRide> {
             1000.0;
         // Tính giá tiền dựa trên quãng đường, với giá 8000 VND cho mỗi km
         _totalPrice = _totalDistance * 800;
-         // Làm tròn lên hàng nghìn
+        // Làm tròn lên hàng nghìn
         _totalPrice = ((_totalPrice + 999) ~/ 1000) * 1000;
       });
     } else {
@@ -87,27 +85,32 @@ class _PickTypeRideState extends State<PickTypeRide> {
       return;
     }
 
-  
-    final success = await bookingService.sendBookingRequest(
-      user_id: widget.user.User_ID,
-      requestedCarType: _selectedCarType!,
-      pickupAddress: widget.pickupAddress,
-      dropoffAddress: widget.destinationAddress,
-      pickupLocation: widget.pickupLocation,
-      dropoffLocation: widget.destinationLocation,
-      price: _totalPrice, // Gửi giá tiền
-    );
+    try {
+      // Gửi yêu cầu đặt xe
+      await bookingService.sendBookingRequest(
+        user_id: widget.user.User_ID,
+        requestedCarType: _selectedCarType!,
+        pickupAddress: widget.pickupAddress,
+        dropoffAddress: widget.destinationAddress,
+        pickupLocation: widget.pickupLocation,
+        dropoffLocation: widget.destinationLocation,
+        price: _totalPrice, // Gửi giá tiền
+      );
 
-    if (success) {
-      print('Booking request sent successfully');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Bạn đã đặt xe thành công'),
-          duration: Duration(seconds: 2),
+      // Điều hướng sang trang WaitingCab sau khi gửi yêu cầu thành công
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WaitingCab(
+            pickupLocation: widget.pickupLocation,
+            destinationLocation: widget.destinationLocation,
+            pickupAddress: widget.pickupAddress,
+            destinationAddress: widget.destinationAddress,
+          ),
         ),
       );
-    } else {
-      print('Failed to send booking request');
+    } catch (error) {
+      print('Error during booking request: $error');
     }
   }
 
@@ -187,8 +190,8 @@ class _PickTypeRideState extends State<PickTypeRide> {
                         ),
                         SizedBox(height: 5),
                         Text(
-                           'Giá tiền: ${_totalPrice.toStringAsFixed(0)} VND',
-                           style: TextStyle(
+                          'Giá tiền: ${_totalPrice.toStringAsFixed(0)} VND',
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
@@ -277,6 +280,7 @@ class _PickTypeRideState extends State<PickTypeRide> {
                   onTap: () {
                     _sendBookingRequest(); // Gọi hàm gửi yêu cầu đặt xe
                   },
+                  isBookingButton: true, // Thêm cờ để xác định nút Đặt xe
                 ),
               ],
             ),
@@ -295,7 +299,8 @@ Widget _buildOptionItem(BuildContext context,
     {required String title,
     required IconData icon,
     required bool isSelected,
-    required VoidCallback onTap}) {
+    required VoidCallback onTap,
+    bool isBookingButton = false}) { // Thêm cờ isBookingButton để tùy chỉnh nút Đặt xe
   return GestureDetector(
     onTap: onTap,
     child: Container(
@@ -303,20 +308,21 @@ Widget _buildOptionItem(BuildContext context,
       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       margin: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isBookingButton ? Colors.teal : Colors.white, // Nền teal cho nút Đặt xe
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: isSelected ? Colors.yellow : Colors.teal, width: 1),
+        border: Border.all(color: Colors.teal, width: 1), // Viền màu teal
       ),
       child: Row(
+        mainAxisAlignment: isBookingButton ? MainAxisAlignment.center : MainAxisAlignment.start, // Căn giữa cho nút Đặt xe
         children: [
-          Icon(icon, color: isSelected ? Colors.black : Colors.black, size: 24),
-          SizedBox(width: 12),
+          Icon(icon, color: isBookingButton ? Colors.white : Colors.teal, size: 24),
+          SizedBox(width: isBookingButton ? 0 : 12), // Xóa khoảng trống cho nút Đặt xe
           Text(
             title,
             style: TextStyle(
               fontSize: 16,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isSelected ? Colors.black : Colors.black,
+              color: isBookingButton ? Colors.white : Colors.black, // Màu chữ trắng cho nút Đặt xe
             ),
           ),
         ],

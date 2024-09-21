@@ -185,3 +185,35 @@ class BookingRequest {
     };
   }
 }
+
+class BookingDriver {
+  final int booking_id;
+  final int driver_id;
+  final String status;
+  final String status_changed_at;
+
+  BookingDriver({
+    required this.booking_id,
+    required this.driver_id,
+    required this.status,
+    required this.status_changed_at,
+  });
+
+  factory BookingDriver.fromJson(Map<String, dynamic> json) {
+    return BookingDriver(
+      booking_id: json['booking_id'] ?? 0,  // Default to 0 if null
+      driver_id: json['driver_id'] ?? 0,  // Default to 0 if null
+      status: json['status'] ?? '',  // Default to empty string if null
+      status_changed_at: json['status_changed_at'] ?? '',  // Default to empty string if null
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'booking_id': booking_id,
+      'driver_id': driver_id,
+      'status': status,
+      'status_changed_at': status_changed_at,
+    };
+  }
+}
