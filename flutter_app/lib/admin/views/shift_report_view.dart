@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/viewmodels/shift_viewmodels.dart';
+import 'package:flutter_app/admin/viewmodels/viewmodels.dart';
+import 'package:flutter_app/admin/viewmodels/cab_viewmodels.dart';
 import 'package:flutter_app/admin/models/shift_model.dart';
 
 class ShiftReportScreenView extends StatefulWidget {
@@ -91,7 +93,6 @@ class _ShiftReportScreenViewState extends State<ShiftReportScreenView> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
-                  columnSpacing: MediaQuery.of(context).size.width - 200,
                   columns: [
                     DataColumn(
                       label: Text(
@@ -136,7 +137,7 @@ class _ShiftReportScreenViewState extends State<ShiftReportScreenView> {
                       ),
                       DataCell(
                         Container(
-                          alignment: Alignment.centerLeft,
+                          alignment: Alignment.centerLeft, // Căn lề trái
                           padding: EdgeInsets.all(8),
                           child: Text(
                             shift.shift_start_time,
@@ -158,12 +159,14 @@ class _ShiftReportScreenViewState extends State<ShiftReportScreenView> {
 
 class ShiftDetailScreen extends StatelessWidget {
   final FullShift shift;
-
-  const ShiftDetailScreen({Key? key, required this.shift}) : super(key: key);
+  final AdminDashboardViewModel driverViewModel = AdminDashboardViewModel();
+  final CabDashboardViewModel cabViewModel = CabDashboardViewModel();
+  ShiftDetailScreen({Key? key, required this.shift}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final double fontSize = 16.0;
+    final double increasedFontSize = fontSize * 1;
 
     return Scaffold(
       appBar: AppBar(
@@ -179,7 +182,7 @@ class ShiftDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'ID: ',
+                    text: 'ID ca làm việc: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -201,7 +204,69 @@ class ShiftDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Thời gian bắt đầu: ',
+                    text: 'ID tài xế: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  WidgetSpan(
+                    child: GestureDetector(
+                      onTap: () {
+                        driverViewModel.fetchEachDriver(
+                            context, shift.Driver_id);
+                      },
+                      child: Text(
+                        '${shift.Driver_id}',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: increasedFontSize,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Add more fields as needed
+            SizedBox(height: 8),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'ID xe: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  WidgetSpan(
+                    child: GestureDetector(
+                      onTap: () {
+                        cabViewModel.fetchEachCab(context, shift.cab_id);
+                      },
+                      child: Text(
+                        '${shift.cab_id}',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: increasedFontSize,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 8),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Thời gian ca làm việc bắt đầu: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -218,7 +283,72 @@ class ShiftDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            // Add more fields as needed
+            SizedBox(height: 8),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Thời gian ca làm việc kết thúc: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${shift.shift_end_time}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 8),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Thời gian đăng nhập ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${shift.login_time}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 8),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Thời gian đăng xuất ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '${shift.logout_time}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

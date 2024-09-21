@@ -36,7 +36,6 @@ class AdminDashboardService {
       dynamic responseBody = json.decode(response.body);
 
       if (responseBody is List) {
-        // If the response body is a list, take the first item
         if (responseBody.isNotEmpty) {
           responseBody = responseBody.first;
         } else {
@@ -46,7 +45,6 @@ class AdminDashboardService {
       }
 
       if (responseBody is Map<String, dynamic>) {
-        // Proceed with decoding the response body
         if (responseBody['Driver_ID'] != null) {
           String driverID = responseBody['Driver_ID'].toString();
           String driverWallet = responseBody['Wallet'].toString();

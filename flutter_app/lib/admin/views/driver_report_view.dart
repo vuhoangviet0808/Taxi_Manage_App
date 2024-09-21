@@ -196,7 +196,7 @@ class DriverDetailScreen extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'ID: ',
+                    text: 'ID tài xế: ',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,

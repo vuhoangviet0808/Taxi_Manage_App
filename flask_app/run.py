@@ -11,5 +11,6 @@ app.register_blueprint(driver_blueprint, url_prefix='/driver')
 app.register_blueprint(user_blueprint, url_prefix='/user')
 app.register_blueprint(auth_blueprint, url_prefix='/')
 
+
 if __name__ == '__main__':
     app.run(debug=True)

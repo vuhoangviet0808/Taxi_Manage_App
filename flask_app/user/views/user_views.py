@@ -14,3 +14,15 @@ def user_get_info():
 @user_blueprint.route('/update_user_infor', methods = ['POST'])
 def user_updateinfo():    
     return UserController.update_info()
+@user_blueprint.route('/getCarModel', methods = ['GET'])
+def get_car_model():
+    return UserController.car_model()
+@user_blueprint.route('/getCab', methods = ['GET'])
+def get_cab():
+    return UserController.cab()
+@user_blueprint.route('/getCabRide', methods = ['GET'])
+def get_cab_ride():
+    return UserController.cab_ride()
+@user_blueprint.route('/sendBookingRequest', methods=['POST'])
+def send_booking_request():
+    return UserController.send_booking_request()

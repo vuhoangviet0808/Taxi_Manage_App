@@ -3,14 +3,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/viewmodels/cab_ride_viewmodels.dart';
 import 'package:flutter_app/admin/models/cab_ride_model.dart';
+import 'package:flutter_app/admin/viewmodels/shift_viewmodels.dart';
+import 'package:flutter_app/admin/viewmodels/user_viewmodels.dart';
 
 class CabRideListScreen extends StatefulWidget {
   final List<Cab_ride> cabRides;
   final CabRideDashboardViewModel viewModel;
 
-  const CabRideListScreen(
-      {Key? key, required this.cabRides, required this.viewModel})
-      : super(key: key);
+  const CabRideListScreen({
+    Key? key,
+    required this.cabRides,
+    required this.viewModel,
+  }) : super(key: key);
 
   @override
   _CabRideListScreenState createState() => _CabRideListScreenState();
@@ -149,9 +153,10 @@ class _CabRideListScreenState extends State<CabRideListScreen> {
 
 class CabRideDetailScreen extends StatelessWidget {
   final FullCabRide cabRide;
+  final ShiftDashboardViewModel shiftViewModel = ShiftDashboardViewModel();
+  final UserDashboardViewModel userViewModel = UserDashboardViewModel();
 
-  const CabRideDetailScreen({Key? key, required this.cabRide})
-      : super(key: key);
+  CabRideDetailScreen({Key? key, required this.cabRide}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -197,10 +202,21 @@ class CabRideDetailScreen extends StatelessWidget {
                         color: Colors.black,
                         fontSize: increasedFontSize),
                   ),
-                  TextSpan(
-                    text: '${cabRide.shift_id}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
+                  WidgetSpan(
+                    child: GestureDetector(
+                      onTap: () {
+                        shiftViewModel.fetchEachShift(
+                            context, cabRide.shift_id);
+                      },
+                      child: Text(
+                        '${cabRide.shift_id}',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: increasedFontSize,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -216,10 +232,20 @@ class CabRideDetailScreen extends StatelessWidget {
                         color: Colors.black,
                         fontSize: increasedFontSize),
                   ),
-                  TextSpan(
-                    text: '${cabRide.user_id}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
+                  WidgetSpan(
+                    child: GestureDetector(
+                      onTap: () {
+                        userViewModel.fetchEachUser(context, cabRide.user_id);
+                      },
+                      child: Text(
+                        '${cabRide.user_id}',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: increasedFontSize,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
