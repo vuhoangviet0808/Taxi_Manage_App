@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/models/shift_model.dart';
 import 'package:flutter_app/admin/services/shift_services.dart';

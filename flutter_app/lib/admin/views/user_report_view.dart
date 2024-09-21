@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_string_interpolations, library_private_types_in_public_api, prefer_const_declarations
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/admin/viewmodels/user_viewmodels.dart';
 import 'package:flutter_app/admin/models/user_model.dart';

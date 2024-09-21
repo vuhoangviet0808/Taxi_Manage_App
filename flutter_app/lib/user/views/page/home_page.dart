@@ -1,10 +1,9 @@
-// ignore_for_file: library_private_types_in_public_api, unnecessary_new
+// ignore_for_file: library_private_types_in_public_api, unnecessary_new, unused_field, prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
 import '../widget/home_menu.dart';
 import '../widget/ride_picker.dart';
 import '../../models/user.dart';
-
 
 class HomePage extends StatefulWidget {
   final User user;

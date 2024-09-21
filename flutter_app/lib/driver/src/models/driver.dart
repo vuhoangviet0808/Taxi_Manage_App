@@ -2,6 +2,8 @@
 
 import 'dart:ffi';
 
+import 'package:flutter/material.dart';
+
 class Driver {
   int Driver_ID;
   String firstname;
@@ -13,7 +15,7 @@ class Driver {
   String Address;
   String CCCD;
   String Driving_license;
-  int Working_experiment;
+  double Working_experiment;
 
   Driver(
       {required this.Driver_ID,
@@ -30,17 +32,19 @@ class Driver {
 
   factory Driver.fromJson(Map<String, dynamic> json) {
     return Driver(
-        Driver_ID: json['Driver_ID'],
-        firstname: json['firstname'],
-        lastname: json['lastname'],
-        SDT: json['SDT'],
-        Wallet: (json['Wallet'] as num).toDouble(),
-        DOB: json['DOB'],
-        gender: json['gender'],
-        Address: json['Address'],
-        CCCD: json['CCCD'],
-        Driving_license: json['Driving_license'],
-        Working_experiment: json['Working_experiment']);
+      Driver_ID: json['Driver_ID'],
+      firstname: json['firstname'],
+      lastname: json['lastname'],
+      SDT: json['SDT'],
+      Wallet: double.tryParse(json['Wallet'].toString()) ?? 0.0,
+      DOB: json['DOB'],
+      gender: json['gender'],
+      Address: json['Address'],
+      CCCD: json['CCCD'],
+      Driving_license: json['Driving_license'],
+      Working_experiment:
+          double.tryParse(json['Working_experiment'].toString()) ?? 0.0,
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -49,13 +53,35 @@ class Driver {
       'firstname': firstname,
       'lastname': lastname,
       'SDT': SDT,
-      'Wallet': Wallet.toInt(),
+      'Wallet': Wallet,
       'DOB': DOB,
       'gender': gender,
       'Address': Address,
       'CCCD': CCCD,
       'Driving_license': Driving_license,
       'Working_experiment': Working_experiment
+    };
+  }
+}
+
+class GPSlocation {
+  final double latitude;
+  final double
+      longitude; // Sửa tên trường từ 'longtitude' thành 'longitude' cho đúng chính tả
+
+  GPSlocation({required this.latitude, required this.longitude});
+
+  factory GPSlocation.fromJson(Map<String, dynamic> json) {
+    return GPSlocation(
+      latitude: json['latitude'] ?? 0.0,
+      longitude: json['longitude'] ?? 0.0, // Đảm bảo không có giá trị null
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'latitude': latitude,
+      'longitude': longitude,
     };
   }
 }
@@ -67,14 +93,13 @@ class CabRide {
   final String ride_start_time;
   final String ride_end_time;
   final String address_starting_point;
-  final String GPS_starting_point;
+  final GPSlocation GPS_starting_point;
   final String address_destination;
-  final String GPS_destination;
-  final int canceled;
-  final int payment_type_id;
+  final GPSlocation GPS_destination;
+  final String? cancelled_by;
   final double price;
   final String response;
-  final String evaluate;
+  final double evaluate;
 
   CabRide({
     required this.id,
@@ -86,8 +111,7 @@ class CabRide {
     required this.GPS_starting_point,
     required this.address_destination,
     required this.GPS_destination,
-    required this.canceled,
-    required this.payment_type_id,
+    required this.cancelled_by,
     required this.price,
     required this.response,
     required this.evaluate,
@@ -98,17 +122,22 @@ class CabRide {
       id: json['id'],
       shift_id: json['shift_id'],
       user_id: json['user_id'],
-      ride_start_time: json['ride_start_time'],
-      ride_end_time: json['ride_end_time'],
+      ride_start_time: json[
+          'ride_start_time'], // Nếu cần, sử dụng DateTime.parse(json['ride_start_time'])
+      ride_end_time: json[
+          'ride_end_time'], // Nếu cần, sử dụng DateTime.parse(json['ride_end_time'])
       address_starting_point: json['address_starting_point'],
-      GPS_starting_point: json['GPS_starting_point'],
+      GPS_starting_point: GPSlocation.fromJson(json['GPS_starting_point']),
       address_destination: json['address_destination'],
-      GPS_destination: json['GPS_destination'],
-      canceled: json['canceled'],
-      payment_type_id: json['payment_type_id'],
-      price: double.parse(json['price'].toString()),
+      GPS_destination: GPSlocation.fromJson(json['GPS_destination']),
+      cancelled_by: json['cancelled_by'],
+      price: json['price'] != null
+          ? double.tryParse(json['price'].toString()) ?? 0.0
+          : 0.0, // Ép kiểu trực tiếp nếu không phải String
       response: json['response'],
-      evaluate: json['evaluate'],
+      evaluate: json['evaluate'] != null
+          ? double.tryParse(json['evaluate'].toString()) ?? 0.0
+          : 0.0, // Ép kiểu trực tiếp nếu không phải String
     );
   }
 
@@ -117,14 +146,15 @@ class CabRide {
       'id': id,
       'shift_id': shift_id,
       'user_id': user_id,
-      'ride_start_time': ride_start_time,
-      'ride_end_time': ride_end_time,
+      'ride_start_time':
+          ride_start_time, // Nếu cần, sử dụng ride_start_time.toIso8601String()
+      'ride_end_time':
+          ride_end_time, // Nếu cần, sử dụng ride_end_time.toIso8601String()
       'address_starting_point': address_starting_point,
-      'GPS_starting_point': GPS_starting_point,
+      'GPS_starting_point': GPS_starting_point.toJson(),
       'address_destination': address_destination,
-      'GPS_destination': GPS_destination,
-      'canceled': canceled,
-      'payment_type_id': payment_type_id,
+      'GPS_destination': GPS_destination.toJson(),
+      'cancelled_by': cancelled_by,
       'price': price,
       'response': response,
       'evaluate': evaluate,
