@@ -1,20 +1,31 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names
-
 import 'package:flutter/material.dart';
+import 'package:flutter_app/driver/src/services/driver_info_services.dart';
 import 'package:provider/provider.dart';
 
 import '../models/driver.dart';
 import '../viewmodels/driver_viewmodel.dart';
 import 'driver_infor.dart';
+import 'ride_history.dart';
 
 class HomeMenu extends StatefulWidget {
   final Driver driver;
+
   HomeMenu({required this.driver});
+
   @override
   State<HomeMenu> createState() => _HomeMenuState();
 }
 
 class _HomeMenuState extends State<HomeMenu> {
+  List<CabRide> _cabRides = [];
+  String? _errorMes;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCabRides();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,20 +51,23 @@ class _HomeMenuState extends State<HomeMenu> {
                         width: 10,
                       ),
                       Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            ' ${widget.driver.lastname} ${widget.driver.firstname}',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
-                          Text(
-                            'CCCD: ${widget.driver.CCCD}',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          )
-                        ],
-                      ))
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              ' ${widget.driver.lastname} ${widget.driver.firstname}',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
+                            ),
+                            Text(
+                              'CCCD: ${widget.driver.CCCD}',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -77,9 +91,11 @@ class _HomeMenuState extends State<HomeMenu> {
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                                builder: (context) => ChangeNotifierProvider(
-                                    create: (context) => DriverViewModel(),
-                                    child: DriverInfor(driver: widget.driver))),
+                              builder: (context) => ChangeNotifierProvider(
+                                create: (context) => DriverViewModel(),
+                                child: DriverInfor(driver: widget.driver),
+                              ),
+                            ),
                           );
                         },
                       ),
@@ -92,17 +108,34 @@ class _HomeMenuState extends State<HomeMenu> {
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                         onTap: () {
-                          show_wallet();
+                          showWallet();
                         },
                       ),
                     ),
                     Card(
                       child: ListTile(
-                        leading: Icon(Icons.attach_money),
+                          leading: Icon(Icons.attach_money),
+                          title: Text(
+                            'Tổng hợp doanh thu',
+                            style: TextStyle(fontSize: 16, color: Colors.black),
+                          ),
+                          onTap: () {}),
+                    ),
+                    Card(
+                      child: ListTile(
+                        leading: Icon(Icons.history_rounded),
                         title: Text(
-                          'Tổng hợp doanh thu',
+                          'Lịch sử chuyến đi',
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => RideHistoryPage(
+                                  driverId: widget.driver.Driver_ID),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     Card(
@@ -110,15 +143,6 @@ class _HomeMenuState extends State<HomeMenu> {
                         leading: Icon(Icons.percent),
                         title: Text(
                           'Tỷ lệ hoạt động',
-                          style: TextStyle(fontSize: 16, color: Colors.black),
-                        ),
-                      ),
-                    ),
-                    Card(
-                      child: ListTile(
-                        leading: Icon(Icons.history_rounded),
-                        title: Text(
-                          'Lịch sử chuyến đi',
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                       ),
@@ -164,23 +188,77 @@ class _HomeMenuState extends State<HomeMenu> {
     );
   }
 
-  void show_wallet() {
+  void showWallet() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Tiền hiện có"),
-          content: SizedBox(
-            width: 300,
-            height: 100,
-            child: ListView(
-              scrollDirection: Axis.vertical,
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.teal, Colors.cyan],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                Row(
+                  children: [
+                    Icon(Icons.account_balance_wallet,
+                        size: 40, color: Colors.white),
+                    SizedBox(width: 10),
+                    Text(
+                      "Ví tài khoản",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
                 Card(
-                  child: ListTile(
-                    title: Text(
-                      'Wallet: ${widget.driver.Wallet} \$',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  elevation: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Số dư hiện tại:',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black54,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              widget.driver.Wallet.toStringAsFixed(2),
+                              style: TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Icon(Icons.monetization_on,
+                                size: 40, color: Colors.green),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -190,5 +268,32 @@ class _HomeMenuState extends State<HomeMenu> {
         );
       },
     );
+  }
+
+  void fetchCabRides() async {
+    CabRideInfoService cabRides = CabRideInfoService();
+    try {
+      List<CabRide> rides = await cabRides.getCabRide(widget.driver.Driver_ID);
+      setState(() {
+        _cabRides = rides;
+        _errorMes = rides.isEmpty ? "Không có dữ liệu chuyến đi" : null;
+        totalPrice();
+      });
+    } catch (e) {
+      setState(() {
+        _errorMes = "Lỗi khi lấy dữ liệu: $e";
+      });
+    }
+  }
+
+  void totalPrice() {
+    double totalPrice = _cabRides.fold(0, (sum, ride) => sum + ride.price);
+    setState(() {
+      if (_errorMes == null) {
+        widget.driver.Wallet = double.parse(totalPrice.toStringAsFixed(2));
+      } else {
+        widget.driver.Wallet = 0;
+      }
+    });
   }
 }

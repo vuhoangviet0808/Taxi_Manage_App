@@ -80,3 +80,38 @@ class cabModel:
             manufacture_year= data.get('manufacture_year'),
             active= data.get('active')
         )
+class CabRide:
+    def __init__(self, id, shift_id, user_id, ride_start_time, ride_end_time, address_starting_point, GPS_starting_point, address_destination, GPS_destination, canceled, payment_type_id, price, response, evaluate):
+        self.id = id
+        self.shift_id = shift_id
+        self.user_id = user_id
+        self.ride_start_time = ride_start_time
+        self.ride_end_time = ride_end_time
+        self.address_starting_point = address_starting_point
+        self.GPS_starting_point = GPS_starting_point
+        self.address_destination = address_destination
+        self.GPS_destination = GPS_destination
+        self.canceled = canceled
+        self.payment_type_id = payment_type_id
+        self.price = price
+        self.response = response
+        self.evaluate = evaluate
+    
+    @staticmethod
+    def from_dict(data):
+        return CabRide(
+            id=data.get('ID'),
+            shift_id=data.get('shift_id'),
+            user_id=data.get('user_id'),
+            ride_start_time=data.get('ride_start_time'),
+            ride_end_time=data.get('ride_end_time'),
+            address_starting_point=data.get('address_starting_point'),
+            GPS_starting_point=data.get('GPS_starting_point'),
+            address_destination=data.get('address_destination'),
+            GPS_destination=data.get('GPS_destination'),
+            canceled=data.get('canceled'),
+            payment_type_id=data.get('payment_type_id'),
+            price=data.get('price'),
+            response=data.get('response'),
+            evaluate=data.get('evaluate')
+        )

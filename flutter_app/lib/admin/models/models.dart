@@ -6,6 +6,10 @@ class Driver {
   final String Driver_ID;
 
   Driver(this.Firstname, this.Lastname, this.Driver_ID);
+
+  get driverId => null;
+
+  get lastName => null;
 }
 
 class FullDriver {
