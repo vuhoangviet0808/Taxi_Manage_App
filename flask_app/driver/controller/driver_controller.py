@@ -2,8 +2,6 @@ from ..models.driver import Driver
 from ..services.driver_service import DriverService
 from flask import request, jsonify , abort
 
-
-
 driver_service = DriverService()
 class DriverController:
     @staticmethod
@@ -52,15 +50,6 @@ class DriverController:
             abort(404, "No shift infomation found for this driver_id")
         return jsonify([s.__dict__ for s in shift])
     @staticmethod
-    def car_model():
-        car_id = request.args.get('car_model_id')
-        if not car_id:
-            abort(400, "Bad request: No car_model_id provided")
-        car_model =  driver_service.get_car_model(car_id)
-        if car_model is None:
-            abort(404, "No Information")
-        return jsonify(car_model.__dict__)
-    @staticmethod
     def cab():
         cabs = driver_service.get_cab()
         if cabs is None:
@@ -74,4 +63,4 @@ class DriverController:
         cab_ride = driver_service.get_cab_ride(driver_id)
         if not cab_ride:
             abort(404, "No cab ride found for this driver_id")
-        return jsonify([ride.__dict__ for ride in cab_ride])
+        return jsonify([ride.to_dict() for ride in cab_ride])

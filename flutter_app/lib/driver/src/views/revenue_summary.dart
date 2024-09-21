@@ -27,16 +27,23 @@ class DailyRevenueSummaryState extends State<DailyRevenueSummary> {
     fetchCabRides();
   }
 
+  String formatCurrency(double price) {
+    final NumberFormat formatter =
+        NumberFormat.currency(locale: 'vi_VN', symbol: 'đ');
+    return formatter.format(price);
+  }
+
   Future<void> fetchCabRides() async {
     CabRideInfoService cabRideService = CabRideInfoService();
     try {
       List<CabRide> rides = await cabRideService.getCabRide(widget.driverId);
+      for (var ride in rides) {
+        print('Fetched ride price: ${ride.price}');
+      }
       setState(() {
         _cabRides = rides;
         _filteredRides = rides;
-        _errorMessage = rides.isEmpty
-            ? "Không có doanh thu trong khoảng thời gian đã chọn"
-            : null;
+        _errorMessage = rides.isEmpty ? "Chưa có doanh thu nào!" : null;
         _isLoading = false;
       });
     } catch (e) {
@@ -53,8 +60,7 @@ class DailyRevenueSummaryState extends State<DailyRevenueSummary> {
 
   DateTime _parseDateTime(String dateTimeStr) {
     try {
-      DateFormat format = DateFormat('EEE, dd MMM yyyy HH:mm:ss zzz');
-      return format.parse(dateTimeStr);
+      return DateTime.parse(dateTimeStr);
     } catch (e) {
       throw FormatException("Invalid date format", dateTimeStr);
     }
@@ -69,7 +75,7 @@ class DailyRevenueSummaryState extends State<DailyRevenueSummary> {
             startTime.isBefore(dateRange.end);
       }).toList();
       if (_filteredRides.isEmpty) {
-        _errorMessage = "Không có doanh thu trong khoảng thời gian đã chọn";
+        _errorMessage = "Chưa có doanh thu nào!";
         _showErrorDialog();
       } else {
         _errorMessage = null;
@@ -83,7 +89,10 @@ class DailyRevenueSummaryState extends State<DailyRevenueSummary> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Thông báo'),
-          content: Text(_errorMessage!),
+          content: Text(
+            _errorMessage!,
+            style: TextStyle(color: Colors.red),
+          ),
           actions: <Widget>[
             TextButton(
               child: Text('OK'),
@@ -220,7 +229,7 @@ class DailyRevenueSummaryState extends State<DailyRevenueSummary> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    '${totalRevenue.toStringAsFixed(2)} \$',
+                    formatCurrency(totalRevenue),
                     style: TextStyle(
                       fontSize: 24,
                       color: Colors.white,
@@ -257,7 +266,7 @@ class DailyRevenueSummaryState extends State<DailyRevenueSummary> {
                               ),
                             ),
                             subtitle: Text(
-                              'Doanh thu: ${ride.price.toStringAsFixed(2)} \$',
+                              "Doanh thu: ${formatCurrency(totalRevenue)}",
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black54,

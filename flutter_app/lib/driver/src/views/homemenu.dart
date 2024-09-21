@@ -8,6 +8,7 @@ import '../models/driver.dart';
 import '../viewmodels/driver_viewmodel.dart';
 import 'driver_infor.dart';
 import 'ride_history.dart';
+import 'package:intl/intl.dart';
 
 class HomeMenu extends StatefulWidget {
   final Driver driver;
@@ -21,6 +22,12 @@ class HomeMenu extends StatefulWidget {
 class _HomeMenuState extends State<HomeMenu> {
   List<CabRide> _cabRides = [];
   String? _errorMes;
+
+  String formatCurrency(double price) {
+    final NumberFormat formatter =
+        NumberFormat.currency(locale: 'vi_VN', symbol: 'VNĐ');
+    return formatter.format(price);
+  }
 
   @override
   void initState() {
@@ -58,7 +65,7 @@ class _HomeMenuState extends State<HomeMenu> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Text(
-                              ' ${widget.driver.lastname} ${widget.driver.firstname}',
+                              '${widget.driver.lastname} ${widget.driver.firstname} ',
                               style:
                                   TextStyle(fontSize: 18, color: Colors.white),
                             ),
@@ -262,15 +269,15 @@ class _HomeMenuState extends State<HomeMenu> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              widget.driver.Wallet.toStringAsFixed(2),
+                              formatCurrency(widget.driver.Wallet),
                               style: TextStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
                             ),
-                            Icon(Icons.monetization_on,
-                                size: 40, color: Colors.green),
+                            // Icon(Icons.monetization_on,
+                            //     size: 40, color: Colors.green),
                           ],
                         ),
                       ],
@@ -289,6 +296,7 @@ class _HomeMenuState extends State<HomeMenu> {
     CabRideInfoService cabRides = CabRideInfoService();
     try {
       List<CabRide> rides = await cabRides.getCabRide(widget.driver.Driver_ID);
+      print('Received rides: $rides'); // In ra để kiểm tra dữ liệu nhận được
       setState(() {
         _cabRides = rides;
         _errorMes = rides.isEmpty ? "Không có dữ liệu chuyến đi" : null;
@@ -302,7 +310,16 @@ class _HomeMenuState extends State<HomeMenu> {
   }
 
   void totalPrice() {
+    // double totalPrice = _cabRides.fold(0.0, (sum, ride) {
+    //   // In ra giá trị của ride.price để kiểm tra
+    //   print('Price of ride: ${ride.price}');
+    //   return sum + ride.price;
+    // });
+    // setState(() {
+    //   widget.driver.Wallet = totalPrice;
+    // });
     double totalPrice = _cabRides.fold(0, (sum, ride) => sum + ride.price);
+    print('Total Price: $totalPrice');
     setState(() {
       if (_errorMes == null) {
         widget.driver.Wallet = double.parse(totalPrice.toStringAsFixed(2));

@@ -73,6 +73,14 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void zoomIn() {
+    _mapController.move(_mapController.center, _mapController.zoom + 1);
+  }
+
+  void zoomOut() {
+    _mapController.move(_mapController.center, _mapController.zoom - 1);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -132,6 +140,27 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.black,
                   size: 25,
                 ),
+              ),
+            ),
+            Positioned(
+              bottom: 120,
+              right: 16,
+              child: Column(
+                children: [
+                  FloatingActionButton(
+                    heroTag: 'zoomIn', // Thêm heroTag để tránh xung đột
+                    onPressed: zoomIn,
+                    mini: true,
+                    child: Icon(Icons.zoom_in),
+                  ),
+                  SizedBox(height: 8),
+                  FloatingActionButton(
+                    heroTag: 'zoomOut', // Thêm heroTag để tránh xung đột
+                    onPressed: zoomOut,
+                    mini: true,
+                    child: Icon(Icons.zoom_out),
+                  ),
+                ],
               ),
             ),
             Positioned(

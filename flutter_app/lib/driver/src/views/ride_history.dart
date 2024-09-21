@@ -27,14 +27,23 @@ class RideHistoryPageState extends State<RideHistoryPage> {
     fetchCabRides();
   }
 
+  String formatCurrency(double price) {
+    final NumberFormat formatter =
+        NumberFormat.currency(locale: 'vi_VN', symbol: 'đ');
+    return formatter.format(price);
+  }
+
   Future<void> fetchCabRides() async {
     CabRideInfoService cabRideService = CabRideInfoService();
     try {
       List<CabRide> rides = await cabRideService.getCabRide(widget.driverId);
+      for (var ride in rides) {
+        print('Fetched ride price: ${ride.price}');
+      }
       setState(() {
         _cabRides = rides;
         _filteredRides = rides;
-        _errorMessage = rides.isEmpty ? "Không có dữ liệu chuyến đi" : null;
+        _errorMessage = rides.isEmpty ? "Chưa có chuyến đi nào" : null;
         _isLoading = false;
       });
     } catch (e) {
@@ -49,8 +58,7 @@ class RideHistoryPageState extends State<RideHistoryPage> {
     setState(() {
       _selectedDateRange = dateRange;
       _filteredRides = _cabRides.where((ride) {
-        DateTime startTime = DateFormat('EEE, dd MMM yyyy HH:mm:ss zzz')
-            .parse(ride.ride_start_time);
+        DateTime startTime = DateTime.parse(ride.ride_start_time);
         return startTime.isAfter(dateRange.start) &&
             startTime.isBefore(dateRange.end);
       }).toList();
@@ -139,8 +147,7 @@ class RideHistoryPageState extends State<RideHistoryPage> {
                         itemBuilder: (context, index) {
                           CabRide ride = _filteredRides[index];
                           DateTime startTime =
-                              DateFormat('EEE, dd MMM yyyy HH:mm:ss zzz')
-                                  .parse(ride.ride_start_time);
+                              DateTime.parse(ride.ride_start_time);
                           String formattedDate =
                               DateFormat('dd/MM/yyyy HH:mm:ss')
                                   .format(startTime);
@@ -167,7 +174,8 @@ class RideHistoryPageState extends State<RideHistoryPage> {
                                       buildInfoRow('Điểm đến:',
                                           '${ride.address_destination}',
                                           multiline: true),
-                                      buildInfoRow('Giá:', '${ride.price} \$'),
+                                      buildInfoRow('Giá:',
+                                          '${formatCurrency(ride.price)}'),
                                       buildInfoRow(
                                           'Đánh giá:', '${ride.evaluate}',
                                           multiline: true),
