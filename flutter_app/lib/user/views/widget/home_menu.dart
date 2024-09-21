@@ -1,12 +1,10 @@
-// ignore_for_file: library_private_types_in_public_api
-
-import "package:flutter/material.dart";
-import "package:flutter_app/user/viewmodels/user_view_model.dart";
-import "package:flutter_app/user/views/page/update_user_page.dart";
-import "package:provider/provider.dart";
-import "../../../common/views/login_page.dart";
-import "../../models/user.dart";
-
+import 'package:flutter/material.dart';
+import 'package:flutter_app/user/viewmodels/user_view_model.dart';
+import 'package:flutter_app/user/views/page/update_user_page.dart';
+import 'package:provider/provider.dart';
+import '../../../common/views/login_page.dart';
+import '../../models/user.dart';
+import '../page/ride_history_page.dart';
 
 class HomeMenu extends StatefulWidget {
   final User user;
@@ -19,70 +17,85 @@ class HomeMenu extends StatefulWidget {
 class _HomeMenuState extends State<HomeMenu> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ChangeNotifierProvider(
-                  create: (context) => UserViewModel(),
-                  child: UpdateUserPage(user: widget.user),
-                ),
-              )
-            );
-          },
-          child: ListTile(
-            leading: Image.asset("assets/user/userlogin.png"),
-            title: Text(
-              "My profile",
-              style: TextStyle(fontSize: 18, color: Color(0xff323643)),
+    return Drawer(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(30.0),
+            bottomRight: Radius.circular(30.0),
+          ),
+        ),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            buildMenuItem(
+              icon: "assets/user/userlogin.png",
+              text: "My profile",
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ChangeNotifierProvider(
+                      create: (context) => UserViewModel(),
+                      child: UpdateUserPage(user: widget.user),
+                    ),
+                  ),
+                );
+              },
             ),
-          ),
+            buildMenuItem(
+              icon: "assets/user/refresh-ccw.png",
+              text: "Ride History",
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => RideHistoryPage(
+                        userID: widget.user.User_ID),
+                  ),
+                );
+              },
+            ),
+            buildMenuItem(
+              icon: "assets/user/percent.png",
+              text: "Offers",
+              onTap: () {},
+            ),
+            buildMenuItem(
+              icon: "assets/user/whitebell.png",
+              text: "Notifications",
+              onTap: () {},
+            ),
+            buildMenuItem(
+              icon: "assets/user/help-circle.png",
+              text: "Help & support",
+              onTap: () {},
+            ),
+            buildMenuItem(
+              icon: "assets/user/log-out.png",
+              text: "Log out",
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+            ),
+          ],
         ),
-        ListTile(
-          leading: Image.asset("assets/user/refresh-ccw.png"),
-          title: Text(
-            "Ride History",
-            style: TextStyle(fontSize: 18, color: Color(0xff323643)),
-          )
-        ),
-        ListTile(
-          leading: Image.asset("assets/user/percent.png"),
-          title: Text(
-            "Offers",
-            style: TextStyle(fontSize: 18, color: Color(0xff323643)),
-          )
-        ),
-        ListTile(
-          leading: Image.asset("assets/user/whitebell.png"),
-          title: Text(
-            "Notifications",
-            style: TextStyle(fontSize: 18, color: Color(0xff323643)),
-          )
-        ),
-        ListTile(
-          leading: Image.asset("assets/user/help-circle.png"),
-          title: Text(
-            "Help & support",
-            style: TextStyle(fontSize: 18, color: Color(0xff323643)),
-          )
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => LoginPage())
-            );
-          },
-          child: ListTile(
-            leading: Image.asset("assets/user/log-out.png"),
-            title: Text(
-              "Log out",
-              style: TextStyle(fontSize: 18, color: Color(0xff323643)),
-            )
-          ),
-        )
-      ],
+      ),
+    );
+  }
+
+  Widget buildMenuItem({required String icon, required String text, required VoidCallback onTap}) {
+    return ListTile(
+      leading: Image.asset(
+        icon,
+        color: Colors.teal, // Chuyển đổi màu của icon thành màu xanh lá cây
+      ),
+      title: Text(
+        text,
+        style: TextStyle(fontSize: 18, color: Color(0xff323643)),
+      ),
+      onTap: onTap,
     );
   }
 }

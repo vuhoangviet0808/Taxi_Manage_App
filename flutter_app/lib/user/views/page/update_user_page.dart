@@ -21,31 +21,32 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
   late TextEditingController _genderController;
   late TextEditingController _addressController;
   late TextEditingController _cccdController;
-  
 
-   @override
+  @override
   void initState() {
     super.initState();
     _firstNameController = TextEditingController(text: widget.user.firstname);
     _lastNameController = TextEditingController(text: widget.user.lastname);
     _dobController = TextEditingController(text: _formatDate(widget.user.DOB));
-    _genderController = TextEditingController(text: widget.user.gender);
+    _genderController = TextEditingController(text: widget.user.Gender);
     _cccdController = TextEditingController(text: widget.user.CCCD);
     _addressController = TextEditingController(text: widget.user.Address);
   }
-  String _formatDate(String date){
-    try{
+
+  String _formatDate(String date) {
+    try {
       final DateTime dateTime = DateTime.parse(date);
       final DateFormat formatter = DateFormat('yyyy-MM-dd');
       return formatter.format(dateTime);
-    } catch (e){
-      final DateTime dateTime = 
-        DateFormat('EEE, dd MMM yyyy HH:mm:ss').parse(date, true).toLocal();
+    } catch (e) {
+      final DateTime dateTime =
+          DateFormat('EEE, dd MMM yyyy HH:mm:ss').parse(date, true).toLocal();
       final DateFormat formatter = DateFormat('yyyy-MM-dd');
       return formatter.format(dateTime);
     }
   }
-   @override
+
+  @override
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
@@ -53,12 +54,21 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
     _genderController.dispose();
     _addressController.dispose();
     _cccdController.dispose();
-
     super.dispose();
   }
+
+  // Hàm kiểm tra hợp lệ cho giới tính
+  String? _validateGender(String? value) {
+    List<String> validGenders = ['Nam', 'Nữ'];
+    if (value == null || !validGenders.contains(value.trim())) {
+      return 'Giới tính không hợp lệ. Vui lòng nhập "Nam" hoặc "Nữ".';
+    }
+    return null; // Không có lỗi
+  }
+
   @override
   Widget build(BuildContext context) {
-     final userViewModel = Provider.of<UserViewModel>(context);
+    final userViewModel = Provider.of<UserViewModel>(context);
 
     return Scaffold(
       body: SafeArea(
@@ -75,9 +85,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                     centerTitle: true,
                     title: Text(
                       "User information",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     actions: [
                       TextButton(
@@ -86,35 +94,34 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                           style: TextStyle(fontSize: 14),
                         ),
                         onPressed: () {
-                          if(_formKey.currentState!.validate()){
-                             var updateUser = User(
-                                User_ID: widget.user.User_ID,
-                                firstname: _firstNameController.text,
-                                lastname: _lastNameController.text,
-                                SDT: widget.user.SDT,
-                                Wallet: widget.user.Wallet,
-                                DOB: _dobController.text,
-                                gender: _genderController.text,
-                                Address: _addressController.text,
-                                CCCD: _cccdController.text,
-                                );
-                                
-                               userViewModel
-                                .updateUSerInfo(updateUser)
-                                .then((_) {
+                          if (_formKey.currentState!.validate()) {
+                            var updateUser = User(
+                              User_ID: widget.user.User_ID,
+                              firstname: _firstNameController.text,
+                              lastname: _lastNameController.text,
+                              SDT: widget.user.SDT,
+                              Wallet: widget.user.Wallet,
+                              DOB: _dobController.text,
+                              Gender: _genderController.text,
+                              Address: _addressController.text,
+                              CCCD: _cccdController.text,
+                              user_token: widget.user.user_token, // Giữ nguyên giá trị user_token
+                            );
+
+                            userViewModel.updateUSerInfo(updateUser).then((_) {
                               setState(() {
-                                widget.user.firstname =_firstNameController.text;
-                                widget.user.lastname =_lastNameController.text;
+                                widget.user.firstname = _firstNameController.text;
+                                widget.user.lastname = _lastNameController.text;
                                 widget.user.DOB = _dobController.text;
-                                widget.user.gender = _genderController.text;
+                                widget.user.Gender = _genderController.text;
                                 widget.user.CCCD = _cccdController.text;
                                 widget.user.Address = _addressController.text;
+                                // Không thay đổi user_token vì không hiển thị trong form
                               });
 
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(
-                                      'Thông tin user đã được cập nhật!'),
+                                  content: Text('Thông tin user đã được cập nhật!'),
                                   duration: Duration(seconds: 2),
                                 ),
                               );
@@ -125,7 +132,7 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top:60),
+                    padding: EdgeInsets.only(top: 60),
                     child: Row(children: <Widget>[
                       SizedBox(
                         width: 205,
@@ -134,21 +141,24 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                           controller: _firstNameController,
                           decoration: InputDecoration(
                             labelText: "First name",
-                            labelStyle: 
-                              TextStyle(color: Colors.black, fontSize: 16),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                  color: Colors.white, width: 0.5))),
+                            labelStyle: TextStyle(color: Colors.black, fontSize: 16),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.teal),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.teal),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.teal, width: 0.5),
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -157,24 +167,27 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                         child: TextFormField(
                           controller: _lastNameController,
                           decoration: InputDecoration(
-                             labelText: "Last Name",
-                             labelStyle: 
-                             TextStyle(color: Colors.black, fontSize: 16),
-                             focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                               focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                  color: Colors.white, width: 0.5 ))),
+                            labelText: "Last Name",
+                            labelStyle: TextStyle(color: Colors.black, fontSize: 16),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.teal),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.teal),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.teal, width: 0.5),
+                            ),
+                          ),
                         ),
-                      )
+                      ),
                     ]),
                   ),
                   Padding(
@@ -182,22 +195,25 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                     child: TextFormField(
                       decoration: InputDecoration(
                         labelText: "SDT:${widget.user.SDT}",
-                        hintText: "Khong the thay doi SDT",
-                         labelStyle:
-                            TextStyle(color: Colors.black, fontSize: 16),
-                             focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                            enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                            focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red),
-                          ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide: 
-                                BorderSide(color: Colors.white,width: 0.5))),
+                        hintText: "Không thể thay đổi SDT",
+                        labelStyle: TextStyle(color: Colors.black, fontSize: 16),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                          borderSide: BorderSide(color: Colors.teal),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                          borderSide: BorderSide(color: Colors.teal),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                          borderSide: BorderSide(color: Colors.teal, width: 0.5),
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
@@ -205,23 +221,26 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                     child: TextFormField(
                       controller: _dobController,
                       decoration: InputDecoration(
-                          labelText: "DOB",
-                          labelStyle:
-                              TextStyle(color: Colors.black, fontSize: 16),
-                          hintText: "YYYY-MM-DD",
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red),
-                          ),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 0.5))),
+                        labelText: "DOB",
+                        labelStyle: TextStyle(color: Colors.black, fontSize: 16),
+                        hintText: "YYYY-MM-DD",
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                          borderSide: BorderSide(color: Colors.teal),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                          borderSide: BorderSide(color: Colors.teal),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                          borderSide: BorderSide(color: Colors.teal, width: 0.5),
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
@@ -232,24 +251,28 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                         height: 60,
                         child: TextFormField(
                           controller: _genderController,
+                          validator: _validateGender, // Thêm kiểm tra hợp lệ cho Gender
                           decoration: InputDecoration(
                             labelText: "Sex",
-                            labelStyle: 
-                              TextStyle(color: Colors.black, fontSize: 16),
-                              hintText: "Nam/Nữ",
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                  color: Colors.white, width: 0.5))),
+                            labelStyle: TextStyle(color: Colors.black, fontSize: 16),
+                            hintText: "Nam/Nữ",
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.teal),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.teal),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.teal, width: 0.5),
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(
@@ -259,21 +282,24 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                           controller: _cccdController,
                           decoration: InputDecoration(
                             labelText: 'CCCD',
-                            labelStyle: 
-                              TextStyle(color: Colors.black, fontSize: 16),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                                borderSide: BorderSide(
-                                  color: Colors.white, width: 0.5))),
+                            labelStyle: TextStyle(color: Colors.black, fontSize: 16),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.teal),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.teal),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                              borderSide: BorderSide(color: Colors.teal, width: 0.5),
+                            ),
+                          ),
                         ),
                       )
                     ]),
@@ -284,30 +310,25 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
                       controller: _addressController,
                       decoration: InputDecoration(
                         labelText: "Address",
-                          labelStyle:
-                              TextStyle(color: Colors.black, fontSize: 16),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            borderSide: 
-                              BorderSide(color: Colors.white, width: 0.5))),
+                        labelStyle: TextStyle(color: Colors.black, fontSize: 16),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                          borderSide: BorderSide(color: Colors.teal),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                           borderRadius: BorderRadius.circular(15), // Bo tròn góc
+                           borderSide: BorderSide(color: Colors.teal),
+                        ),
+                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
-          )
+          ),
         ),
       ),
     );
   }
-  
 }
+
