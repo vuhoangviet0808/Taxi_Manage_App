@@ -26,6 +26,7 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Doanh thu tài xế ${widget.driverId}'),
+        backgroundColor: Colors.teal,
       ),
       body: ListView(
         children: [
@@ -49,8 +50,18 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
                         labelText: startDate != null
                             ? DateFormat('dd-MM-yyyy').format(startDate!)
                             : 'Ngày bắt đầu',
-                        prefixIcon: Icon(Icons.calendar_today),
-                        border: OutlineInputBorder(),
+                        prefixIcon:
+                            Icon(Icons.calendar_today, color: Colors.teal),
+                        filled: true,
+                        fillColor: Colors.teal.withOpacity(0.1),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide(color: Colors.teal),
+                        ),
                       ),
                     ),
                   ),
@@ -71,19 +82,34 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
                         labelText: endDate != null
                             ? DateFormat('dd-MM-yyyy').format(endDate!)
                             : 'Ngày kết thúc',
-                        prefixIcon: Icon(Icons.calendar_today),
-                        border: OutlineInputBorder(),
+                        prefixIcon:
+                            Icon(Icons.calendar_today, color: Colors.teal),
+                        filled: true,
+                        fillColor: Colors.teal.withOpacity(0.1),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide(color: Colors.teal),
+                        ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
                   onPressed: () {
                     if (startDate != null && endDate != null) {
                       _fetchDriverRevenue();
                     } else {
-                      // Show error message
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
@@ -92,7 +118,10 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
                       );
                     }
                   },
-                  child: Text('Xem báo cáo'),
+                  child: Text(
+                    'Xem báo cáo',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),
@@ -104,13 +133,20 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
               children: [
                 ListView.builder(
                   shrinkWrap: true,
-                  physics: AlwaysScrollableScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),
                   itemCount: revenueData.length,
                   itemBuilder: (context, index) {
                     final revenueItem = revenueData[index];
-                    return ListTile(
-                      title: Text(revenueItem['period']),
-                      subtitle: Text('Doanh thu: ${revenueItem['revenue']}'),
+                    return Card(
+                      elevation: 4,
+                      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ListTile(
+                        title: Text(revenueItem['period']),
+                        subtitle: Text('Doanh thu: ${revenueItem['revenue']}'),
+                      ),
                     );
                   },
                 ),
@@ -169,7 +205,7 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
                               y: revenueData[revenueData.length - 1 - index]
                                       ['revenue']
                                   .toDouble(),
-                              colors: [Colors.blue],
+                              colors: [Colors.teal],
                               width: 16,
                             ),
                           ],

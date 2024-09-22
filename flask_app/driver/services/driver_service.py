@@ -1,5 +1,6 @@
+import logging
 from shared.services.database_service import db
-from ..models.driver import CarModel, Driver, Shift, cabModel
+from ..models.driver import CarModel, Driver, Shift, cabModel, CabRide
 
 class DriverService():
     def get_driver_by_phone(self, phone):
@@ -21,11 +22,11 @@ class DriverService():
         try:
             cursor.execute("""
                 UPDATE driver SET
-                Firstname = %s, Lastname = %s, DOB = %s, Gender = %s, Address = %s, 
+                Firstname = %s, Lastname = %s, Wallet = %s, DOB = %s, Gender = %s, Address = %s, 
                 CCCD = %s, Driving_licence_number = %s, Working_experiment = %s
                 WHERE Driver_ID = %s
             """, (
-                driver.firstname, driver.lastname, driver.dob, 
+                driver.firstname, driver.lastname, driver.wallet, driver.dob, 
                 driver.gender, driver.address, driver.cccd, 
                 driver.driving_license, driver.working_experiment, driver.driver_id
             ))
@@ -71,6 +72,27 @@ class DriverService():
             return [cabModel.from_dict(row) for row in result]
         except Exception as e:
             print("Error: ", e)
+            return None
+        finally:
+            cursor.close()
+    def get_cab_ride(self, driver_id):
+        shifts = self.get_shift(driver_id)
+        if not shifts:
+            return None
+    
+        shift_ids = [shift.id for shift in shifts]
+        if not shift_ids:
+            return None
+        
+        format_strings = ','.join(['%s'] * len(shift_ids))
+        query = f"SELECT * FROM cab_ride WHERE shift_id IN ({format_strings})"
+        cursor = db.cursor(dictionary=True)
+        try:
+            cursor.execute(query, tuple(shift_ids))
+            result = cursor.fetchall()
+            return [CabRide.from_dict(row) for row in result]
+        except Exception as e:
+            logging.error(f"Error retrieving cab rides: {e}")
             return None
         finally:
             cursor.close()

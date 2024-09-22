@@ -11,9 +11,11 @@ class DriverRevenueReportScreenView extends StatefulWidget {
   final List<Driver> drivers;
   final AdminDashboardViewModel viewModel;
 
-  const DriverRevenueReportScreenView(
-      {Key? key, required this.drivers, required this.viewModel})
-      : super(key: key);
+  const DriverRevenueReportScreenView({
+    Key? key,
+    required this.drivers,
+    required this.viewModel,
+  }) : super(key: key);
 
   @override
   _DriverRevenueReportScreenViewState createState() =>
@@ -41,193 +43,260 @@ class _DriverRevenueReportScreenViewState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin tài xế'),
+        title: Text('Thông tin doanh thu tài xế',
+            style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.teal,
       ),
       body: Column(
         children: [
-          ExpansionTile(
-            title: Text("Tìm kiếm"),
-            leading: Icon(Icons.search),
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      idFilter = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo ID',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      nameFilter = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo tên',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () async {
-                    final pickedDate = await _selectDate(context, startDate);
-                    if (pickedDate != null) {
-                      setState(() {
-                        startDate = pickedDate;
-                      });
-                    }
-                  },
-                  child: AbsorbPointer(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: startDate != null
-                            ? DateFormat('dd-MM-yyyy').format(startDate!)
-                            : 'Ngày bắt đầu',
-                        prefixIcon: Icon(Icons.calendar_today),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () async {
-                    final pickedDate = await _selectDate(context, endDate);
-                    if (pickedDate != null) {
-                      setState(() {
-                        endDate = pickedDate;
-                      });
-                    }
-                  },
-                  child: AbsorbPointer(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: endDate != null
-                            ? DateFormat('dd-MM-yyyy').format(endDate!)
-                            : 'Ngày kết thúc',
-                        prefixIcon: Icon(Icons.calendar_today),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (startDate != null && endDate != null) {
-                    _fetchDriversRevenue();
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                            'Vui lòng chọn ngày bắt đầu và ngày kết thúc.'),
-                      ),
-                    );
-                  }
-                },
-                child: Text('Lọc theo doanh thu cao nhất'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    nameFilter = '';
-                    idFilter = '';
-                    startDate = null;
-                    endDate = null;
-                    sortedDrivers = [];
-                  });
-                },
-                child: Text('Reset'),
-              ),
-            ],
-          ),
+          _buildSearchSection(),
+          _buildDriverCount(
+              (sortedDrivers.isNotEmpty ? sortedDrivers : filteredDrivers)
+                  .length),
           if (isLoading) Center(child: CircularProgressIndicator()),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columnSpacing: MediaQuery.of(context).size.width - 200,
-                  columns: [
-                    DataColumn(
-                      label: Text(
-                        'ID',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
+          _buildDriverTable(
+              sortedDrivers.isNotEmpty ? sortedDrivers : filteredDrivers),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchSection() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.all(8.0),
+      child: ExpansionTile(
+        title: Text("Tìm kiếm"),
+        leading: Icon(Icons.search, color: Colors.teal),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildSoftSearchField(
+              label: 'Tìm kiếm theo ID',
+              onChanged: (value) {
+                setState(() {
+                  idFilter = value;
+                });
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildSoftSearchField(
+              label: 'Tìm kiếm theo tên',
+              onChanged: (value) {
+                setState(() {
+                  nameFilter = value;
+                });
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+              onTap: () async {
+                final pickedDate = await _selectDate(context, startDate);
+                if (pickedDate != null) {
+                  setState(() {
+                    startDate = pickedDate;
+                  });
+                }
+              },
+              child: AbsorbPointer(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: startDate != null
+                        ? DateFormat('dd-MM-yyyy').format(startDate!)
+                        : 'Ngày bắt đầu',
+                    prefixIcon: Icon(Icons.calendar_today, color: Colors.teal),
+                    filled: true,
+                    fillColor: Colors.teal.withOpacity(0.1),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide.none,
                     ),
-                    DataColumn(
-                      label: Text(
-                        'Họ tên',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(color: Colors.teal),
                     ),
-                  ],
-                  rows: (sortedDrivers.isNotEmpty
-                          ? sortedDrivers
-                          : filteredDrivers)
-                      .map((driver) {
-                    return DataRow(cells: [
-                      DataCell(
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.all(8),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      DriverRevenueDetailScreen(
-                                          driverId: driver.Driver_ID),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              driver.Driver_ID,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            "${driver.Firstname} ${driver.Lastname}",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ]);
-                  }).toList(),
+                  ),
                 ),
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+              onTap: () async {
+                final pickedDate = await _selectDate(context, endDate);
+                if (pickedDate != null) {
+                  setState(() {
+                    endDate = pickedDate;
+                  });
+                }
+              },
+              child: AbsorbPointer(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: endDate != null
+                        ? DateFormat('dd-MM-yyyy').format(endDate!)
+                        : 'Ngày kết thúc',
+                    prefixIcon: Icon(Icons.calendar_today, color: Colors.teal),
+                    filled: true,
+                    fillColor: Colors.teal.withOpacity(0.1),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(color: Colors.teal),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (startDate != null && endDate != null) {
+                _fetchDriversRevenue();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content:
+                        Text('Vui lòng chọn ngày bắt đầu và ngày kết thúc.'),
+                  ),
+                );
+              }
+            },
+            child: Text('Lọc theo doanh thu cao nhất',
+                style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.teal,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                nameFilter = '';
+                idFilter = '';
+                startDate = null;
+                endDate = null;
+                sortedDrivers = [];
+              });
+            },
+            child: Text('Reset', style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.teal,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSoftSearchField(
+      {required String label, required Function(String) onChanged}) {
+    return TextField(
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(Icons.search, color: Colors.teal),
+        filled: true,
+        fillColor: Colors.teal.withOpacity(0.1),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: Colors.teal),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDriverCount(int count) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Số lượng: $count',
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDriverTable(List<Driver> drivers) {
+    return Expanded(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columnSpacing: 140.0,
+            headingRowHeight: 56.0,
+            dataRowHeight: 56.0,
+            headingRowColor:
+                MaterialStateColor.resolveWith((states) => Colors.teal.shade50),
+            columns: [
+              DataColumn(
+                label: Text(
+                  'ID',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Họ tên',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+            ],
+            rows: drivers.map((driver) {
+              return DataRow(cells: [
+                DataCell(
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DriverRevenueDetailScreen(
+                              driverId: driver.Driver_ID),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      driver.Driver_ID,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        color: Colors.teal,
+                      ),
+                    ),
+                  ),
+                ),
+                DataCell(
+                  Text(
+                    "${driver.Firstname} ${driver.Lastname}",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ]);
+            }).toList(),
+          ),
+        ),
       ),
     );
   }

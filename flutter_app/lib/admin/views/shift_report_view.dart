@@ -33,123 +33,146 @@ class _ShiftReportScreenViewState extends State<ShiftReportScreenView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Báo cáo ca làm việc'),
+        title: Text('Thông tin ca làm việc',
+            style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.teal,
       ),
       body: Column(
         children: [
-          ExpansionTile(
-            title: Text("Tìm kiếm"),
-            leading: Icon(Icons.search),
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      idFilter = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo ID',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      startTimeFilter = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo thời gian bắt đầu',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-            ],
+          _buildSearchSection(),
+          _buildShiftCount(filteredShifts.length),
+          _buildShiftTable(filteredShifts),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchSection() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.all(8.0),
+      child: ExpansionTile(
+        title: Text("Tìm kiếm"),
+        leading: Icon(Icons.search, color: Colors.teal),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildSearchField(
+              label: 'Tìm kiếm theo ID',
+              onChanged: (value) {
+                setState(() {
+                  idFilter = value;
+                });
+              },
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Số lượng: ${filteredShifts.length}',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columns: [
-                    DataColumn(
-                      label: Text(
-                        'ID',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Thời gian bắt đầu',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                  rows: filteredShifts.map((shift) {
-                    return DataRow(cells: [
-                      DataCell(
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.all(8),
-                          child: GestureDetector(
-                            onTap: () {
-                              widget.viewModel
-                                  .fetchEachShift(context, shift.ID);
-                            },
-                            child: Text(
-                              shift.ID,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Container(
-                          alignment: Alignment.centerLeft, // Căn lề trái
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            shift.shift_start_time,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ]);
-                  }).toList(),
-                ),
-              ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildSearchField(
+              label: 'Tìm kiếm theo thời gian bắt đầu',
+              onChanged: (value) {
+                setState(() {
+                  startTimeFilter = value;
+                });
+              },
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSearchField(
+      {required String label, required Function(String) onChanged}) {
+    return TextField(
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(Icons.search, color: Colors.teal),
+        filled: true,
+        fillColor: Colors.teal.withOpacity(0.1),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: Colors.teal),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShiftCount(int count) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Số lượng: $count',
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildShiftTable(List<Shift> shifts) {
+    return Expanded(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columnSpacing: 24.0,
+            headingRowHeight: 56.0,
+            dataRowHeight: 56.0,
+            headingRowColor:
+                MaterialStateColor.resolveWith((states) => Colors.teal.shade50),
+            columns: [
+              DataColumn(
+                label: Text(
+                  'ID',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Thời gian bắt đầu',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+            ],
+            rows: shifts.map((shift) {
+              return DataRow(cells: [
+                DataCell(
+                  GestureDetector(
+                    onTap: () {
+                      widget.viewModel.fetchEachShift(context, shift.ID);
+                    },
+                    child: Text(
+                      shift.ID,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        color: Colors.teal,
+                      ),
+                    ),
+                  ),
+                ),
+                DataCell(
+                  Text(
+                    shift.shift_start_time,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ]);
+            }).toList(),
+          ),
+        ),
       ),
     );
   }
@@ -159,16 +182,17 @@ class ShiftDetailScreen extends StatelessWidget {
   final FullShift shift;
   final AdminDashboardViewModel driverViewModel = AdminDashboardViewModel();
   final CabDashboardViewModel cabViewModel = CabDashboardViewModel();
+
   ShiftDetailScreen({Key? key, required this.shift}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final double fontSize = 16.0;
-    final double increasedFontSize = fontSize * 1;
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Thông tin chi tiết ca làm việc'),
+        backgroundColor: Colors.teal,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -176,179 +200,67 @@ class ShiftDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'ID ca làm việc: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${shift.ID}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDetailText('ID ca làm việc: ', shift.ID),
             SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'ID tài xế: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  WidgetSpan(
-                    child: GestureDetector(
-                      onTap: () {
-                        driverViewModel.fetchEachDriver(
-                            context, shift.Driver_id);
-                      },
-                      child: Text(
-                        '${shift.Driver_id}',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: increasedFontSize,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Add more fields as needed
+            _buildDetailText('ID tài xế: ', shift.Driver_id, isLink: true,
+                onTap: () {
+              driverViewModel.fetchEachDriver(context, shift.Driver_id);
+            }),
             SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'ID xe: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  WidgetSpan(
-                    child: GestureDetector(
-                      onTap: () {
-                        cabViewModel.fetchEachCab(context, shift.cab_id);
-                      },
-                      child: Text(
-                        '${shift.cab_id}',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: increasedFontSize,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDetailText('ID xe: ', shift.cab_id, isLink: true, onTap: () {
+              cabViewModel.fetchEachCab(context, shift.cab_id);
+            }),
             SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Thời gian ca làm việc bắt đầu: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${shift.shift_start_time}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDetailText(
+                'Thời gian ca làm việc bắt đầu: ', shift.shift_start_time),
             SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Thời gian ca làm việc kết thúc: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${shift.shift_end_time}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDetailText(
+                'Thời gian ca làm việc kết thúc: ', shift.shift_end_time),
             SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Thời gian đăng nhập ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${shift.login_time}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDetailText('Thời gian đăng nhập: ', shift.login_time),
             SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Thời gian đăng xuất ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${shift.logout_time}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDetailText('Thời gian đăng xuất: ', shift.logout_time),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDetailText(String label, String value,
+      {bool isLink = false, Function()? onTap}) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: label,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontSize: 16.0,
+            ),
+          ),
+          isLink
+              ? WidgetSpan(
+                  child: GestureDetector(
+                    onTap: onTap,
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 16.0,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                )
+              : TextSpan(
+                  text: value,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.0,
+                  ),
+                ),
+        ],
       ),
     );
   }

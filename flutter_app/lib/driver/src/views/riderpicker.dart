@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/driver/src/views/homepage.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
+import 'package:geolocator/geolocator.dart';
 import '../models/driver.dart';
 import '../viewmodels/create_marker.dart';
+import 'homepage.dart';
 
 class RiderPicker extends StatefulWidget {
   final Driver driver;
   RiderPicker({required this.driver});
+
   @override
   State<RiderPicker> createState() => _RiderPickerState();
 }

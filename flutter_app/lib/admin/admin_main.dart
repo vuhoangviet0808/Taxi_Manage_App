@@ -12,7 +12,7 @@ class AdminPage extends StatelessWidget {
     final adminDashboardViewModel = AdminDashboardViewModel();
     final cabRideDashboardViewModel = CabRideDashboardViewModel();
     final userDashboardViewModel = UserDashboardViewModel();
-    final shiftDashboardViewModel = ShiftDashboardViewModel();
+    //final shiftDashboardViewModel = ShiftDashboardViewModel();
     final cabDashboardViewModel = CabDashboardViewModel();
 
     return MaterialApp(
@@ -26,7 +26,7 @@ class AdminPage extends StatelessWidget {
               viewModel: adminDashboardViewModel,
               CabRideViewModel: cabRideDashboardViewModel,
               UserViewModel: userDashboardViewModel,
-              ShiftViewModel: shiftDashboardViewModel,
+              //ShiftViewModel: shiftDashboardViewModel,
               CabViewModel: cabDashboardViewModel,
             ),
       },

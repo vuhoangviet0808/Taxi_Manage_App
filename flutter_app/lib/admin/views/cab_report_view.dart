@@ -31,123 +31,149 @@ class _CabReportScreenViewState extends State<CabReportScreenView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin xe'),
+        title: Text('Thông tin xe', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.teal,
       ),
       body: Column(
         children: [
-          ExpansionTile(
-            title: Text("Tìm kiếm"),
-            leading: Icon(Icons.search),
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      idFilter = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo ID',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      licencePlateFilter = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo biển số xe',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-            ],
+          _buildSearchSection(),
+          _buildCabCount(filteredCabs.length),
+          _buildCabTable(filteredCabs),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchSection() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.all(8.0),
+      child: ExpansionTile(
+        title: Text("Tìm kiếm"),
+        leading: Icon(Icons.search, color: Colors.teal),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildSearchField(
+              label: 'Tìm kiếm theo ID',
+              onChanged: (value) {
+                setState(() {
+                  idFilter = value;
+                });
+              },
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Số lượng: ${filteredCabs.length}',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columnSpacing: MediaQuery.of(context).size.width - 200,
-                  columns: [
-                    DataColumn(
-                      label: Text(
-                        'ID',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Biển số xe',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                  rows: filteredCabs.map((cab) {
-                    return DataRow(cells: [
-                      DataCell(
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.all(8),
-                          child: GestureDetector(
-                            onTap: () {
-                              widget.viewModel.fetchEachCab(context, cab.ID);
-                            },
-                            child: Text(
-                              cab.ID,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            cab.licence_plate,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ]);
-                  }).toList(),
-                ),
-              ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildSearchField(
+              label: 'Tìm kiếm theo biển số xe',
+              onChanged: (value) {
+                setState(() {
+                  licencePlateFilter = value;
+                });
+              },
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSearchField(
+      {required String label, required Function(String) onChanged}) {
+    return TextField(
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(Icons.search, color: Colors.teal),
+        filled: true,
+        fillColor: Colors.teal.withOpacity(0.1),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: Colors.teal),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCabCount(int count) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Số lượng: $count',
+            style: TextStyle(fontSize: 20, color: Colors.teal),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCabTable(List<Cab> cabs) {
+    return Expanded(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columnSpacing: 175.0, // Tăng khoảng cách giữa các cột
+            headingRowHeight: 56.0, // Tăng chiều cao hàng tiêu đề
+            dataRowHeight: 56.0, // Tăng chiều cao hàng dữ liệu
+            headingRowColor:
+                MaterialStateColor.resolveWith((states) => Colors.teal.shade50),
+            columns: [
+              DataColumn(
+                label: Text(
+                  'ID',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  textAlign: TextAlign.left, // Align to the left
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Biển số xe',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  textAlign: TextAlign.right, // Align to the right
+                ),
+              ),
+            ],
+            rows: cabs.map((cab) {
+              return DataRow(cells: [
+                DataCell(
+                  GestureDetector(
+                    onTap: () {
+                      widget.viewModel.fetchEachCab(context, cab.ID);
+                    },
+                    child: Text(
+                      cab.ID,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        color: Colors.teal,
+                      ),
+                      textAlign: TextAlign.left, // Align to the left
+                    ),
+                  ),
+                ),
+                DataCell(
+                  Text(
+                    cab.licence_plate,
+                    style: TextStyle(fontSize: 18),
+                    textAlign: TextAlign.right, // Align to the right
+                  ),
+                ),
+              ]);
+            }).toList(),
+          ),
+        ),
       ),
     );
   }
@@ -155,8 +181,9 @@ class _CabReportScreenViewState extends State<CabReportScreenView> {
 
 class CabDetailScreen extends StatelessWidget {
   final FullCab cab;
+  final CabDashboardViewModel cabViewModel = CabDashboardViewModel();
 
-  const CabDetailScreen({Key? key, required this.cab}) : super(key: key);
+  CabDetailScreen({Key? key, required this.cab}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -165,6 +192,7 @@ class CabDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Thông tin chi tiết xe'),
+        backgroundColor: Colors.teal,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
@@ -172,161 +200,45 @@ class CabDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'ID xe: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${cab.ID}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDetailText('ID xe: ', cab.ID),
             SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Biển số xe: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${cab.licence_plate}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDetailText('Biển số xe: ', cab.licence_plate),
             SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'ID model xe: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${cab.car_model_id}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDetailText('ID model xe: ', cab.car_model_id),
             SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Năm sản xuất: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${cab.manufacture_year}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDetailText('Năm sản xuất: ', cab.manufacture_year.toString()),
             SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Hoạt động: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${cab.active}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDetailText('Hoạt động: ', cab.active.toString()),
             SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Tên model: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${cab.model_name}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDetailText('Tên model: ', cab.model_name),
             SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Mô tả model: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${cab.model_description}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildDetailText('Mô tả model: ', cab.model_description),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDetailText(String label, String value) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: label,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontSize: 16.0,
+            ),
+          ),
+          TextSpan(
+            text: value,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 16.0,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,3 +1,4 @@
+"""
 from flask import jsonify, abort
 from ..services.shift_services import ShiftService
 
@@ -35,3 +36,25 @@ class ShiftController:
             return jsonify(shift_info), 200
         else:
             abort(404, description="No users found.")
+
+"""
+from flask import jsonify, abort
+from ..services.shift_services import ShiftService
+
+shift_service = ShiftService()
+
+class ShiftController:
+    def get_2_shift_info(self):
+        shifts = shift_service.get_shift_by_ID_and_current_gps_location()
+        if shifts:
+            shift_info = [shift.__dict__ for shift in shifts]  # Convert Shift objects to dictionaries
+            return jsonify(shift_info), 200
+        else:
+            abort(404, description="No shifts found.")
+
+    def get_full_shift_info(self, ID):
+        shift = shift_service.get_shift_by_all(ID)
+        if shift:
+            return jsonify(shift.__dict__), 200  # Convert Shift object to dictionary
+        else:
+            abort(404, description="No shift found with the given ID.")

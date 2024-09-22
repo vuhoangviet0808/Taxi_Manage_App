@@ -26,15 +26,16 @@ class FullDriver {
   final String Working_experiment;
 
   FullDriver(
-      this.Firstname,
-      this.Lastname,
-      this.Driver_ID,
-      this.SDT,
-      this.Wallet,
-      this.DOB,
-      this.Gender,
-      this.Address,
-      this.CCCD,
-      this.Driving_licence_number,
-      this.Working_experiment);
+    this.Firstname,
+    this.Lastname,
+    this.Driver_ID,
+    this.SDT,
+    this.Wallet,
+    this.DOB,
+    this.Gender,
+    this.Address,
+    this.CCCD,
+    this.Driving_licence_number,
+    this.Working_experiment,
+  );
 }
