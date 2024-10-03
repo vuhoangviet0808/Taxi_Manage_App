@@ -13,7 +13,7 @@ from ..controllers.company_revenue_controller import calculate_company_revenue
 from ..controllers.get_driver_by_revenue_controller import get_drivers_by_revenue_controller
 from ..controllers.find_driver_controllers import FindDriverController
 from ..controllers.insert_driver_controllers import InsertBookingDriverController
-
+from ..controllers.driver_booking_controllers import DriverBookingController
 
 admin_blueprint = Blueprint('admin', __name__)
 
@@ -141,3 +141,17 @@ def insert_drivers_for_booking(booking_id):
 def each_booking_request_by_id_info(booking_id):
     return BookingRequestController().get_full_booking_request_info(booking_id)
 
+
+@admin_blueprint.route('/driver_booking', methods=['GET'])
+def get_earliest_assigned_driver_bookings():
+    return DriverBookingController().get_earliest_assigned_driver_bookings()
+
+
+@admin_blueprint.route('/driver_booking/<int:booking_id>/<int:driver_id>', methods=['GET', 'POST'])
+def update_driver_id(booking_id, driver_id):
+    return DriverBookingController().insert_driver_id(booking_id, driver_id)
+
+
+@admin_blueprint.route('/driver_booking/delete/<int:booking_id>', methods=['GET','DELETE'])
+def delete_booking(booking_id):
+    return DriverBookingController().delete_booking_by_id(booking_id)
