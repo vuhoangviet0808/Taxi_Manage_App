@@ -25,7 +25,7 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Doanh thu tài xế ${widget.driverId}'),
+        title: Text('Detailed Revenue', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.teal,
       ),
       body: ListView(
@@ -49,7 +49,7 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
                       decoration: InputDecoration(
                         labelText: startDate != null
                             ? DateFormat('dd-MM-yyyy').format(startDate!)
-                            : 'Ngày bắt đầu',
+                            : 'Start Date',
                         prefixIcon:
                             Icon(Icons.calendar_today, color: Colors.teal),
                         filled: true,
@@ -81,7 +81,7 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
                       decoration: InputDecoration(
                         labelText: endDate != null
                             ? DateFormat('dd-MM-yyyy').format(endDate!)
-                            : 'Ngày kết thúc',
+                            : 'End Date',
                         prefixIcon:
                             Icon(Icons.calendar_today, color: Colors.teal),
                         filled: true,
@@ -103,7 +103,7 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   onPressed: () {
@@ -112,14 +112,13 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(
-                              'Vui lòng chọn ngày bắt đầu và ngày kết thúc.'),
+                          content: Text('Please enter Start Date and End Date'),
                         ),
                       );
                     }
                   },
                   child: Text(
-                    'Xem báo cáo',
+                    'View Report',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -145,7 +144,8 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
                       ),
                       child: ListTile(
                         title: Text(revenueItem['period']),
-                        subtitle: Text('Doanh thu: ${revenueItem['revenue']}'),
+                        subtitle:
+                            Text('Revenue: ${revenueItem['revenue']} VNĐ'),
                       ),
                     );
                   },
@@ -265,7 +265,7 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Đã xảy ra lỗi khi tải dữ liệu.'),
+          content: Text('Error occured'),
         ),
       );
     }

@@ -31,15 +31,23 @@ class _CabReportScreenViewState extends State<CabReportScreenView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin xe', style: TextStyle(color: Colors.white)),
+        title: Text('Cab Information', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.teal,
       ),
-      body: Column(
-        children: [
-          _buildSearchSection(),
-          _buildCabCount(filteredCabs.length),
-          _buildCabTable(filteredCabs),
-        ],
+      body: Container(
+        color: Color.fromARGB(255, 203, 235, 231), // Thêm màu nền ở đây
+        child: Column(
+          children: [
+            _buildSearchSection(),
+            _buildCabCount(filteredCabs.length),
+            Expanded(
+              child: Container(
+                color: Colors.white, // Màu nền trắng cho bảng thông tin
+                child: _buildCabTable(filteredCabs),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -50,13 +58,13 @@ class _CabReportScreenViewState extends State<CabReportScreenView> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: const EdgeInsets.all(8.0),
       child: ExpansionTile(
-        title: Text("Tìm kiếm"),
+        title: Text("Filter"),
         leading: Icon(Icons.search, color: Colors.teal),
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: _buildSearchField(
-              label: 'Tìm kiếm theo ID',
+              label: 'By ID',
               onChanged: (value) {
                 setState(() {
                   idFilter = value;
@@ -67,7 +75,7 @@ class _CabReportScreenViewState extends State<CabReportScreenView> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: _buildSearchField(
-              label: 'Tìm kiếm theo biển số xe',
+              label: 'By Plate',
               onChanged: (value) {
                 setState(() {
                   licencePlateFilter = value;
@@ -108,7 +116,7 @@ class _CabReportScreenViewState extends State<CabReportScreenView> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            'Số lượng: $count',
+            'Quantity: $count',
             style: TextStyle(fontSize: 20, color: Colors.teal),
           ),
         ),
@@ -126,8 +134,8 @@ class _CabReportScreenViewState extends State<CabReportScreenView> {
             columnSpacing: 175.0, // Tăng khoảng cách giữa các cột
             headingRowHeight: 56.0, // Tăng chiều cao hàng tiêu đề
             dataRowHeight: 56.0, // Tăng chiều cao hàng dữ liệu
-            headingRowColor:
-                MaterialStateColor.resolveWith((states) => Colors.teal.shade50),
+            headingRowColor: MaterialStateColor.resolveWith(
+                (states) => Colors.teal.shade100),
             columns: [
               DataColumn(
                 label: Text(
@@ -138,7 +146,7 @@ class _CabReportScreenViewState extends State<CabReportScreenView> {
               ),
               DataColumn(
                 label: Text(
-                  'Biển số xe',
+                  'Plate',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   textAlign: TextAlign.right, // Align to the right
                 ),
@@ -191,7 +199,7 @@ class CabDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin chi tiết xe'),
+        title: Text('Detail Information'),
         backgroundColor: Colors.teal,
       ),
       body: SingleChildScrollView(
@@ -200,19 +208,17 @@ class CabDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            _buildDetailText('ID xe: ', cab.ID),
+            _buildDetailText('ID: ', cab.ID),
             SizedBox(height: 8),
-            _buildDetailText('Biển số xe: ', cab.licence_plate),
+            _buildDetailText('Plate: ', cab.licence_plate),
             SizedBox(height: 8),
-            _buildDetailText('ID model xe: ', cab.car_model_id),
+            _buildDetailText('Car type: ', cab.car_type),
             SizedBox(height: 8),
-            _buildDetailText('Năm sản xuất: ', cab.manufacture_year.toString()),
+            _buildDetailText(
+                'Manufacture year: ', cab.manufacture_year.toString()),
             SizedBox(height: 8),
-            _buildDetailText('Hoạt động: ', cab.active.toString()),
+            _buildDetailText('Status: ', cab.active.toString()),
             SizedBox(height: 8),
-            _buildDetailText('Tên model: ', cab.model_name),
-            SizedBox(height: 8),
-            _buildDetailText('Mô tả model: ', cab.model_description),
           ],
         ),
       ),

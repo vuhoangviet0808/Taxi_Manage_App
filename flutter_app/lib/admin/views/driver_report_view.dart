@@ -32,15 +32,24 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin tài xế', style: TextStyle(color: Colors.white)),
+        title:
+            Text('Driver Information', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.teal,
       ),
-      body: Column(
-        children: [
-          _buildSearchSection(),
-          _buildDriverCount(filteredDrivers.length),
-          _buildDriverTable(filteredDrivers),
-        ],
+      body: Container(
+        color: Color.fromARGB(255, 203, 235, 231), // Thêm màu nền ở đây
+        child: Column(
+          children: [
+            _buildSearchSection(),
+            _buildDriverCount(filteredDrivers.length),
+            Expanded(
+              child: Container(
+                color: Colors.white, // Màu nền trắng cho bảng thông tin
+                child: _buildDriverTable(filteredDrivers),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -51,13 +60,13 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: const EdgeInsets.all(8.0),
       child: ExpansionTile(
-        title: Text("Tìm kiếm"),
+        title: Text("Filter"),
         leading: Icon(Icons.search, color: Colors.teal),
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: _buildSoftSearchField(
-              label: 'Tìm kiếm theo ID',
+              label: 'By ID',
               onChanged: (value) {
                 setState(() {
                   idFilter = value;
@@ -68,7 +77,7 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: _buildSoftSearchField(
-              label: 'Tìm kiếm theo tên',
+              label: 'By Name',
               onChanged: (value) {
                 setState(() {
                   nameFilter = value;
@@ -107,9 +116,9 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(15.0),
           child: Text(
-            'Số lượng: $count',
+            'Quantity: $count',
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -124,11 +133,11 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
-            columnSpacing: 24.0,
+            columnSpacing: 60.0,
             headingRowHeight: 56.0,
             dataRowHeight: 56.0,
-            headingRowColor:
-                MaterialStateColor.resolveWith((states) => Colors.teal.shade50),
+            headingRowColor: MaterialStateColor.resolveWith(
+                (states) => Colors.teal.shade100),
             columns: [
               DataColumn(
                 label: Text(
@@ -138,13 +147,13 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
               ),
               DataColumn(
                 label: Text(
-                  'Họ tên',
+                  'Name',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
               ),
               DataColumn(
                 label: Text(
-                  'Hình ảnh',
+                  'Avatar',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
               ),
@@ -179,7 +188,8 @@ class _DriverReportScreenViewState extends State<DriverReportScreenView> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       CircleAvatar(
-                        //backgroundImage: NetworkImage(driver.profileImageUrl ?? 'https://via.placeholder.com/150'),
+                        backgroundImage:
+                            AssetImage('assets/admin/adminDefault.jpg'),
                         radius: 20,
                       ),
                     ],
@@ -204,29 +214,81 @@ class DriverDetailScreen extends StatelessWidget {
     final double fontSize = 16.0;
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 203, 235, 231),
       appBar: AppBar(
-        title: Text('Thông tin chi tiết tài xế'),
+        title:
+            Text('Detailed Information', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.teal,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border:
+                          Border.all(color: Colors.black, width: 1), // Viền đen
+                    ),
+                    child: CircleAvatar(
+                      backgroundImage:
+                          AssetImage('assets/admin/adminDefault.jpg'),
+                      radius: 60,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    '${driver.Firstname} ${driver.Lastname}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 20),
-            _buildDetailRow('Họ và tên: ',
-                '${driver.Firstname} ${driver.Lastname}', fontSize),
-            _buildDetailRow('ID tài xế: ', driver.Driver_ID, fontSize),
-            _buildDetailRow('Số điện thoại: ', driver.SDT, fontSize),
-            _buildDetailRow('Ví: ', driver.Wallet, fontSize),
-            _buildDetailRow('Ngày sinh: ', driver.DOB, fontSize),
-            _buildDetailRow('Giới tính: ', driver.Gender, fontSize),
-            _buildDetailRow('Địa chỉ: ', driver.Address, fontSize),
-            _buildDetailRow('CCCD: ', driver.CCCD, fontSize),
-            _buildDetailRow(
-                'Số bằng lái: ', driver.Driving_licence_number, fontSize),
-            _buildDetailRow(
-                'Kinh nghiệm làm việc: ', driver.Working_experiment, fontSize),
+            // Bọc các trường thông tin từ ID trở xuống vào Container
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white, // Màu nền cho Container
+                borderRadius: BorderRadius.circular(10), // Bo góc
+              ),
+              padding: EdgeInsets.only(
+                  bottom: 10,
+                  top: 20,
+                  left: 30,
+                  right: 30), // Thêm padding cho Container
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDetailRow('ID: ', driver.Driver_ID, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Phone number: ', driver.SDT, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Wallet: ', driver.Wallet, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('DOB: ', driver.DOB, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Gender: ', driver.Gender, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Address: ', driver.Address, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Identity Card: ', driver.CCCD, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Driver license: ',
+                      driver.Driving_licence_number, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Working experience in years: ',
+                      driver.Working_experiment, fontSize),
+                ],
+              ),
+            ),
           ],
         ),
       ),

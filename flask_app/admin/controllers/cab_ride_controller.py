@@ -31,6 +31,7 @@ class Cab_rideController:
                 'GPS_starting_point': (cab_ride.get("lat_start"), cab_ride.get("lon_start")),
                 'address_destination': cab_ride.get("address_destination"),
                 'GPS_destination': (cab_ride.get("lat_dest"), cab_ride.get("lon_dest")),
+                'status': cab_ride.get("status"),
                 'cancelled_by': cab_ride.get("cancelled_by"),
                 'price': cab_ride.get("price"),
                 'response': cab_ride.get("response"),

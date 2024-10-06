@@ -9,7 +9,7 @@ class CabRideService:
             cursor.execute("""
                 SELECT ID, ride_start_time 
                 FROM cab_ride 
-                WHERE status != 'cancelled' 
+                WHERE status = 'completed' 
                 ORDER BY ride_start_time DESC
             """)
             result = cursor.fetchall()
@@ -29,9 +29,9 @@ class CabRideService:
             SELECT ID, shift_id, user_id, ride_start_time, ride_end_time, address_starting_point,
                    ST_X(GPS_starting_point) AS lat_start, ST_Y(GPS_starting_point) AS lon_start,
                    address_destination, ST_X(GPS_destination) AS lat_dest, ST_Y(GPS_destination) AS lon_dest,
-                   cancelled_by, price, response, evaluate
+                   status, cancelled_by, price, response, evaluate
             FROM cab_ride
-            WHERE ID = %s
+            WHERE ID = %s AND status ='completed'
         """
         cursor = db.cursor(dictionary=True)
         try:

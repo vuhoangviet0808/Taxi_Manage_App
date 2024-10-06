@@ -19,6 +19,7 @@ class BookingRequestService {
           bookingInfo.add(BookingRequest(
             bookingID,
             bookingData['pickup_location'].toString(),
+            bookingData['request_time'].toString(),
             bookingData['status'].toString(),
           ));
         } else {
@@ -81,6 +82,49 @@ class BookingRequestService {
     } else {
       throw Exception(
           'Failed to load booking request with ID: $bookingRequestID');
+    }
+  }
+
+  Future<int> fetchTotalBookingRequests() async {
+    final response = await http.get(
+      Uri.parse('http://10.0.2.2:5000/admin/booking_request/total'),
+    );
+
+    if (response.statusCode == 200) {
+      dynamic responseBody = json.decode(response.body);
+      if (responseBody['pending_booking_requests'] != null) {
+        return responseBody['pending_booking_requests'];
+      } else {
+        print('Invalid data received for total booking requests count.');
+        throw Exception(
+            'Invalid data received for total booking requests count');
+      }
+    } else {
+      print('Error fetching total booking requests: ${response.statusCode}');
+      throw Exception('Failed to fetch total booking requests');
+    }
+  }
+
+  // Method mới để lấy số lượng xe 4_seat và 6_seat
+  Future<Map<String, int>> fetchCarTypeCounts() async {
+    final response = await http.get(
+      Uri.parse('http://10.0.2.2:5000/admin/booking_request/car_type'),
+    );
+
+    if (response.statusCode == 200) {
+      dynamic responseBody = json.decode(response.body);
+      if (responseBody['4_seat'] != null && responseBody['6_seat'] != null) {
+        return {
+          '4_seat': responseBody['4_seat'],
+          '6_seat': responseBody['6_seat'],
+        };
+      } else {
+        print('Invalid data received for car type counts.');
+        throw Exception('Invalid data received for car type counts');
+      }
+    } else {
+      print('Error fetching car type counts: ${response.statusCode}');
+      throw Exception('Failed to fetch car type counts');
     }
   }
 }

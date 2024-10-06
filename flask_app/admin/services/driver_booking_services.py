@@ -33,6 +33,36 @@ class DriverBookingService:
             cursor.close()
 
 
+    def count_earliest_assigned_bookings(self):
+        query = """
+            SELECT COUNT(*) AS count
+            FROM booking_driver bd
+            JOIN (
+                SELECT booking_id, MIN(status_changed_at) AS earliest_status_changed_at
+                FROM booking_driver
+                WHERE status = 'assigned'
+                GROUP BY booking_id
+            ) earliest_bd
+            ON bd.booking_id = earliest_bd.booking_id
+            AND bd.status_changed_at = earliest_bd.earliest_status_changed_at
+            WHERE bd.status = 'assigned';
+        """
+        cursor = db.cursor(dictionary=True)
+        try:
+            cursor.execute(query)
+            result = cursor.fetchone()
+            if result:
+                return result['count']  # Trả về số lượng booking
+            else:
+                print("No results found.")
+                return 0
+        except Exception as e:
+            print("Error occurred:", e)
+            return 0
+        finally:
+            cursor.close()
+
+
     def insert_driver_id_into_booking_request(self, booking_id, driver_id):
             query = """
                 UPDATE booking_requests

@@ -132,3 +132,58 @@ END //
 DELIMITER ;
 SET SQL_SAFE_UPDATES = 0;
 CALL calculateDriverRevenue(1, '01-01-2024', '31-12-2024');
+
+-- -------------------------------------------------------Lọc tài xế theo doanh thu----------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE getDriversByRevenue(
+    IN start_date_str VARCHAR(10), -- Input start date as DD-MM-YYYY
+    IN end_date_str VARCHAR(10)    -- Input end date as DD-MM-YYYY
+)
+BEGIN
+    DECLARE start_date DATE;
+    DECLARE end_date DATE;
+
+    -- Convert string dates to DATE type
+    SET start_date = STR_TO_DATE(start_date_str, '%d-%m-%Y');
+    SET end_date = STR_TO_DATE(end_date_str, '%d-%m-%Y');
+
+    -- Create temporary table to hold revenue data
+    CREATE TEMPORARY TABLE IF NOT EXISTS temp_driver_revenue (
+        Driver_ID INT,
+        Firstname CHAR(255) CHARACTER SET UTF8MB4,
+        Lastname CHAR(255) CHARACTER SET UTF8MB4,
+        total_revenue DECIMAL(10, 2)
+    );
+
+    -- Clear old data in temporary table
+    DELETE FROM temp_driver_revenue;
+
+    -- Insert revenue data into temporary table
+    INSERT INTO temp_driver_revenue (Driver_ID, Firstname, Lastname, total_revenue)
+    SELECT 
+        d.Driver_ID,
+        d.Firstname,
+        d.Lastname,
+        SUM(cr.price) AS total_revenue
+    FROM Driver d
+    JOIN Shift s ON d.Driver_ID = s.Driver_id
+    JOIN cab_ride cr ON s.ID = cr.shift_id
+    WHERE cr.ride_start_time BETWEEN start_date AND end_date
+    GROUP BY d.Driver_ID
+    ORDER BY total_revenue DESC;
+
+    -- Select results from temporary table
+    SELECT 
+        Driver_ID,
+        Firstname,
+        Lastname,
+        total_revenue
+    FROM temp_driver_revenue
+    ORDER BY total_revenue DESC;
+
+    -- Drop temporary table after use
+    DROP TEMPORARY TABLE IF EXISTS temp_driver_revenue;
+END //
+
+DELIMITER ;

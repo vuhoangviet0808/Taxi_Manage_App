@@ -1,9 +1,11 @@
 class BookingRequest {
   final String booking_id;
   final String pickup_location;
+  final String request_time;
   final String status;
 
-  BookingRequest(this.booking_id, this.pickup_location, this.status);
+  BookingRequest(
+      this.booking_id, this.pickup_location, this.request_time, this.status);
 }
 
 class FullBookingRequest {

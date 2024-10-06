@@ -44,4 +44,26 @@ class DriverBookingService {
       throw Exception('Failed to delete booking');
     }
   }
+
+  // Lấy tổng số booking đã được phân công
+  Future<int> fetchTotalAssignedBookings() async {
+    final response = await http.get(
+      Uri.parse('http://10.0.2.2:5000/admin/driver_booking/total'),
+    );
+
+    if (response.statusCode == 200) {
+      dynamic responseBody = json.decode(response.body);
+
+      if (responseBody['earliest_assigned_bookings_count'] != null) {
+        return responseBody['earliest_assigned_bookings_count'];
+      } else {
+        print('Invalid data received for total assigned bookings count.');
+        throw Exception(
+            'Invalid data received for total assigned bookings count');
+      }
+    } else {
+      print('Error fetching total assigned bookings: ${response.statusCode}');
+      throw Exception('Failed to fetch total assigned bookings');
+    }
+  }
 }

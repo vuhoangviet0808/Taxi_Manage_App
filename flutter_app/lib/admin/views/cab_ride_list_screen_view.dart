@@ -32,15 +32,23 @@ class _CabRideListScreenState extends State<CabRideListScreen> {
     return Scaffold(
       appBar: AppBar(
         title:
-            Text('Thông tin chuyến đi', style: TextStyle(color: Colors.white)),
+            Text('Cab Ride Information', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.teal,
       ),
-      body: Column(
-        children: [
-          _buildSearchSection(),
-          _buildCabRideCount(filteredCabRides.length),
-          _buildCabRideTable(filteredCabRides),
-        ],
+      body: Container(
+        color: Color.fromARGB(255, 203, 235, 231), // Thêm màu nền ở đây
+        child: Column(
+          children: [
+            _buildSearchSection(),
+            _buildCabRideCount(filteredCabRides.length),
+            Expanded(
+              child: Container(
+                color: Colors.white, // Màu nền trắng cho bảng thông tin
+                child: _buildCabRideTable(filteredCabRides),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -51,13 +59,13 @@ class _CabRideListScreenState extends State<CabRideListScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: const EdgeInsets.all(8.0),
       child: ExpansionTile(
-        title: Text("Tìm kiếm"),
+        title: Text("Filter"),
         leading: Icon(Icons.search, color: Colors.teal),
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: _buildSoftSearchField(
-              label: 'Tìm kiếm theo ID',
+              label: 'By ID',
               onChanged: (value) {
                 setState(() {
                   idFilter = value;
@@ -68,7 +76,7 @@ class _CabRideListScreenState extends State<CabRideListScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: _buildSoftSearchField(
-              label: 'Tìm kiếm theo thời gian khởi hành',
+              label: 'By starting time',
               onChanged: (value) {
                 setState(() {
                   startTimeFilter = value;
@@ -107,9 +115,9 @@ class _CabRideListScreenState extends State<CabRideListScreen> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(15.0),
           child: Text(
-            'Số lượng: $count',
+            'Quantity: $count',
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -127,8 +135,8 @@ class _CabRideListScreenState extends State<CabRideListScreen> {
             columnSpacing: 24.0,
             headingRowHeight: 56.0,
             dataRowHeight: 56.0,
-            headingRowColor:
-                MaterialStateColor.resolveWith((states) => Colors.teal.shade50),
+            headingRowColor: MaterialStateColor.resolveWith(
+                (states) => Colors.teal.shade100),
             columns: [
               DataColumn(
                 label: Text(
@@ -138,7 +146,7 @@ class _CabRideListScreenState extends State<CabRideListScreen> {
               ),
               DataColumn(
                 label: Text(
-                  'Thời gian khởi hành',
+                  'Starting time',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
               ),
@@ -189,52 +197,77 @@ class CabRideDetailScreen extends StatelessWidget {
     final double increasedFontSize = baseFontSize * 1.0;
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 203, 235, 231),
       appBar: AppBar(
-        title: Text('Thông tin chi tiết chuyến đi'),
+        title:
+            Text('Detailed Information', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.teal,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
-            _buildDetailText('ID chuyến đi: ', cabRide.ID),
-            SizedBox(height: 8),
-            _buildDetailText('ID ca làm việc: ', cabRide.shift_id, isLink: true,
-                onTap: () {
-              shiftViewModel.fetchEachShift(context, cabRide.shift_id);
-            }),
-            SizedBox(height: 8),
-            _buildDetailText('ID người dùng: ', cabRide.user_id, isLink: true,
-                onTap: () {
-              userViewModel.fetchEachUser(context, cabRide.user_id);
-            }),
-            SizedBox(height: 8),
-            _buildDetailText(
-                'Thời gian bắt đầu: ', cabRide.ride_start_time.toString()),
-            SizedBox(height: 8),
-            _buildDetailText(
-                'Thời gian kết thúc: ', cabRide.ride_end_time.toString()),
-            SizedBox(height: 8),
-            _buildDetailText(
-                'Điểm khởi hành: ', cabRide.address_starting_point),
-            SizedBox(height: 8),
-            _buildDetailText('GPS khởi hành: ', cabRide.GPS_starting_point),
-            SizedBox(height: 8),
-            _buildDetailText('Điểm đến: ', cabRide.address_destination),
-            SizedBox(height: 8),
-            _buildDetailText('GPS điểm đến: ', cabRide.GPS_destination),
-            SizedBox(height: 8),
-            _buildDetailText('Bị hủy: ', cabRide.canceled.toString()),
-            SizedBox(height: 8),
-            _buildDetailText('ID loại thanh toán: ', cabRide.payment_type_id),
-            SizedBox(height: 8),
-            _buildDetailText('Giá: ', cabRide.price.toString()),
-            SizedBox(height: 8),
-            _buildDetailText('Phản hồi: ', cabRide.response),
-            SizedBox(height: 8),
-            _buildDetailText('Đánh giá: ', cabRide.evaluate),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding:
+                  EdgeInsets.only(bottom: 10, top: 10, left: 30, right: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDetailText('ID: ', cabRide.ID),
+                  SizedBox(height: 7),
+                  _buildDetailText('Shift ID: ', cabRide.shift_id, isLink: true,
+                      onTap: () {
+                    shiftViewModel.fetchEachShift(context, cabRide.shift_id);
+                  }),
+                  SizedBox(height: 7),
+                  _buildDetailText('User ID: ', cabRide.user_id, isLink: true,
+                      onTap: () {
+                    userViewModel.fetchEachUser(context, cabRide.user_id);
+                  }),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Departure time: ', cabRide.ride_start_time.toString()),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Arrival time: ', cabRide.ride_end_time.toString()),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Departure point: ', cabRide.address_starting_point),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Departure GPS: ', cabRide.GPS_starting_point),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Destination: ', cabRide.address_destination),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Destination GPS: ', cabRide.GPS_destination),
+                  SizedBox(height: 7),
+                  _buildDetailText('Status: ', cabRide.status.toString()),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Is Canceled: ', cabRide.canceled.toString()),
+                  SizedBox(height: 7),
+                  _buildDetailText('Price: ', cabRide.price.toString()),
+                  SizedBox(height: 7),
+                  _buildDetailText('Customer Feedback: ', cabRide.response),
+                  SizedBox(height: 7),
+                  _buildDetailText('Evaluation: ', cabRide.evaluate),
+                ],
+              ),
+            ),
+            SizedBox(height: 15),
+            Center(
+              child: CircleAvatar(
+                backgroundImage: AssetImage('assets/admin/Success.png'),
+                radius: 50,
+              ),
+            ),
           ],
         ),
       ),

@@ -43,20 +43,37 @@ class _DriverRevenueReportScreenViewState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin doanh thu tài xế',
-            style: TextStyle(color: Colors.white)),
+        title: Text('Driver Revenue', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.teal,
       ),
-      body: Column(
-        children: [
-          _buildSearchSection(),
-          _buildDriverCount(
-              (sortedDrivers.isNotEmpty ? sortedDrivers : filteredDrivers)
-                  .length),
-          if (isLoading) Center(child: CircularProgressIndicator()),
-          _buildDriverTable(
-              sortedDrivers.isNotEmpty ? sortedDrivers : filteredDrivers),
-        ],
+      // body: Column(
+      //   children: [
+      //     _buildSearchSection(),
+      // _buildDriverCount(
+      //     (sortedDrivers.isNotEmpty ? sortedDrivers : filteredDrivers)
+      //         .length),
+      //     if (isLoading) Center(child: CircularProgressIndicator()),
+      //     _buildDriverTable(
+      //         sortedDrivers.isNotEmpty ? sortedDrivers : filteredDrivers),
+      //   ],
+      // ),
+      body: Container(
+        color: Color.fromARGB(255, 203, 235, 231), // Thêm màu nền ở đây
+        child: Column(
+          children: [
+            _buildSearchSection(),
+            _buildDriverCount(
+                (sortedDrivers.isNotEmpty ? sortedDrivers : filteredDrivers)
+                    .length),
+            Expanded(
+              child: Container(
+                  color: Colors.white, // Màu nền trắng cho bảng thông tin
+                  child: _buildDriverTable(sortedDrivers.isNotEmpty
+                      ? sortedDrivers
+                      : filteredDrivers)),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -67,13 +84,13 @@ class _DriverRevenueReportScreenViewState
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: const EdgeInsets.all(8.0),
       child: ExpansionTile(
-        title: Text("Tìm kiếm"),
+        title: Text("Filter"),
         leading: Icon(Icons.search, color: Colors.teal),
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: _buildSoftSearchField(
-              label: 'Tìm kiếm theo ID',
+              label: 'By ID',
               onChanged: (value) {
                 setState(() {
                   idFilter = value;
@@ -84,7 +101,7 @@ class _DriverRevenueReportScreenViewState
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: _buildSoftSearchField(
-              label: 'Tìm kiếm theo tên',
+              label: 'By Name',
               onChanged: (value) {
                 setState(() {
                   nameFilter = value;
@@ -108,7 +125,7 @@ class _DriverRevenueReportScreenViewState
                   decoration: InputDecoration(
                     labelText: startDate != null
                         ? DateFormat('dd-MM-yyyy').format(startDate!)
-                        : 'Ngày bắt đầu',
+                        : 'Start Date',
                     prefixIcon: Icon(Icons.calendar_today, color: Colors.teal),
                     filled: true,
                     fillColor: Colors.teal.withOpacity(0.1),
@@ -141,7 +158,7 @@ class _DriverRevenueReportScreenViewState
                   decoration: InputDecoration(
                     labelText: endDate != null
                         ? DateFormat('dd-MM-yyyy').format(endDate!)
-                        : 'Ngày kết thúc',
+                        : 'End Date',
                     prefixIcon: Icon(Icons.calendar_today, color: Colors.teal),
                     filled: true,
                     fillColor: Colors.teal.withOpacity(0.1),
@@ -158,43 +175,48 @@ class _DriverRevenueReportScreenViewState
               ),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              if (startDate != null && endDate != null) {
-                _fetchDriversRevenue();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content:
-                        Text('Vui lòng chọn ngày bắt đầu và ngày kết thúc.'),
-                  ),
-                );
-              }
-            },
-            child: Text('Lọc theo doanh thu cao nhất',
-                style: TextStyle(color: Colors.white)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.teal,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                nameFilter = '';
-                idFilter = '';
-                startDate = null;
-                endDate = null;
-                sortedDrivers = [];
-              });
-            },
-            child: Text('Reset', style: TextStyle(color: Colors.white)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.teal,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-            ),
+          Row(
+            mainAxisAlignment:
+                MainAxisAlignment.spaceEvenly, // Căn giữa hai nút
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  if (startDate != null && endDate != null) {
+                    _fetchDriversRevenue();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please enter Start Date and End Date'),
+                      ),
+                    );
+                  }
+                },
+                child: Text('Highest to Lowest Revenue',
+                    style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    nameFilter = '';
+                    idFilter = '';
+                    startDate = null;
+                    endDate = null;
+                    sortedDrivers = [];
+                  });
+                },
+                child: Text('Reset', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -229,7 +251,7 @@ class _DriverRevenueReportScreenViewState
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            'Số lượng: $count',
+            'Quantity: $count',
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -244,11 +266,11 @@ class _DriverRevenueReportScreenViewState
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
-            columnSpacing: 140.0,
+            columnSpacing: 60.0,
             headingRowHeight: 56.0,
             dataRowHeight: 56.0,
-            headingRowColor:
-                MaterialStateColor.resolveWith((states) => Colors.teal.shade50),
+            headingRowColor: MaterialStateColor.resolveWith(
+                (states) => Colors.teal.shade100),
             columns: [
               DataColumn(
                 label: Text(
@@ -258,7 +280,13 @@ class _DriverRevenueReportScreenViewState
               ),
               DataColumn(
                 label: Text(
-                  'Họ tên',
+                  'Name',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Avatar',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
               ),
@@ -291,6 +319,18 @@ class _DriverRevenueReportScreenViewState
                   Text(
                     "${driver.Firstname} ${driver.Lastname}",
                     style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                DataCell(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage:
+                            AssetImage('assets/admin/adminDefault.jpg'),
+                        radius: 20,
+                      ),
+                    ],
                   ),
                 ),
               ]);

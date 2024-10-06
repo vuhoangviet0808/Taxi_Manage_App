@@ -17,8 +17,8 @@ class FullCabRide {
   final String GPS_starting_point;
   final String address_destination;
   final String GPS_destination;
+  final String status;
   final String canceled;
-  final String payment_type_id;
   final String price;
   final String response;
   final String evaluate;
@@ -33,8 +33,8 @@ class FullCabRide {
     this.GPS_starting_point,
     this.address_destination,
     this.GPS_destination,
+    this.status,
     this.canceled,
-    this.payment_type_id,
     this.price,
     this.response,
     this.evaluate,

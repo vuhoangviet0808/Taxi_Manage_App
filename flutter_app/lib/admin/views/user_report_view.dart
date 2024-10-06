@@ -30,16 +30,23 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
 
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text('Thông tin người dùng', style: TextStyle(color: Colors.white)),
+        title: Text('User Information', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.teal,
       ),
-      body: Column(
-        children: [
-          _buildSearchSection(),
-          _buildUserCount(filteredUsers.length),
-          _buildUserTable(filteredUsers),
-        ],
+      body: Container(
+        color: Color.fromARGB(255, 203, 235, 231), // Thêm màu nền ở đây
+        child: Column(
+          children: [
+            _buildSearchSection(),
+            _buildUserCount(filteredUsers.length),
+            Expanded(
+              child: Container(
+                color: Colors.white, // Màu nền trắng cho bảng thông tin
+                child: _buildUserTable(filteredUsers),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -50,13 +57,13 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: const EdgeInsets.all(8.0),
       child: ExpansionTile(
-        title: Text("Tìm kiếm"),
+        title: Text("Filter"),
         leading: Icon(Icons.search, color: Colors.teal),
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: _buildSoftSearchField(
-              label: 'Tìm kiếm theo ID',
+              label: 'By ID',
               onChanged: (value) {
                 setState(() {
                   idFilter = value;
@@ -67,7 +74,7 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: _buildSoftSearchField(
-              label: 'Tìm kiếm theo tên',
+              label: 'By Name',
               onChanged: (value) {
                 setState(() {
                   nameFilter = value;
@@ -106,9 +113,9 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(15.0),
           child: Text(
-            'Số lượng: $count',
+            'Quantity: $count',
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -123,11 +130,11 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
-            columnSpacing: 24.0,
+            columnSpacing: 60.0,
             headingRowHeight: 56.0,
             dataRowHeight: 56.0,
-            headingRowColor:
-                MaterialStateColor.resolveWith((states) => Colors.teal.shade50),
+            headingRowColor: MaterialStateColor.resolveWith(
+                (states) => Colors.teal.shade100),
             columns: [
               DataColumn(
                 label: Text(
@@ -137,13 +144,13 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
               ),
               DataColumn(
                 label: Text(
-                  'Họ tên',
+                  'Name',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
               ),
               DataColumn(
                 label: Text(
-                  'Hình ảnh',
+                  'Avatar',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
               ),
@@ -177,7 +184,8 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       CircleAvatar(
-                        // backgroundImage: NetworkImage(user.profileImageUrl ?? 'https://via.placeholder.com/150'),
+                        backgroundImage:
+                            AssetImage('assets/admin/adminDefault.jpg'),
                         radius: 20,
                       ),
                     ],
@@ -202,26 +210,73 @@ class UserDetailScreen extends StatelessWidget {
     final double fontSize = 16.0;
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 203, 235, 231),
       appBar: AppBar(
-        title: Text('Thông tin chi tiết người dùng'),
+        title:
+            Text('Detailed Information', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.teal,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.black, width: 1),
+                    ),
+                    child: CircleAvatar(
+                      backgroundImage:
+                          AssetImage('assets/admin/adminDefault.jpg'),
+                      radius: 60,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    '${user.Firstname} ${user.Lastname}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 20),
-            _buildDetailRow('ID người dùng:', user.User_ID, fontSize),
-            _buildDetailRow(
-                'Họ và tên:', '${user.Firstname} ${user.Lastname}', fontSize),
-            _buildDetailRow('Số điện thoại:', user.SDT, fontSize),
-            _buildDetailRow('Ví:', user.Wallet, fontSize),
-            _buildDetailRow('Ngày sinh:', user.DOB, fontSize),
-            _buildDetailRow('Giới tính:', user.Gender, fontSize),
-            _buildDetailRow('Địa chỉ:', user.Address, fontSize),
-            _buildDetailRow('CCCD:', user.CCCD, fontSize),
-            _buildDetailRow('Ngày tạo:', user.created_at, fontSize),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white, // Màu nền cho Container
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding:
+                  EdgeInsets.only(bottom: 10, top: 20, left: 30, right: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDetailRow('ID: ', user.User_ID, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Phone number: ', user.SDT, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Wallet: ', user.Wallet, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('DOB: ', user.DOB, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Gender: ', user.Gender, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Address: ', user.Address, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Identity Card: ', user.CCCD, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow(
+                      'Account Creation:', user.created_at, fontSize),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -230,12 +285,12 @@ class UserDetailScreen extends StatelessWidget {
 
   Widget _buildDetailRow(String label, String value, double fontSize) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: RichText(
         text: TextSpan(
           children: [
             TextSpan(
-              text: '$label ',
+              text: label,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.black,

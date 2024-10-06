@@ -33,3 +33,8 @@ class DriverBookingController:
             return jsonify({"message": f"Booking ID {booking_id} successfully deleted."}), 200
         else:
             abort(404, description=f"Booking ID {booking_id} not found or deletion failed.")
+
+
+    def count_earliest_assigned_driver_bookings(self):
+        count = driver_booking_service.count_earliest_assigned_bookings()
+        return jsonify({"earliest_assigned_bookings_count": count}), 200

@@ -55,8 +55,8 @@ class CabRideService {
               responseBody['GPS_starting_point']?.toString() ?? '',
               responseBody['address_destination']?.toString() ?? '',
               responseBody['GPS_destination']?.toString() ?? '',
+              responseBody['status']?.toString() ?? '',
               responseBody['canceled']?.toString() ?? '',
-              responseBody['payment_type_id']?.toString() ?? '',
               responseBody['price']?.toString() ?? '',
               responseBody['response']?.toString() ?? '',
               responseBody['evaluate']?.toString() ?? '');

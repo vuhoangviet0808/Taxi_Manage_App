@@ -20,20 +20,9 @@ class CabService:
 
     def get_cab_by_all(self, ID):
         query = """
-        SELECT 
-            Cab.ID, 
-            Cab.licence_plate, 
-            Cab.car_model_id, 
-            Cab.manufacture_year, 
-            Cab.active, 
-            car_model.model_name, 
-            car_model.model_description 
+        SELECT *
         FROM 
             Cab 
-        JOIN 
-            car_model 
-        ON 
-            Cab.car_model_id = car_model.ID 
         WHERE 
             Cab.ID = %s
         """

@@ -43,18 +43,16 @@ class CabService {
         // Proceed with decoding the response body
         if (responseBody['ID'] != null) {
           String cabID = responseBody['ID'].toString();
-          String carModelID = responseBody['car_model_id'].toString();
+          String carType = responseBody['car_type'].toString();
           String manufactureYear = responseBody['manufacture_year'].toString();
           String active = responseBody['active'].toString();
 
           return FullCab(
             cabID,
             responseBody['licence_plate'],
-            carModelID,
+            carType,
             manufactureYear,
             active,
-            responseBody['model_name'],
-            responseBody['model_description'],
           );
         } else {
           print('Null data received for the cab with ID: $cabID');
