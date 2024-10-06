@@ -217,3 +217,145 @@ class BookingDriver {
     };
   }
 }
+
+class Driver {
+  final int Driver_ID;
+  final String SDT;
+  final String Firstname;
+  final String Lastname;
+  final double Wallet;
+  final String DOB;
+  final String Gender;
+  final String Address;
+  final String CCCD;
+  final String Driving_license_number;
+  final double Working_experiment;
+  final String driver_token;
+
+  Driver({
+    required this.Driver_ID,
+    required this.SDT,
+    required this.Firstname,
+    required this.Lastname,
+    required this.Wallet,
+    required this.DOB,
+    required this.Gender,
+    required this.Address,
+    required this.CCCD,
+    required this.Driving_license_number,
+    required this.Working_experiment,
+    required this.driver_token,
+  });
+
+  factory Driver.fromJson(Map<String, dynamic> json) {
+    return Driver(
+      Driver_ID: json['Driver_ID'] ?? 0,  // Default to 0 if null
+      SDT: json['SDT'] ?? '',  // Default to empty string if null
+      Firstname: json['Firstname'] ?? '',  // Default to empty string if null
+      Lastname: json['Lastname'] ?? '',  // Default to empty string if null
+      Wallet: json['Wallet'] != null ? double.tryParse(json['Wallet'].toString()) ?? 0.0 : 0.0,
+      DOB: json['DOB'] ?? '',  // Default to empty string if null
+      Gender: json['Gender'] ?? '',  // Default to empty string if null
+      Address: json['Address'] ?? '',  // Default to empty string if null
+      CCCD: json['CCCD'] ?? '',  // Default to empty string if null
+      Driving_license_number: json['Driving_licence_number'] ?? '',  // Default to empty string if null
+      Working_experiment: json['Working_experiment'] != null ? double.tryParse(json['Working_experiment'].toString()) ?? 0.0 : 0.0,
+      driver_token: json['driver_token'] ?? '',  // Default to empty string if null
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'Driver_ID': Driver_ID,
+      'SDT': SDT,
+      'Firstname': Firstname,
+      'Lastname': Lastname,
+      'Wallet': Wallet,
+      'DOB': DOB,
+      'Gender': Gender,
+      'Address': Address,
+      'CCCD': CCCD,
+      'Driving_licence_number': Driving_license_number,
+      'Working_experiment': Working_experiment,
+      'driver_token': driver_token,
+    };
+  }
+}
+
+class Shift {
+  final int id;
+  final int driver_id;
+  final int cab_id;
+  final String current_gps_location;
+  final String current_address;
+  final double evaluate;
+
+  Shift({
+    required this.id,
+    required this.driver_id,
+    required this.cab_id,
+    required this.current_gps_location,
+    required this.current_address,
+    required this.evaluate,
+  });
+
+  // Phương thức để khởi tạo đối tượng Shift từ JSON
+  factory Shift.fromJson(Map<String, dynamic> json) {
+    return Shift(
+      id: json['ID'] ?? 0,  // Default to 0 if null
+      driver_id: json['Driver_id'] ?? 0,  // Default to 0 if null
+      cab_id: json['cab_id'] ?? 0,  // Default to 0 if null
+      current_gps_location: json['current_gps_location'] ?? '',  // Default to empty string if null
+      current_address: json['current_address'] ?? '',  // Default to empty string if null
+      evaluate: json['evaluate'] != null ? double.tryParse(json['evaluate'].toString()) ?? 0.0 : 0.0,  // Default to 0.0 if null
+    );
+  }
+
+  // Phương thức để chuyển đổi đối tượng Shift thành JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'Driver_id': driver_id,
+      'cab_id': cab_id,
+      'current_gps_location': current_gps_location,
+      'current_address': current_address,
+      'evaluate': evaluate,
+    };
+  }
+}class Cab {
+  final int id;
+  final String licence_plate;
+  final String car_type;
+  final int manufacture_year;
+  final bool active;
+
+  Cab({
+    required this.id,
+    required this.licence_plate,
+    required this.car_type,
+    required this.manufacture_year,
+    required this.active,
+  });
+
+  // Phương thức để khởi tạo đối tượng Cab từ JSON
+  factory Cab.fromJson(Map<String, dynamic> json) {
+    return Cab(
+      id: json['ID'] ?? 0,  // Default to 0 if null
+      licence_plate: json['licence_plate'] ?? '',  // Default to empty string if null
+      car_type: json['car_type'] ?? '',  // Default to empty string if null
+      manufacture_year: json['manufacture_year'] ?? 0,  // Default to 0 if null
+      active: json['active'] == 1,  // Chuyển đổi thành boolean
+    );
+  }
+
+  // Phương thức để chuyển đổi đối tượng Cab thành JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'ID': id,
+      'licence_plate': licence_plate,
+      'car_type': car_type,
+      'manufacture_year': manufacture_year,
+      'active': active ? 1 : 0,  // Chuyển đổi từ boolean thành 1 hoặc 0
+    };
+  }
+}

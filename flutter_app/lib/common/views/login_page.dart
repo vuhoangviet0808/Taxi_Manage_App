@@ -102,10 +102,10 @@ class _LoginPageState extends State<LoginPage> {
                         _showDialog(context, viewModel.errorMessage);
                       } else {
                         switch(viewModel.role) {
-                          case "admin":
-                            Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => AdminPage()));
-                            break;
+                          // case "admin":
+                          //   Navigator.push(context,
+                          // MaterialPageRoute(builder: (context) => AdminPage()));
+                            // break;
                           case "driver":
                             Navigator.push(context,
                           MaterialPageRoute(builder: (context) => DriverPage(sdt: viewModel.sdt)));

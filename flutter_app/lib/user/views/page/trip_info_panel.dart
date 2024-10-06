@@ -13,6 +13,7 @@ class TripInfoPanel extends StatefulWidget {
   final TextEditingController destinationLocationController;
   final Function(LatLng, LatLng) onLocationsChanged;
   final User user;
+
   TripInfoPanel({
     required this.onLocationsChanged,
     required this.pickupLocationController,
@@ -48,7 +49,7 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
   }
 
   Future<LatLng?> _fetchLatLng(String address) async {
-    if (address == "Vị trí hiện tại" && _currentLocation != null) {
+    if (address == "Current location" && _currentLocation != null) {
       return _currentLocation;
     }
     final url = Uri.parse(
@@ -77,8 +78,10 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
   }
 
   Future<void> _navigateToPickTypeRide(BuildContext context) async {
-    LatLng? pickupLatLng = await _fetchLatLng(widget.pickupLocationController.text);
-    LatLng? destinationLatLng = await _fetchLatLng(widget.destinationLocationController.text);
+    LatLng? pickupLatLng =
+        await _fetchLatLng(widget.pickupLocationController.text);
+    LatLng? destinationLatLng =
+        await _fetchLatLng(widget.destinationLocationController.text);
 
     if (pickupLatLng != null && destinationLatLng != null) {
       widget.onLocationsChanged(pickupLatLng, destinationLatLng);
@@ -87,17 +90,16 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
           builder: (context) => PickTypeRide(
             pickupLocation: pickupLatLng,
             destinationLocation: destinationLatLng,
-            pickupAddress: widget.pickupLocationController.text,  // Truyền địa chỉ đón
-            destinationAddress: widget.destinationLocationController.text, 
+            pickupAddress: widget.pickupLocationController.text, // Pass pickup address
+            destinationAddress: widget.destinationLocationController.text, // Pass destination address
             user: widget.user,
-             // Truyền địa chỉ đến
           ),
         ),
       );
 
       if (result != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Bạn đã chọn $result')),
+          SnackBar(content: Text('You selected $result')),
         );
       }
     }
@@ -116,7 +118,7 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
               icon: Icon(Icons.my_location, color: Colors.teal),
               onPressed: () {
                 if (_currentLocation != null) {
-                  controller.text = "Vị trí hiện tại";
+                  controller.text = "Current location";
                   _updateLocations();
                 }
               },
@@ -124,6 +126,11 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
             hintText: label,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide(color: Colors.teal), // Add teal border
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide(color: Colors.teal, width: 2), // Teal when focused
             ),
           ),
           onChanged: (query) {
@@ -140,10 +147,9 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
             }
           },
         ),
-        if ((isPickup ? _pickupSuggestions : _destinationSuggestions)
-            .isNotEmpty)
+        if ((isPickup ? _pickupSuggestions : _destinationSuggestions).isNotEmpty)
           SizedBox(
-            height: 150, // Đặt chiều cao cố định cho danh sách gợi ý
+            height: 150, // Set fixed height for suggestions list
             child: ListView.builder(
               shrinkWrap: true,
               itemCount: isPickup
@@ -200,7 +206,7 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
             SizedBox(height: 16.0),
             Center(
               child: Text(
-                "Thông tin chuyến đi",
+                "Trip Information",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20.0,
@@ -210,14 +216,14 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
             ),
             SizedBox(height: 40.0),
             _buildTextField(
-              "Điểm đón",
+              "Pickup Location",
               widget.pickupLocationController,
               Icons.location_on,
               true,
             ),
             SizedBox(height: 16.0),
             _buildTextField(
-              "Điểm đến",
+              "Destination",
               widget.destinationLocationController,
               Icons.flag,
               false,
@@ -238,7 +244,7 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: Text('Chỉ đường'),
+                child: Text('Get Directions'),
               ),
             ),
           ],

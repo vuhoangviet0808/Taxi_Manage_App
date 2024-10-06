@@ -1,14 +1,13 @@
-// ignore_for_file: library_private_types_in_public_api, sized_box_for_whitespace
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app/user/views/page/map_page.dart';
 import 'package:flutter_app/user/views/page/trip_info_panel.dart';
-import '../page/ride_picker_page.dart';
 import '../page/trip_info_panel.dart';
 import '../../models/user.dart';
+
 class RidePicker extends StatefulWidget {
   final User user;
-  RidePicker({Key? key, required this.user}) : super(key: key);
+
+  RidePicker({required this.user});
   @override
   _RidePickerState createState() => _RidePickerState();
 }
@@ -49,11 +48,14 @@ class _RidePickerState extends State<RidePicker> {
                   SizedBox(width: 8.0),
                   Expanded(
                     child: Text(
-                      "Bạn muốn đi đâu?",
+                      "Where do you want to go?",
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xff323643),
+                        fontSize: 16, // Tăng kích thước chữ
+                        color: Colors.teal, // Màu teal cho chữ
+                        fontWeight: FontWeight.bold, // Chữ đậm
+                        fontStyle: FontStyle.italic, // Chữ nghiêng
+                        fontFamily: 'Arial', // Có thể chọn font khác nếu cần
                       ),
                     ),
                   ),
@@ -65,9 +67,9 @@ class _RidePickerState extends State<RidePicker> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildCategoryButton(Icons.home, 'Thêm Nhà'),
-              _buildCategoryButton(Icons.business, 'Thêm Công ty'),
-              _buildCategoryButton(Icons.location_city, 'Thêm địa chỉ'),
+              _buildCategoryButton(Icons.home, 'Add Home'),
+              _buildCategoryButton(Icons.business, 'Add Company'),
+              _buildCategoryButton(Icons.location_city, 'Add Address'),
             ],
           ),
         ],

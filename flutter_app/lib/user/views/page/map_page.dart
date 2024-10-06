@@ -10,7 +10,10 @@ import '../page/home_page.dart';
 
 class MapPage extends StatefulWidget {
   final User user;
-  MapPage({required this.user});
+ 
+  MapPage({required this.user,
+           
+          });
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -154,7 +157,8 @@ class _MapPageState extends State<MapPage> {
               },
               pickupLocationController: _pickupLocationController,
               destinationLocationController: _destinationLocationController,
-              user: widget.user, // Truyền đối tượng user
+              user: widget.user, 
+              // Truyền đối tượng user
             ),
             borderRadius: BorderRadius.vertical(top: Radius.circular(18.0)),
             minHeight: 80,
