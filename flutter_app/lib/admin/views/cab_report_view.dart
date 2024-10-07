@@ -198,27 +198,41 @@ class CabDetailScreen extends StatelessWidget {
     final double fontSize = 16.0;
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 203, 235, 231),
       appBar: AppBar(
-        title: Text('Detail Information'),
+        title:
+            Text('Detail Information', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.teal,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
-            _buildDetailText('ID: ', cab.ID),
-            SizedBox(height: 8),
-            _buildDetailText('Plate: ', cab.licence_plate),
-            SizedBox(height: 8),
-            _buildDetailText('Car type: ', cab.car_type),
-            SizedBox(height: 8),
-            _buildDetailText(
-                'Manufacture year: ', cab.manufacture_year.toString()),
-            SizedBox(height: 8),
-            _buildDetailText('Status: ', cab.active.toString()),
-            SizedBox(height: 8),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding:
+                  EdgeInsets.only(bottom: 10, top: 10, left: 30, right: 120),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDetailText('ID: ', cab.ID),
+                  SizedBox(height: 7),
+                  _buildDetailText('Plate: ', cab.licence_plate),
+                  SizedBox(height: 7),
+                  _buildDetailText('Car type: ', cab.car_type),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Manufacture year: ', cab.manufacture_year.toString()),
+                  SizedBox(height: 7),
+                  _buildDetailText('Status: ', cab.active.toString()),
+                  SizedBox(height: 7),
+                ],
+              ),
+            ),
           ],
         ),
       ),

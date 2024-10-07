@@ -124,7 +124,6 @@ class AdminDashboardView extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 2.0),
                     child: _buildEvaluationSection(context),
                   ),
-                  SizedBox(height: 10),
                 ],
               ),
             ),
@@ -142,7 +141,7 @@ class AdminDashboardView extends StatelessWidget {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 185, 189, 189),
+                        color: Color.fromARGB(255, 197, 200, 200),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       padding:
@@ -180,7 +179,8 @@ class AdminDashboardView extends StatelessWidget {
                           child: Container(
                             height: 100,
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 239, 236, 236),
+                              //color: Color.fromARGB(255, 239, 236, 236),
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -191,7 +191,8 @@ class AdminDashboardView extends StatelessWidget {
                                   style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black),
+                                      color: const Color.fromARGB(
+                                          255, 62, 175, 65)),
                                 ),
                                 SizedBox(height: 10),
                                 Text(
@@ -199,7 +200,8 @@ class AdminDashboardView extends StatelessWidget {
                                   style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black),
+                                      color: const Color.fromARGB(
+                                          255, 62, 175, 65)),
                                 ),
                               ],
                             ),
@@ -210,7 +212,8 @@ class AdminDashboardView extends StatelessWidget {
                           child: Container(
                             height: 100,
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 53, 52, 52),
+                              //color: Color.fromARGB(255, 53, 52, 52),
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -221,7 +224,7 @@ class AdminDashboardView extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: Colors.red,
                                   ),
                                 ),
                                 SizedBox(height: 10),
@@ -230,7 +233,7 @@ class AdminDashboardView extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: Colors.red,
                                   ),
                                 ),
                               ],
@@ -446,7 +449,7 @@ class AdminDashboardView extends StatelessWidget {
                 // Hiển thị loader khi đang fetch data
                 return ListTile(
                   leading: Icon(Icons.update, color: Colors.teal),
-                  title: Text('Booking Requests Accepted',
+                  title: Text('Requests Accepted',
                       style: TextStyle(color: Colors.white)),
                   trailing: CircularProgressIndicator(),
                   onTap: () {},
@@ -455,7 +458,7 @@ class AdminDashboardView extends StatelessWidget {
                 // Nếu xảy ra lỗi, hiển thị thông báo lỗi
                 return ListTile(
                   leading: Icon(Icons.update, color: Colors.white),
-                  title: Text('Booking Requests Accepted'),
+                  title: Text('Requests Accepted'),
                   trailing: Icon(Icons.error, color: Colors.red),
                   onTap: () {},
                 );
@@ -463,7 +466,7 @@ class AdminDashboardView extends StatelessWidget {
                 // Hiển thị số lượng booking status updates khi fetch thành công
                 return ListTile(
                   leading: Icon(Icons.update, color: Colors.white),
-                  title: Text('Booking Requests Accepted',
+                  title: Text('Requests Accepted',
                       style: TextStyle(color: Colors.white)),
                   trailing: CircleAvatar(
                     radius: 12,

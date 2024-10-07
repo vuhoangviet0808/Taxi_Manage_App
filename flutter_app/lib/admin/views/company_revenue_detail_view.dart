@@ -81,7 +81,8 @@ class _CompanyRevenueDetailScreenState
                       elevation: 4,
                       child: ListTile(
                         title: Text(revenueItem['period']),
-                        subtitle: Text('Revenue: ${revenueItem['revenue']}'),
+                        subtitle:
+                            Text('Revenue: ${revenueItem['revenue']} VNĐ'),
                       ),
                     );
                   },

@@ -295,7 +295,7 @@ class _FullBookingRequestDetailScreenState
                               borderRadius:
                                   BorderRadius.circular(10), // Bo góc container
                               border:
-                                  Border.all(color: Colors.black), // Viền đen
+                                  Border.all(color: Colors.blue), // Viền đen
                             ),
                             padding: EdgeInsets.all(
                                 16), // Padding cho container bên trong
