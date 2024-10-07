@@ -29,6 +29,42 @@ class _HomeMenuState extends State<HomeMenu> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
+            // Thêm phần ảnh đại diện và tên user ở đầu menu
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage("assets/user/avatar.png"), // Đường dẫn đến ảnh đại diện
+                  ),
+                  SizedBox(height: 10), // Khoảng cách giữa avatar và tên user
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Welcome ',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '${widget.user.lastname}!',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal, // Màu cho lastname
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Divider(), // Đường kẻ ngăn cách
             buildMenuItem(
               icon: "assets/user/userlogin.png",
               text: "My profile",
@@ -49,8 +85,7 @@ class _HomeMenuState extends State<HomeMenu> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => RideHistoryPage(
-                        userID: widget.user.User_ID),
+                    builder: (context) => RideHistoryPage(userID: widget.user.User_ID),
                   ),
                 );
               },
@@ -89,7 +124,7 @@ class _HomeMenuState extends State<HomeMenu> {
     return ListTile(
       leading: Image.asset(
         icon,
-        color: Colors.teal, // Chuyển đổi màu của icon thành màu xanh lá cây
+        color: Colors.teal, // Màu của icon
       ),
       title: Text(
         text,

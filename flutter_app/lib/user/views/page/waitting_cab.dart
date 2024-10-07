@@ -5,18 +5,26 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../page/got_driver.dart';
+import '../../services/user_info_services.dart';
+import '../../models/user.dart';
+import '../page/home_page.dart';
 
 class WaitingCab extends StatefulWidget {
   final LatLng pickupLocation;
   final LatLng destinationLocation;
-  final String pickupAddress; // Địa chỉ đón
-  final String destinationAddress; // Địa chỉ đến
+  final String pickupAddress;
+  final String destinationAddress;
+  final User user;
+  final double totalDistance;
 
   WaitingCab({
     required this.pickupLocation,
     required this.destinationLocation,
     required this.pickupAddress,
     required this.destinationAddress,
+    required this.user,
+    required this.totalDistance,
   });
 
   @override
@@ -27,6 +35,39 @@ class _WaitingCabState extends State<WaitingCab> {
   late LatLng _initialLocation;
   MapController _mapController = MapController();
   List<LatLng> _routePoints = [];
+  int? _latestBookingID;
+  int? _driverID;
+  final BookingInfoService _bookingInfoService = BookingInfoService();
+  final BookingService _bookingService = BookingService();
+
+  Future<void> _fetchLatestBookingId() async {
+    try {
+      final bookingID = await _bookingInfoService.getLatestBookingID(widget.user.User_ID);
+      setState(() {
+        _latestBookingID = bookingID;
+      });
+    } catch (e) {
+      print('Error fetching latest booking ID: $e');
+    }
+  }
+
+  Future<void> _fetchDriverId() async {
+    if (_latestBookingID != null) {
+      try {
+        final driverID = await _bookingInfoService.getDriverIdByLatestBooking(_latestBookingID!);
+        setState(() {
+          _driverID = driverID;
+        });
+        if (driverID != null) {
+          print("Driver ID: $driverID");
+        } else {
+          print("No driver assigned for this booking.");
+        }
+      } catch (e) {
+        print('Error fetching driver ID: $e');
+      }
+    }
+  }
 
   void getLocation() async {
     try {
@@ -39,7 +80,7 @@ class _WaitingCabState extends State<WaitingCab> {
       });
       _mapController.move(_initialLocation, 15.0);
     } catch (e) {
-      print("Lỗi khi lấy vị trí: $e");
+      print("Error fetching location: $e");
     }
   }
 
@@ -63,8 +104,10 @@ class _WaitingCabState extends State<WaitingCab> {
   @override
   void initState() {
     super.initState();
+    print("initState called");
     _initialLocation = widget.pickupLocation;
     _fetchRoute(widget.pickupLocation, widget.destinationLocation);
+    _fetchLatestBookingId();
   }
 
   @override
@@ -103,7 +146,7 @@ class _WaitingCabState extends State<WaitingCab> {
                   padding: const EdgeInsets.all(16.0),
                   child: Center(
                     child: Text(
-                      "Tìm tài xế",
+                      "Finding Driver",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -120,14 +163,14 @@ class _WaitingCabState extends State<WaitingCab> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Mã chuyến đi",
+                            "Booking ID",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            "01J84WPTKVVD549ON4D9EAHKH5", // Replace with actual trip ID
+                            _latestBookingID != null ? _latestBookingID.toString() : 'Waiting...',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.blue,
@@ -137,13 +180,90 @@ class _WaitingCabState extends State<WaitingCab> {
                       ),
                       SizedBox(height: 8),
                       _buildAddressBox(
-                        icon: Icons.circle,
+                        icon: Icons.location_on, // Thay biểu tượng location_on
                         address: widget.pickupAddress,
                       ),
                       SizedBox(height: 8),
                       _buildAddressBox(
-                        icon: Icons.circle_outlined,
+                        icon: Icons.location_on, // Thay biểu tượng location_on
                         address: widget.destinationAddress,
+                      ),
+
+                      SizedBox(height: 16),
+
+                      // Nút "Confirm Ride"
+                      SizedBox(
+                        width: double.infinity, // Chiều rộng toàn bộ
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await _fetchDriverId();
+
+                            if (_driverID != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => GotDriver(
+                                    pickupLocation: widget.pickupLocation,
+                                    destinationLocation: widget.destinationLocation,
+                                    pickupAddress: widget.pickupAddress,
+                                    destinationAddress: widget.destinationAddress,
+                                    driverID: _driverID!,
+                                    totalDistance: widget.totalDistance,
+                                    user: widget.user,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              print("No driver found.");
+                            }
+                          },
+                          child: Text("Confirm Ride"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.teal, // Background color
+                            foregroundColor: Colors.white, // Text color
+                            padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0), // Giảm padding dọc
+                            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold), // Giảm kích thước chữ
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 16),
+
+                      // Nút "Cancel Ride"
+                      SizedBox(
+                        width: double.infinity, // Chiều rộng toàn bộ
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            final bool isCancelled = await _bookingService.cancelLatestBooking(widget.user.User_ID);
+                            if (isCancelled) {
+                              print("Ride has been cancelled successfully.");
+                              
+                              // Điều hướng người dùng quay lại trang HomePage và xoá tất cả các màn hình trước đó
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomePage(user: widget.user),
+                                ),
+                                (Route<dynamic> route) => false, // Xoá tất cả các route trước đó
+                              );
+                            } else {
+                              print("Failed to cancel the ride.");
+                            }
+                          },
+                          child: Text("Cancel Ride"),  // Thay đổi thành "Cancel Ride"
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,  // Nút màu đỏ
+                            foregroundColor: Colors.white, // Text color
+                            padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0), // Giảm padding dọc
+                            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold), // Giảm kích thước chữ
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -152,7 +272,7 @@ class _WaitingCabState extends State<WaitingCab> {
             ),
             borderRadius: BorderRadius.vertical(top: Radius.circular(18.0)),
             minHeight: 200,
-            maxHeight: 400,
+            maxHeight: 550,
             body: Container(),
           ),
         ],
@@ -166,17 +286,45 @@ class _WaitingCabState extends State<WaitingCab> {
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       margin: EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.teal[50], // Box color
+        color: Colors.teal[50],
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.teal, width: 1), // Border color
+        border: Border.all(color: Colors.teal, width: 1),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 24, color: Colors.teal),
+          Icon(icon, size: 24, color: Colors.teal), // Thay đổi thành location_on
           SizedBox(width: 8),
           Expanded(
             child: Text(
               address,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDistanceBox({required double totalDistance}) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      margin: EdgeInsets.symmetric(vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.teal[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.teal, width: 1),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.directions_car, size: 24, color: Colors.teal),
+          SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Distance: ${totalDistance.toStringAsFixed(2)} km',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black,

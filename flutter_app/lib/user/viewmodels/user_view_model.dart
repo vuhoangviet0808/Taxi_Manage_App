@@ -82,5 +82,32 @@ class BookingViewModel with ChangeNotifier {
   }
 }
 
+class BookingInfoViewModel with ChangeNotifier {
+  final BookingInfoService _bookingInfoService = BookingInfoService();
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  int? _latestBookingID;
+  int? get latestBookingID => _latestBookingID;
+
+  Future<void> fetchLatestBookingID(int userID) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final bookingID = await _bookingInfoService.getLatestBookingID(userID);
+      _latestBookingID = bookingID;
+      if (bookingID != null) {
+        print('Latest booking ID for user $userID: $bookingID');
+      } else {
+        print('No booking found for the given user_id $userID');
+      }
+    } catch (e) {
+      print('Error fetching latest booking ID: $e');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+}
 
 

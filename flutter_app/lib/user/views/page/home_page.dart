@@ -5,6 +5,8 @@ import '../widget/home_menu.dart';
 import '../widget/ride_picker.dart';
 import '../../models/user.dart';
 
+
+
 class HomePage extends StatefulWidget {
   final User user;
   HomePage({required this.user});
@@ -40,7 +42,8 @@ class _HomePageState extends State<HomePage> {
                         Spacer(),
                         Text(
                           "Taxi app",
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(color: Colors.black,
+                          fontWeight: FontWeight.bold, fontSize: 20),
                         ),
                         Spacer(),
                       ],
@@ -63,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                    child: RidePicker(user: widget.user),
+                    child: RidePicker(user: widget.user,),
                   ),
                 ],
               ),

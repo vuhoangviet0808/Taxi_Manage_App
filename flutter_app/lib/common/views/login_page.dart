@@ -104,59 +104,43 @@ class _LoginPageState extends State<LoginPage> {
               ),
               SizedBox(height: 20),
               Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ElevatedButton(
-                      onPressed: viewModel.isLoading
-                          ? null
-                          : () async {
-                              bool success = await viewModel.login(
-                                  _sdtController.text,
-                                  _passwordController.text);
-                              if (!success) {
-                                // ignore: use_build_context_synchronously
-                                _showDialog(context, viewModel.errorMessage);
-                              } else {
-                                switch (viewModel.role) {
-                                  // case "admin":
-                                  //   Navigator.push(context,
-                                  // MaterialPageRoute(builder: (context) => AdminPage()));
-                                  //   break;
-                                  case "driver":
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => DriverPage(
-                                                sdt: viewModel.sdt)));
-                                    break;
-                                  case "user":
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                UserPage(sdt: viewModel.sdt)));
-                                    break;
-                                  default:
-                                    _showDialog(context, "Access Denied");
-                                    break;
-                                }
-                              }
-                            },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.resolveWith<Color>(
-                                (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.pressed))
-                            return Colors.black;
-                          return Colors.blue;
-                        }),
-                        foregroundColor:
-                            MaterialStateProperty.all(Colors.white),
-                        elevation: MaterialStateProperty.all(5),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10))),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:<Widget> [
+                  ElevatedButton(
+                    onPressed: viewModel.isLoading ? null : () async {
+                      bool success = await viewModel.login(_sdtController.text, _passwordController.text);
+                      if(!success) {
+                        // ignore: use_build_context_synchronously
+                        _showDialog(context, viewModel.errorMessage);
+                      } else {
+                        switch(viewModel.role) {
+                          // case "admin":
+                          //   Navigator.push(context,
+                          // MaterialPageRoute(builder: (context) => AdminPage()));
+                            // break;
+                          case "driver":
+                            Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => DriverPage(sdt: viewModel.sdt)));
+                            break;
+                          case "user":
+                            Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => UserPage(sdt: viewModel.sdt)));
+                            break;
+                          default:
+                            _showDialog(context, "Access Denied");
+                            break;
+                        }
+                      }
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                        if (states.contains(MaterialState.pressed)) return Colors.black; 
+                        return Colors.blue; 
+                      }),  
+                      foregroundColor: MaterialStateProperty.all(Colors.white),
+                      elevation: MaterialStateProperty.all(5), 
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
                       ),
                       child: Text("Đăng nhập"),
                     ),

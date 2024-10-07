@@ -1,23 +1,23 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:fl_chart/fl_chart.dart';
+// import 'package:flutter/material.dart';
+// import 'package:intl/intl.dart';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
+// import 'package:fl_chart/fl_chart.dart';
 
-class CompanyRevenueDetailScreen extends StatefulWidget {
-  const CompanyRevenueDetailScreen({Key? key}) : super(key: key);
+// class CompanyRevenueDetailScreen extends StatefulWidget {
+//   const CompanyRevenueDetailScreen({Key? key}) : super(key: key);
 
-  @override
-  _CompanyRevenueDetailScreenState createState() =>
-      _CompanyRevenueDetailScreenState();
-}
+//   @override
+//   _CompanyRevenueDetailScreenState createState() =>
+//       _CompanyRevenueDetailScreenState();
+// }
 
-class _CompanyRevenueDetailScreenState
-    extends State<CompanyRevenueDetailScreen> {
-  DateTime? startDate;
-  DateTime? endDate;
-  List<dynamic> revenueData = [];
-  bool isLoading = false;
+// class _CompanyRevenueDetailScreenState
+//     extends State<CompanyRevenueDetailScreen> {
+//   DateTime? startDate;
+//   DateTime? endDate;
+//   List<dynamic> revenueData = [];
+//   bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -209,26 +209,26 @@ class _CompanyRevenueDetailScreenState
     return maxRevenue + (maxRevenue * 0.2);
   }
 
-  Future<DateTime?> _selectDate(
-      BuildContext context, DateTime? initialDate) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    return pickedDate;
-  }
+//   Future<DateTime?> _selectDate(
+//       BuildContext context, DateTime? initialDate) async {
+//     final DateTime? pickedDate = await showDatePicker(
+//       context: context,
+//       initialDate: initialDate ?? DateTime.now(),
+//       firstDate: DateTime(2000),
+//       lastDate: DateTime(2101),
+//     );
+//     return pickedDate;
+//   }
 
-  Future<void> _fetchCompanyRevenue() async {
-    setState(() {
-      isLoading = true;
-    });
+//   Future<void> _fetchCompanyRevenue() async {
+//     setState(() {
+//       isLoading = true;
+//     });
 
-    final response = await http.get(
-      Uri.parse(
-          'http://10.0.2.2:5000/admin/company_revenue?start_date=${DateFormat('dd-MM-yyyy').format(startDate!)}&end_date=${DateFormat('dd-MM-yyyy').format(endDate!)}'),
-    );
+//     final response = await http.get(
+//       Uri.parse(
+//           'http://10.0.2.2:5000/admin/company_revenue?start_date=${DateFormat('dd-MM-yyyy').format(startDate!)}&end_date=${DateFormat('dd-MM-yyyy').format(endDate!)}'),
+//     );
 
     if (response.statusCode == 200) {
       setState(() {

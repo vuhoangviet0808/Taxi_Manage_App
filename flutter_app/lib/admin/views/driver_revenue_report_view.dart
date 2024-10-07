@@ -46,17 +46,17 @@ class _DriverRevenueReportScreenViewState
         title: Text('Driver Revenue', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.teal,
       ),
-      // body: Column(
-      //   children: [
-      //     _buildSearchSection(),
-      // _buildDriverCount(
-      //     (sortedDrivers.isNotEmpty ? sortedDrivers : filteredDrivers)
-      //         .length),
-      //     if (isLoading) Center(child: CircularProgressIndicator()),
-      //     _buildDriverTable(
-      //         sortedDrivers.isNotEmpty ? sortedDrivers : filteredDrivers),
-      //   ],
-      // ),
+      body: Column(
+        children: [
+          _buildSearchSection(),
+      _buildDriverCount(
+          (sortedDrivers.isNotEmpty ? sortedDrivers : filteredDrivers)
+              .length),
+          if (isLoading) Center(child: CircularProgressIndicator()),
+          _buildDriverTable(
+              sortedDrivers.isNotEmpty ? sortedDrivers : filteredDrivers),
+        ],
+      ),
       body: Container(
         color: Color.fromARGB(255, 203, 235, 231), // Thêm màu nền ở đây
         child: Column(
