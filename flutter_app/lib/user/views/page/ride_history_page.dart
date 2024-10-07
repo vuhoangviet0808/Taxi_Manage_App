@@ -27,12 +27,12 @@ class RideHistoryPageState extends State<RideHistoryPage> {
       List<CabRide> rides = await cabRideService.getCabRide(widget.userID);
       setState(() {
         _cabRides = rides;
-        _errorMessage = rides.isEmpty ? "Không có dữ liệu chuyến đi" : null;
+        _errorMessage = rides.isEmpty ? "No ride history available" : null;
         _isLoading = false;
       });
     } catch (e) {
       setState(() {
-        _errorMessage = "Lỗi khi lấy dữ liệu: $e";
+        _errorMessage = "Error retrieving data: $e";
         _isLoading = false;
       });
     }
@@ -42,8 +42,18 @@ class RideHistoryPageState extends State<RideHistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lịch sử chuyến đi'),
-        backgroundColor: Colors.white,
+        title: Text(
+          'Ride History',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+            color: Colors.black, // Đổi màu tiêu đề thành đen
+          ),
+        ),
+        centerTitle: true, // Căn giữa tiêu đề
+        backgroundColor: Colors.transparent, // Không có màu nền
+        elevation: 0, // Loại bỏ hiệu ứng đổ bóng
+        iconTheme: IconThemeData(color: Colors.black), // Đổi màu icon về đen
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
@@ -61,28 +71,36 @@ class RideHistoryPageState extends State<RideHistoryPage> {
                     CabRide ride = _cabRides[index];
                     return Card(
                       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      elevation: 2, // Thêm hiệu ứng shadow
+                      elevation: 4, // Thêm hiệu ứng shadow
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       child: ExpansionTile(
-                        title: Text('Chuyến đi ${index + 1}'),
+                        leading: Icon(
+                          Icons.local_taxi,
+                          color: Colors.teal,
+                          size: 30,
+                        ), // Biểu tượng taxi
+                        title: Text(
+                          'Ride ${index + 1}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.teal,
+                          ),
+                        ),
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start, // Đảm bảo căn trái
                               children: [
-                                buildInfoRow('Thời gian bắt đầu:',
-                                    '${ride.ride_start_time}'),
-                                buildInfoRow('Thời gian kết thúc:',
-                                    '${ride.ride_end_time}'),
-                                buildInfoRow('Điểm bắt đầu:',
-                                    '${ride.address_starting_point}',
-                                    multiline: true),
-                                buildInfoRow(
-                                    'Điểm đến:', '${ride.address_destination}',
-                                    multiline: true),
-                                buildInfoRow('Giá:', '${ride.price} \$'),
-                                buildInfoRow('Đánh giá:', '${ride.evaluate}',
-                                    multiline: true),
+                                buildInfoRow('Start time:', '${ride.ride_start_time}'),
+                                buildInfoRow('End time:', '${ride.ride_end_time}'),
+                                buildInfoRow('Starting point:', '${ride.address_starting_point}', multiline: true),
+                                buildInfoRow('Destination:', '${ride.address_destination}', multiline: true),
+                                buildInfoRow('Price:', '\$${ride.price}'),
+                                buildInfoRow('Rating:', '${ride.evaluate}', multiline: true),
                               ],
                             ),
                           ),
@@ -105,7 +123,7 @@ class RideHistoryPageState extends State<RideHistoryPage> {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
-              color: Colors.blue,
+              color: Colors.teal, // Đổi màu chữ thành teal
             ),
           ),
           SizedBox(width: 8),

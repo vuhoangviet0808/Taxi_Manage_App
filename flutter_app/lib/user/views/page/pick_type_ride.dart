@@ -14,8 +14,8 @@ import 'waitting_cab.dart'; // Import trang WaitingCab
 class PickTypeRide extends StatefulWidget {
   final LatLng pickupLocation;
   final LatLng destinationLocation;
-  final String pickupAddress; // Địa chỉ đón
-  final String destinationAddress; // Địa chỉ đến
+  final String pickupAddress; // Pick-up address
+  final String destinationAddress; // Drop-off address
   final User user;
 
   PickTypeRide({
@@ -36,9 +36,9 @@ class _PickTypeRideState extends State<PickTypeRide> {
   List<LatLng> _routePoints = [];
   double _heading = 0.0;
   double _totalDistance = 0.0;
-  double _totalPrice = 0.0; // Biến để lưu trữ giá tiền
-  String? _selectedCarType; // Biến lưu loại xe được chọn
-  final BookingService bookingService = BookingService(); // Khởi tạo service
+  double _totalPrice = 0.0; // Variable to store total price
+  String? _selectedCarType; // Selected car type
+  final BookingService bookingService = BookingService(); // Initialize booking service
 
   void getLocation() async {
     try {
@@ -51,7 +51,7 @@ class _PickTypeRideState extends State<PickTypeRide> {
       });
       _mapController.move(_initialLocation, 15.0);
     } catch (e) {
-      print("Lỗi khi lấy vị trí: $e");
+      print("Error getting location: $e");
     }
   }
 
@@ -69,9 +69,9 @@ class _PickTypeRideState extends State<PickTypeRide> {
         _totalDistance = data['features'][0]['properties']['segments'][0]
                 ['distance'] /
             1000.0;
-        // Tính giá tiền dựa trên quãng đường, với giá 8000 VND cho mỗi km
-        _totalPrice = _totalDistance * 800;
-        // Làm tròn lên hàng nghìn
+        // Calculate total price based on distance, 8000 VND per km
+        _totalPrice = _totalDistance * 8000;
+        // Round up to nearest thousand
         _totalPrice = ((_totalPrice + 999) ~/ 1000) * 1000;
       });
     } else {
@@ -81,12 +81,12 @@ class _PickTypeRideState extends State<PickTypeRide> {
 
   Future<void> _sendBookingRequest() async {
     if (_selectedCarType == null) {
-      print("Chưa chọn loại xe");
+      print("No car type selected");
       return;
     }
 
     try {
-      // Gửi yêu cầu đặt xe
+      // Send booking request
       await bookingService.sendBookingRequest(
         user_id: widget.user.User_ID,
         requestedCarType: _selectedCarType!,
@@ -94,10 +94,10 @@ class _PickTypeRideState extends State<PickTypeRide> {
         dropoffAddress: widget.destinationAddress,
         pickupLocation: widget.pickupLocation,
         dropoffLocation: widget.destinationLocation,
-        price: _totalPrice, // Gửi giá tiền
+        price: _totalPrice, // Send total price
       );
 
-      // Điều hướng sang trang WaitingCab sau khi gửi yêu cầu thành công
+      // Navigate to WaitingCab screen after successful request
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -106,6 +106,8 @@ class _PickTypeRideState extends State<PickTypeRide> {
             destinationLocation: widget.destinationLocation,
             pickupAddress: widget.pickupAddress,
             destinationAddress: widget.destinationAddress,
+            user: widget.user,
+            totalDistance: _totalDistance,
           ),
         ),
       );
@@ -166,10 +168,14 @@ class _PickTypeRideState extends State<PickTypeRide> {
                 Align(
                   alignment: Alignment.center,
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(25), // Rounded corners with teal
+                      border: Border.all(
+                        color: Colors.teal, // Teal border
+                        width: 2,
+                      ),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.black.withOpacity(0.1),
@@ -181,20 +187,20 @@ class _PickTypeRideState extends State<PickTypeRide> {
                     child: Column(
                       children: [
                         Text(
-                          'Quãng đường: ${_totalDistance.toStringAsFixed(2)} km',
+                          'Distance: ${_totalDistance.toStringAsFixed(2)} km',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: Colors.teal,
                           ),
                         ),
                         SizedBox(height: 5),
                         Text(
-                          'Giá tiền: ${_totalPrice.toStringAsFixed(0)} VND',
+                          'Price: ${_totalPrice.toStringAsFixed(0)} VND',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: Colors.teal,
                           ),
                         )
                       ],
@@ -242,7 +248,7 @@ class _PickTypeRideState extends State<PickTypeRide> {
                   padding: const EdgeInsets.all(16.0),
                   child: Center(
                     child: Text(
-                      "Chọn loại xe",
+                      "Choose Car Type",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -252,7 +258,7 @@ class _PickTypeRideState extends State<PickTypeRide> {
                 ),
                 _buildOptionItem(
                   context,
-                  title: "Taxi 4 chỗ",
+                  title: "4-seat Taxi",
                   icon: Icons.directions_car,
                   isSelected: _selectedCarType == '4_seat',
                   onTap: () {
@@ -263,7 +269,7 @@ class _PickTypeRideState extends State<PickTypeRide> {
                 ),
                 _buildOptionItem(
                   context,
-                  title: "Taxi 6 chỗ",
+                  title: "6-seat Taxi",
                   icon: Icons.local_taxi,
                   isSelected: _selectedCarType == '6_seat',
                   onTap: () {
@@ -274,13 +280,13 @@ class _PickTypeRideState extends State<PickTypeRide> {
                 ),
                 _buildOptionItem(
                   context,
-                  title: "Đặt xe",
+                  title: "Book Ride",
                   icon: Icons.check_circle,
                   isSelected: false,
                   onTap: () {
-                    _sendBookingRequest(); // Gọi hàm gửi yêu cầu đặt xe
+                    _sendBookingRequest(); // Trigger booking request
                   },
-                  isBookingButton: true, // Thêm cờ để xác định nút Đặt xe
+                  isBookingButton: true, // Identify booking button
                 ),
               ],
             ),
@@ -300,7 +306,7 @@ Widget _buildOptionItem(BuildContext context,
     required IconData icon,
     required bool isSelected,
     required VoidCallback onTap,
-    bool isBookingButton = false}) { // Thêm cờ isBookingButton để tùy chỉnh nút Đặt xe
+    bool isBookingButton = false}) {
   return GestureDetector(
     onTap: onTap,
     child: Container(
@@ -308,21 +314,21 @@ Widget _buildOptionItem(BuildContext context,
       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       margin: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       decoration: BoxDecoration(
-        color: isBookingButton ? Colors.teal : Colors.white, // Nền teal cho nút Đặt xe
+        color: isBookingButton ? Colors.teal : Colors.white, // Teal for booking button
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.teal, width: 1), // Viền màu teal
+        border: Border.all(color: Colors.teal, width: 1), // Teal border
       ),
       child: Row(
-        mainAxisAlignment: isBookingButton ? MainAxisAlignment.center : MainAxisAlignment.start, // Căn giữa cho nút Đặt xe
+        mainAxisAlignment: isBookingButton ? MainAxisAlignment.center : MainAxisAlignment.start,
         children: [
           Icon(icon, color: isBookingButton ? Colors.white : Colors.teal, size: 24),
-          SizedBox(width: isBookingButton ? 0 : 12), // Xóa khoảng trống cho nút Đặt xe
+          SizedBox(width: isBookingButton ? 0 : 12), // No space for booking button
           Text(
             title,
             style: TextStyle(
               fontSize: 16,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isBookingButton ? Colors.white : Colors.black, // Màu chữ trắng cho nút Đặt xe
+              color: isBookingButton ? Colors.white : Colors.black, // White text for booking button
             ),
           ),
         ],

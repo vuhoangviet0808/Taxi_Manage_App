@@ -1,25 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:fl_chart/fl_chart.dart';
+// import 'package:flutter/material.dart';
+// import 'package:intl/intl.dart';
+// import 'package:http/http.dart' as http;
+// import 'dart:convert';
+// import 'package:fl_chart/fl_chart.dart';
 
-class DriverRevenueDetailScreen extends StatefulWidget {
-  final String driverId;
+// class DriverRevenueDetailScreen extends StatefulWidget {
+//   final String driverId;
 
-  const DriverRevenueDetailScreen({Key? key, required this.driverId})
-      : super(key: key);
+//   const DriverRevenueDetailScreen({Key? key, required this.driverId})
+//       : super(key: key);
 
-  @override
-  _DriverRevenueDetailScreenState createState() =>
-      _DriverRevenueDetailScreenState();
-}
+//   @override
+//   _DriverRevenueDetailScreenState createState() =>
+//       _DriverRevenueDetailScreenState();
+// }
 
-class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
-  DateTime? startDate;
-  DateTime? endDate;
-  List<dynamic> revenueData = [];
-  bool isLoading = false;
+// class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
+//   DateTime? startDate;
+//   DateTime? endDate;
+//   List<dynamic> revenueData = [];
+//   bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -221,37 +221,37 @@ class _DriverRevenueDetailScreenState extends State<DriverRevenueDetailScreen> {
     );
   }
 
-  double _calculateMaxRevenue() {
-    double maxRevenue = 0;
-    for (var data in revenueData) {
-      double revenue = data['revenue'];
-      if (revenue > maxRevenue) {
-        maxRevenue = revenue;
-      }
-    }
-    return maxRevenue + (maxRevenue * 0.2);
-  }
+//   double _calculateMaxRevenue() {
+//     double maxRevenue = 0;
+//     for (var data in revenueData) {
+//       double revenue = data['revenue'];
+//       if (revenue > maxRevenue) {
+//         maxRevenue = revenue;
+//       }
+//     }
+//     return maxRevenue + (maxRevenue * 0.2);
+//   }
 
-  Future<DateTime?> _selectDate(
-      BuildContext context, DateTime? initialDate) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    return pickedDate;
-  }
+//   Future<DateTime?> _selectDate(
+//       BuildContext context, DateTime? initialDate) async {
+//     final DateTime? pickedDate = await showDatePicker(
+//       context: context,
+//       initialDate: initialDate ?? DateTime.now(),
+//       firstDate: DateTime(2000),
+//       lastDate: DateTime(2101),
+//     );
+//     return pickedDate;
+//   }
 
-  Future<void> _fetchDriverRevenue() async {
-    setState(() {
-      isLoading = true;
-    });
+//   Future<void> _fetchDriverRevenue() async {
+//     setState(() {
+//       isLoading = true;
+//     });
 
-    final response = await http.get(
-      Uri.parse(
-          'http://10.0.2.2:5000/admin/driver_revenue?driver_id=${widget.driverId}&start_date=${DateFormat('dd-MM-yyyy').format(startDate!)}&end_date=${DateFormat('dd-MM-yyyy').format(endDate!)}'),
-    );
+//     final response = await http.get(
+//       Uri.parse(
+//           'http://10.0.2.2:5000/admin/driver_revenue?driver_id=${widget.driverId}&start_date=${DateFormat('dd-MM-yyyy').format(startDate!)}&end_date=${DateFormat('dd-MM-yyyy').format(endDate!)}'),
+//     );
 
     if (response.statusCode == 200) {
       setState(() {

@@ -30,12 +30,10 @@ class User:
         )
 
 class Shift:
-    def __init__(self, id, driver_id, cab_id, shift_start_time, shift_end_time, current_gps_location, current_address, evaluate):
+    def __init__(self, id, driver_id, cab_id, current_gps_location, current_address, evaluate):
         self.id = id
         self.driver_id = driver_id
         self.cab_id = cab_id
-        self.shift_start_time = shift_start_time
-        self.shift_end_time = shift_end_time
         self.current_gps_location = current_gps_location
         self.current_address = current_address
         self.evaluate = evaluate
@@ -46,30 +44,56 @@ class Shift:
             id=data.get('ID'),
             driver_id=data.get('Driver_id'),
             cab_id=data.get('cab_id'),
-            shift_start_time=data.get('shift_start_time'),
-            shift_end_time=data.get('shift_end_time'),
             current_gps_location=data.get('current_gps_location'),
             current_address=data.get('current_address'),
             evaluate=data.get('evaluate')
         )
 
-class cabModel:
-    def __init__(self, id, license_plate, car_model_id, manufacture_year, active):
+    def to_json(self):
+        return {
+            'id': self.id,
+            'driver_id': self.driver_id,
+            'cab_id': self.cab_id,
+            'current_gps_location': self.current_gps_location,
+            'current_address': self.current_address,
+            'evaluate': self.evaluate
+        }
+
+class Cab:
+    def __init__(self, id, licence_plate, car_type, manufacture_year, active):
         self.id = id
-        self.license_plate = license_plate
-        self.car_model_id = car_model_id
+        self.licence_plate = licence_plate
+        self.car_type = car_type
         self.manufacture_year = manufacture_year
         self.active = active
 
     @staticmethod
     def from_dict(data):
-        return cabModel(
+        return Cab(
             id=data.get('ID'),
-            license_plate=data.get('license_plate'),
-            car_model_id=data.get('car_model_id'),
+            licence_plate=data.get('licence_plate'),
+            car_type=data.get('car_type'),
             manufacture_year=data.get('manufacture_year'),
             active=data.get('active')
         )
+
+    def to_dict(self):
+        return {
+            'ID': self.id,
+            'licence_plate': self.licence_plate,
+            'car_type': self.car_type,
+            'manufacture_year': self.manufacture_year,
+            'active': self.active
+        }
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'licence_plate': self.licence_plate,
+            'car_type': self.car_type,
+            'manufacture_year': self.manufacture_year,
+            'active': self.active
+        }
 
 class CabRide:
     def __init__(self, id, shift_id, user_id, ride_start_time, ride_end_time, address_starting_point, GPS_starting_point, address_destination, GPS_destination, status, cancelled_by, price, response, evaluate):
@@ -124,6 +148,7 @@ class CabRide:
             'response': self.response,
             'evaluate': self.evaluate
         }
+
 class BookingRequest:
     def __init__(self, booking_id, user_id, requested_car_type, pickup_location, dropoff_location, gps_pick_up_location, gps_destination_location, price, request_time, status, driver_id):
         self.booking_id = booking_id
@@ -169,3 +194,73 @@ class BookingRequest:
             'driver_id': self.driver_id
         }
 
+class BookingDriver:
+    def __init__(self, booking_id, driver_id, status, status_changed_at):
+        self.booking_id = booking_id
+        self.driver_id = driver_id
+        self.status = status
+        self.status_changed_at = status_changed_at
+
+    @staticmethod
+    def from_dict(data):
+        return BookingDriver(
+            booking_id=data.get('booking_id'),
+            driver_id=data.get('driver_id'),
+            status=str(data.get('status', '')),
+            status_changed_at=str(data.get('status_changed_at', ''))
+        )
+
+    def to_json(self):
+        return {
+            'booking_id': self.booking_id,
+            'driver_id': self.driver_id,
+            'status': self.status,
+            'status_changed_at': self.status_changed_at.isoformat() if isinstance(self.status_changed_at, datetime) else self.status_changed_at
+        }
+class Driver:
+    def __init__(self, driver_id, sdt, firstname, lastname, wallet, dob, gender, address, cccd, driving_license_number, working_experiment, driver_token):
+        self.driver_id = driver_id
+        self.sdt = sdt
+        self.firstname = firstname
+        self.lastname = lastname
+        self.wallet = wallet
+        self.dob = dob
+        self.gender = gender
+        self.address = address
+        self.cccd = cccd
+        self.driving_license_number = driving_license_number
+        self.working_experiment = working_experiment
+        self.driver_token = driver_token
+
+    @staticmethod
+    def from_dict(data):
+        return Driver(
+            driver_id=data.get('Driver_ID'),
+            sdt=data.get('SDT'),
+            firstname=data.get('Firstname'),
+            lastname=data.get('Lastname'),
+            wallet=float(data.get('Wallet', 0.0)),  # Chuyển thành float
+            dob=data.get('DOB'),
+            gender=data.get('Gender'),
+            address=data.get('Address'),
+            cccd=data.get('CCCD'),
+            driving_license_number=data.get('Driving_licence_number'),
+            working_experiment=float(data.get('Working_experiment', 0.0)),  # Chuyển thành float
+            driver_token=data.get('driver_token')
+        )
+
+    def to_json(self):
+        return {
+            'Driver_ID': self.driver_id,
+            'SDT': self.sdt,
+            'Firstname': self.firstname,
+            'Lastname': self.lastname,
+            'Wallet': self.wallet,
+            'DOB': self.dob,
+            'Gender': self.gender,
+            'Address': self.address,
+            'CCCD': self.cccd,
+            'Driving_licence_number': self.driving_license_number,
+            'Working_experiment': self.working_experiment,
+            'driver_token': self.driver_token
+        }
