@@ -32,124 +32,171 @@ class _UserReportScreenViewState extends State<UserReportScreenView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông tin người dùng'),
+        title: Text('User Information', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.teal,
       ),
-      body: Column(
+      body: Container(
+        color: Color.fromARGB(255, 203, 235, 231), // Thêm màu nền ở đây
+        child: Column(
+          children: [
+            _buildSearchSection(),
+            _buildUserCount(filteredUsers.length),
+            Expanded(
+              child: Container(
+                color: Colors.white, // Màu nền trắng cho bảng thông tin
+                child: _buildUserTable(filteredUsers),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchSection() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.all(8.0),
+      child: ExpansionTile(
+        title: Text("Filter"),
+        leading: Icon(Icons.search, color: Colors.teal),
         children: [
-          ExpansionTile(
-            title: Text("Tìm kiếm"),
-            leading: Icon(Icons.search),
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      idFilter = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo ID',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      nameFilter = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo tên',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildSoftSearchField(
+              label: 'By ID',
+              onChanged: (value) {
+                setState(() {
+                  idFilter = value;
+                });
+              },
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Số lượng: ${filteredUsers.length}',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columnSpacing: MediaQuery.of(context).size.width - 200,
-                  columns: [
-                    DataColumn(
-                      label: Text(
-                        'ID',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Họ tên',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                  rows: filteredUsers.map((user) {
-                    return DataRow(cells: [
-                      DataCell(
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.all(8),
-                          child: GestureDetector(
-                            onTap: () {
-                              widget.viewModel
-                                  .fetchEachUser(context, user.User_ID);
-                            },
-                            child: Text(
-                              user.User_ID,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            "${user.Firstname} ${user.Lastname}",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ]);
-                  }).toList(),
-                ),
-              ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildSoftSearchField(
+              label: 'By Name',
+              onChanged: (value) {
+                setState(() {
+                  nameFilter = value;
+                });
+              },
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSoftSearchField(
+      {required String label, required Function(String) onChanged}) {
+    return TextField(
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(Icons.search, color: Colors.teal),
+        filled: true,
+        fillColor: Colors.teal.withOpacity(0.1),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: Colors.teal),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserCount(int count) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            'Quantity: $count',
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUserTable(List<User> users) {
+    return Expanded(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columnSpacing: 60.0,
+            headingRowHeight: 56.0,
+            dataRowHeight: 56.0,
+            headingRowColor: MaterialStateColor.resolveWith(
+                (states) => Colors.teal.shade100),
+            columns: [
+              DataColumn(
+                label: Text(
+                  'ID',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Name',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Avatar',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+            ],
+            rows: users.map((user) {
+              return DataRow(cells: [
+                DataCell(
+                  GestureDetector(
+                    onTap: () {
+                      widget.viewModel.fetchEachUser(context, user.User_ID);
+                    },
+                    child: Text(
+                      user.User_ID,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        color: Colors.teal,
+                      ),
+                    ),
+                  ),
+                ),
+                DataCell(
+                  Text(
+                    "${user.Firstname} ${user.Lastname}",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                DataCell(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage:
+                            AssetImage('assets/admin/adminDefault.jpg'),
+                        radius: 20,
+                      ),
+                    ],
+                  ),
+                ),
+              ]);
+            }).toList(),
+          ),
+        ),
       ),
     );
   }
@@ -165,210 +212,98 @@ class UserDetailScreen extends StatelessWidget {
     final double fontSize = 16.0;
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 203, 235, 231),
       appBar: AppBar(
-        title: Text('Thông tin chi tiết người dùng'),
+        title:
+            Text('Detailed Information', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.teal,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.black, width: 1),
+                    ),
+                    child: CircleAvatar(
+                      backgroundImage:
+                          AssetImage('assets/admin/adminDefault.jpg'),
+                      radius: 60,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    '${user.Firstname} ${user.Lastname}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 20),
-            RichText(
-              text: TextSpan(
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white, // Màu nền cho Container
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding:
+                  EdgeInsets.only(bottom: 10, top: 20, left: 30, right: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextSpan(
-                    text: 'ID người dùng: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${user.User_ID}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
+                  _buildDetailRow('ID: ', user.User_ID, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Phone number: ', user.SDT, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Wallet: ', user.Wallet, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('DOB: ', user.DOB, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Gender: ', user.Gender, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Address: ', user.Address, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow('Identity Card: ', user.CCCD, fontSize),
+                  SizedBox(height: 7),
+                  _buildDetailRow(
+                      'Account Creation:', user.created_at, fontSize),
                 ],
               ),
             ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Họ và tên: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${user.Firstname} ${user.Lastname}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value, double fontSize) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: label,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontSize: fontSize,
               ),
             ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Số điện thoại: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${user.SDT}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Ví: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${user.Wallet}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Ngày sinh: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${user.DOB}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Giới tính: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${user.Gender}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Địa chỉ: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${user.Address}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'CCCD: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${user.CCCD}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Ngày tạo: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                  TextSpan(
-                    text: '${user.created_at}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: fontSize,
-                    ),
-                  ),
-                ],
+            TextSpan(
+              text: value,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: fontSize,
               ),
             ),
           ],

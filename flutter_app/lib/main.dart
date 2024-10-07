@@ -7,6 +7,9 @@ import 'common/views/login_page.dart';
 import 'user/user_main.dart';
 import 'admin/admin_main.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 void main() {
   runApp(MyApp());
 }

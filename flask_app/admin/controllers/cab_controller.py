@@ -25,11 +25,9 @@ class CabController:
                 cab_info.append({
                     'ID': cab["ID"],
                     'licence_plate': cab["licence_plate"],
-                    'car_model_id': cab["car_model_id"],
+                    'car_type': cab["car_type"],
                     'manufacture_year' : cab["manufacture_year"],
                     'active': cab["active"],
-                    'model_name': cab["model_name"],
-                    'model_description': cab["model_description"]
                 })
             return jsonify(cab_info), 200
         else:

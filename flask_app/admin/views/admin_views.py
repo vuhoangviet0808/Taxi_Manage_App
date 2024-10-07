@@ -1,14 +1,19 @@
 from flask import Blueprint, jsonify, request
 from datetime import datetime
+
+
 from ..controllers.admin_controller import AdminController
 from ..controllers.cab_ride_controller import Cab_rideController
 from ..controllers.user_controller import UserController
 from ..controllers.shift_controller import ShiftController
 from ..controllers.cab_controller import CabController
+from ..controllers.booking_request_controller import BookingRequestController
 from ..controllers.driver_revenue_controller import calculate_driver_revenue
 from ..controllers.company_revenue_controller import calculate_company_revenue
 from ..controllers.get_driver_by_revenue_controller import get_drivers_by_revenue_controller
-
+from ..controllers.find_driver_controllers import FindDriverController
+from ..controllers.insert_driver_controllers import InsertBookingDriverController
+from ..controllers.driver_booking_controllers import DriverBookingController
 
 admin_blueprint = Blueprint('admin', __name__)
 
@@ -116,3 +121,49 @@ def driver_by_revenue():
         return jsonify({"error": "Incorrect date format, should be dd-mm-yyyy."}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+@admin_blueprint.route('/drivers_in_bounding_box/<int:booking_id>', methods=['GET'])
+def get_drivers_in_bounding_box(booking_id):
+    return FindDriverController().get_drivers_in_bounding_box(booking_id)
+
+@admin_blueprint.route('/drivers_in_bounding_box/<int:booking_id>/insert_drivers', methods=['GET','POST'])
+def insert_drivers_for_booking(booking_id):
+    return InsertBookingDriverController().insert_drivers(booking_id)
+
+
+@admin_blueprint.route('/booking_request', methods=['GET'])
+def booking_request_get_3_info():
+    return BookingRequestController().get_basic_booking_request_info()
+
+
+@admin_blueprint.route('/booking_request/<int:booking_id>', methods=['GET'])
+def each_booking_request_by_id_info(booking_id):
+    return BookingRequestController().get_full_booking_request_info(booking_id)
+
+@admin_blueprint.route('/booking_request/total', methods=['GET'])
+def booking_request_total():
+    return BookingRequestController().get_pending_booking_request_count()
+
+@admin_blueprint.route('/booking_request/car_type', methods=['GET'])
+def booking_request_car_type_count():
+    return BookingRequestController().count_car_types()
+
+
+@admin_blueprint.route('/driver_booking', methods=['GET'])
+def get_earliest_assigned_driver_bookings():
+    return DriverBookingController().get_earliest_assigned_driver_bookings()
+
+
+@admin_blueprint.route('/driver_booking/<int:booking_id>/<int:driver_id>', methods=['GET', 'POST'])
+def update_driver_id(booking_id, driver_id):
+    return DriverBookingController().insert_driver_id(booking_id, driver_id)
+
+
+@admin_blueprint.route('/driver_booking/delete/<int:booking_id>', methods=['GET','DELETE'])
+def delete_booking(booking_id):
+    return DriverBookingController().delete_booking_by_id(booking_id)
+
+@admin_blueprint.route('/driver_booking/total', methods=['GET'])
+def count_earliest_assigned_driver_bookings():
+    return DriverBookingController().count_earliest_assigned_driver_bookings()

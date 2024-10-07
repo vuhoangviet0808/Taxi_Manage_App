@@ -33,119 +33,154 @@ class _CabRideListScreenState extends State<CabRideListScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Quản lí chuyến đi'),
+        title:
+            Text('Cab Ride Information', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.teal,
       ),
-      body: Column(
+      body: Container(
+        color: Color.fromARGB(255, 203, 235, 231), // Thêm màu nền ở đây
+        child: Column(
+          children: [
+            _buildSearchSection(),
+            _buildCabRideCount(filteredCabRides.length),
+            Expanded(
+              child: Container(
+                color: Colors.white, // Màu nền trắng cho bảng thông tin
+                child: _buildCabRideTable(filteredCabRides),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchSection() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      margin: const EdgeInsets.all(8.0),
+      child: ExpansionTile(
+        title: Text("Filter"),
+        leading: Icon(Icons.search, color: Colors.teal),
         children: [
-          ExpansionTile(
-            title: Text("Tìm kiếm"),
-            leading: Icon(Icons.search),
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      idFilter = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo ID',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      startTimeFilter = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Tìm kiếm theo thời gian khởi hành',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildSoftSearchField(
+              label: 'By ID',
+              onChanged: (value) {
+                setState(() {
+                  idFilter = value;
+                });
+              },
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Số lượng: ${filteredCabRides.length}',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columns: [
-                    DataColumn(
-                      label: Text(
-                        'ID',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        'Thời gian khởi hành',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                    ),
-                  ],
-                  rows: filteredCabRides.map((cabRide) {
-                    return DataRow(cells: [
-                      DataCell(
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.all(8),
-                          child: GestureDetector(
-                            onTap: () {
-                              widget.viewModel
-                                  .fetchEachCabRide(context, cabRide.ID);
-                            },
-                            child: Text(
-                              cabRide.ID,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      DataCell(
-                        Container(
-                          alignment: Alignment.centerLeft, // Căn lề trái
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            cabRide.ride_start_time,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ]);
-                  }).toList(),
-                ),
-              ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildSoftSearchField(
+              label: 'By starting time',
+              onChanged: (value) {
+                setState(() {
+                  startTimeFilter = value;
+                });
+              },
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSoftSearchField(
+      {required String label, required Function(String) onChanged}) {
+    return TextField(
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(Icons.search, color: Colors.teal),
+        filled: true,
+        fillColor: Colors.teal.withOpacity(0.1),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(color: Colors.teal),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCabRideCount(int count) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            'Quantity: $count',
+            style: TextStyle(fontSize: 18),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCabRideTable(List<Cab_ride> cabRides) {
+    return Expanded(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columnSpacing: 24.0,
+            headingRowHeight: 56.0,
+            dataRowHeight: 56.0,
+            headingRowColor: MaterialStateColor.resolveWith(
+                (states) => Colors.teal.shade100),
+            columns: [
+              DataColumn(
+                label: Text(
+                  'ID',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Starting time',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+            ],
+            rows: cabRides.map((cabRide) {
+              return DataRow(cells: [
+                DataCell(
+                  GestureDetector(
+                    onTap: () {
+                      widget.viewModel.fetchEachCabRide(context, cabRide.ID);
+                    },
+                    child: Text(
+                      cabRide.ID,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        color: Colors.teal,
+                      ),
+                    ),
+                  ),
+                ),
+                DataCell(
+                  Text(
+                    cabRide.ride_start_time,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ]);
+            }).toList(),
+          ),
+        ),
       ),
     );
   }
@@ -161,306 +196,122 @@ class CabRideDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double baseFontSize = 16.0;
-    final double increasedFontSize = baseFontSize * 1;
+    final double increasedFontSize = baseFontSize * 1.0;
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 203, 235, 231),
       appBar: AppBar(
-        title: Text('Thông tin chi tiết chuyến đi'),
+        title:
+            Text('Detailed Information', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.teal,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'ID chuyến đi: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  TextSpan(
-                    text: '${cabRide.ID}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
-                  ),
-                ],
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
               ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
+              padding:
+                  EdgeInsets.only(bottom: 10, top: 10, left: 30, right: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextSpan(
-                    text: 'ID ca làm việc: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  WidgetSpan(
-                    child: GestureDetector(
+                  _buildDetailText('ID: ', cabRide.ID),
+                  SizedBox(height: 7),
+                  _buildDetailText('Shift ID: ', cabRide.shift_id, isLink: true,
                       onTap: () {
-                        shiftViewModel.fetchEachShift(
-                            context, cabRide.shift_id);
-                      },
-                      child: Text(
-                        '${cabRide.shift_id}',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: increasedFontSize,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'ID người dùng: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  WidgetSpan(
-                    child: GestureDetector(
+                    shiftViewModel.fetchEachShift(context, cabRide.shift_id);
+                  }),
+                  SizedBox(height: 7),
+                  _buildDetailText('User ID: ', cabRide.user_id, isLink: true,
                       onTap: () {
-                        userViewModel.fetchEachUser(context, cabRide.user_id);
-                      },
-                      child: Text(
-                        '${cabRide.user_id}',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontSize: increasedFontSize,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ),
+                    userViewModel.fetchEachUser(context, cabRide.user_id);
+                  }),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Departure time: ', cabRide.ride_start_time.toString()),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Arrival time: ', cabRide.ride_end_time.toString()),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Departure point: ', cabRide.address_starting_point),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Departure GPS: ', cabRide.GPS_starting_point),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Destination: ', cabRide.address_destination),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Destination GPS: ', cabRide.GPS_destination),
+                  SizedBox(height: 7),
+                  _buildDetailText('Status: ', cabRide.status.toString()),
+                  SizedBox(height: 7),
+                  _buildDetailText(
+                      'Is Canceled: ', cabRide.canceled.toString()),
+                  SizedBox(height: 7),
+                  _buildDetailText('Price: ', cabRide.price.toString()),
+                  SizedBox(height: 7),
+                  _buildDetailText('Customer Feedback: ', cabRide.response),
+                  SizedBox(height: 7),
+                  _buildDetailText('Evaluation: ', cabRide.evaluate),
                 ],
               ),
             ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Thời gian bắt đầu: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  TextSpan(
-                    text: '${cabRide.ride_start_time.toString()}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Thời gian kết thúc: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  TextSpan(
-                    text: '${cabRide.ride_end_time.toString()}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Điểm khởi hành: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  TextSpan(
-                    text: '${cabRide.address_starting_point}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'GPS khởi hành: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  TextSpan(
-                    text: '${cabRide.GPS_starting_point}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Điểm đến: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  TextSpan(
-                    text: '${cabRide.address_destination}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'GPS điểm đến: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  TextSpan(
-                    text: '${cabRide.GPS_destination}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Bị hủy: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  TextSpan(
-                    text: '${cabRide.canceled}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'ID loại thanh toán: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  TextSpan(
-                    text: '${cabRide.payment_type_id}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Giá: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  TextSpan(
-                    text: '${cabRide.price}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Phản hồi: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  TextSpan(
-                    text: '${cabRide.response}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 8),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Đánh giá: ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: increasedFontSize),
-                  ),
-                  TextSpan(
-                    text: '${cabRide.evaluate}',
-                    style: TextStyle(
-                        color: Colors.black, fontSize: increasedFontSize),
-                  ),
-                ],
+            SizedBox(height: 15),
+            Center(
+              child: CircleAvatar(
+                backgroundImage: AssetImage('assets/admin/Success.png'),
+                radius: 50,
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDetailText(String label, String value,
+      {bool isLink = false, Function()? onTap}) {
+    final double fontSize = 16.0;
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: label,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontSize: fontSize,
+            ),
+          ),
+          isLink
+              ? WidgetSpan(
+                  child: GestureDetector(
+                    onTap: onTap,
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: fontSize,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                )
+              : TextSpan(
+                  text: value,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: fontSize,
+                  ),
+                ),
+        ],
       ),
     );
   }

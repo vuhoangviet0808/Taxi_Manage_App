@@ -8,16 +8,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.6  
+  firebase_core: 3.4.0
+  firebase_messaging: 15.1.0
+  http: ^0.13.3
   provider: ^6.0.3
-  geolocator: ^11.0.0  
-  intl: ^0.17.0  
-  file_picker: ^5.5.0  
+  google_maps_flutter: ^2.1.1
+  geolocator: ^11.0.0
+  intl: ^0.17.0
+  file_picker: ^5.0.1
   sliding_up_panel: ^2.0.0
-  shared_preferences: ^2.0.13
-  flutter_map: ^3.1.0  
-  latlong2: ^0.8.2
   fl_chart: ^0.40.0
+
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +31,4 @@ flutter:
   - assets/common/
   - assets/user/
   - assets/driver/
+  - assets/admin/
