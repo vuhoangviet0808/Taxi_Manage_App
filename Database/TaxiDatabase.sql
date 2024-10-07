@@ -2,84 +2,62 @@ drop database if exists taxi_management_app;
 create database taxi_management_app;
 use taxi_management_app;
 
-create table Account(
-	SDT varchar(20) primary key,
-    password varchar(50),
-    roles ENUM('admin','driver','user') NOT NULL DEFAULT 'user',
-    status ENUM('active','inactive') NOT NULL DEFAULT 'active',
-    created_at DATE
+CREATE TABLE Account (
+    SDT VARCHAR(20) PRIMARY KEY,
+    password VARCHAR(255),
+    roles ENUM('admin', 'driver', 'user') NOT NULL DEFAULT 'user',
+    status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-create table User(
-	User_ID int primary key auto_increment,
-    SDT varchar(20),
-    Firstname nvarchar(255),
-    Lastname nvarchar(255),
-    Wallet int default 0,
-    DOB date,
-    Gender ENUM('Nam','Nữ'),
-    Address text,
-    CCCD varchar(20),
-    foreign key(SDT) references Account(SDT)
+CREATE TABLE User (
+    User_ID INT PRIMARY KEY AUTO_INCREMENT,
+    SDT VARCHAR(20),
+    Firstname VARCHAR(255),
+    Lastname VARCHAR(255),
+    Wallet DECIMAL(10, 2) DEFAULT 0,
+    DOB DATE,
+    Gender ENUM('Nam', 'Nữ'),
+    Address TEXT,
+    CCCD VARCHAR(20),
+    user_token VARCHAR(255) NULL,
+    FOREIGN KEY(SDT) REFERENCES Account(SDT)
 );
 
-create table Driver (
-	Driver_ID int primary key auto_increment,
-    SDT varchar(20),
-     Firstname nvarchar(255),
-    Lastname nvarchar(255),
-    Wallet int default 0,
-    DOB date,
-    Gender ENUM('Nam','Nữ'),
-    Address text,
-    CCCD varchar(20),
-    Driving_licence_number varchar(20),
-    Working_experiment int default 0,
-    foreign key(SDT) references Account(SDT)
+CREATE TABLE Driver (
+    Driver_ID INT PRIMARY KEY AUTO_INCREMENT,
+    SDT VARCHAR(20),
+    Firstname VARCHAR(255),
+    Lastname VARCHAR(255),
+    Wallet DECIMAL(10, 2) DEFAULT 0,
+    DOB DATE,
+    Gender ENUM('Nam', 'Nữ'),
+    Address TEXT,
+    CCCD VARCHAR(20),
+    Driving_licence_number VARCHAR(20),
+    Working_experiment DECIMAL(5, 2) DEFAULT 0,
+    driver_token VARCHAR(255) NULL,
+    FOREIGN KEY(SDT) REFERENCES Account(SDT)
 );
 
-create table car_model(
-	ID int primary key auto_increment,
-    model_name nvarchar(255),
-    model_description text
+CREATE TABLE Cab (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    licence_plate VARCHAR(20),
+    car_type ENUM('4_seat', '6_seat') NOT NULL, -- Thêm thuộc tính car_type
+    manufacture_year INT,
+    active BOOLEAN DEFAULT TRUE
 );
 
-create table Cab (
-	ID int primary key auto_increment,
-    licence_plate varchar(20),
-    car_model_id int,
-    manufacture_year int,
-    active boolean default true,
-    foreign key (car_model_id) references car_model(ID)
-);
-
-
-create table Shift (
-	ID int primary key auto_increment,
-    Driver_id int,
-    cab_id int,
-    shift_start_time datetime,
-    shift_end_time datetime,
-    login_time datetime,
-    logout_time datetime,
-    foreign key(Driver_id) references Driver(Driver_ID),
-    foreign key(cab_id) references Cab(ID)
-);
-
-create table payment_type (
-	ID int primary key auto_increment,
-    type_name nvarchar(255)
-);
-
-create table status (
-	ID int primary key auto_increment,
-    status_name nvarchar(255)
-);
-
-create table cc_agent(
-	ID int primary key auto_increment,
-    first_name nvarchar(255),
-    last_name nvarchar(255)
+CREATE TABLE Shift (
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Driver_id INT,
+    cab_id INT,
+    current_gps_location POINT,
+    current_address TEXT,
+    evaluate DECIMAL(2, 1),
+    FOREIGN KEY(Driver_id) REFERENCES Driver(Driver_ID),
+    FOREIGN KEY(cab_id) REFERENCES Cab(ID)
 );
 
 CREATE TABLE cab_ride (
@@ -88,33 +66,35 @@ CREATE TABLE cab_ride (
     user_id INT,
     ride_start_time DATETIME,
     ride_end_time DATETIME,
-    address_starting_point text,
-    GPS_starting_point text,
-    address_destination text,
-    GPS_destination text,
-    canceled BOOLEAN,
-    payment_type_id INT,
+    address_starting_point TEXT,
+    GPS_starting_point POINT,
+    address_destination TEXT,
+    GPS_destination POINT,
+    status ENUM('in_progress', 'cancelled', 'completed') NOT NULL,
+    cancelled_by ENUM('user', 'driver', 'system') NULL,
     price DECIMAL(10,2),
     response TEXT,
-    evaluate TEXT,
-    foreign key(shift_id) references shift(ID),
-    foreign key(user_id) references User(User_ID),
-    foreign key(payment_type_id) references payment_type(ID)
+    evaluate DECIMAL(2, 1),
+    FOREIGN KEY(shift_id) REFERENCES Shift(ID),
+    FOREIGN KEY(user_id) REFERENCES User(User_ID)
 );
 
-
-
-create table cab_ride_status (
-	ID int primary key auto_increment,
-    cab_ride_id int,
-    status_id int,
-    status_time datetime,
-    cc_agent_id int,
-    status_detail text,
-    foreign key(cab_ride_id) references cab_ride(ID),
-    foreign key(status_id) references status(ID),
-    foreign key(cc_agent_id) references cc_agent(ID)
+CREATE TABLE booking_requests (
+    booking_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    requested_car_type ENUM('4_seat', '6_seat'),
+    pickup_location VARCHAR(255),
+    dropoff_location VARCHAR(255),
+    gps_pick_up_location POINT,
+    gps_destination_location POINT, 
+    price DECIMAL(10,2),
+    request_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('pending', 'assigned', 'cancelled') DEFAULT 'pending',
+    driver_id INT NULL,
+    FOREIGN KEY(user_id) REFERENCES User(User_ID),
+    FOREIGN KEY(driver_id) REFERENCES Driver(Driver_ID) ON DELETE SET NULL
 );
+
 
 
 

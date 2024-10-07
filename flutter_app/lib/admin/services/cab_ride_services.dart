@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/admin/models/cab_ride_model.dart';

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class Shift {
   final String ID;
   final String shift_start_time;

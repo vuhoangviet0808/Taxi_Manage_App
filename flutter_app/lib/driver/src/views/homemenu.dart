@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/driver/src/services/driver_info_services.dart';
+import 'package:flutter_app/driver/src/services/logout.dart';
+import 'package:flutter_app/driver/src/views/revenue_summary.dart';
 import 'package:provider/provider.dart';
 
 import '../models/driver.dart';
 import '../viewmodels/driver_viewmodel.dart';
 import 'driver_infor.dart';
 import 'ride_history.dart';
+import 'package:intl/intl.dart';
 
 class HomeMenu extends StatefulWidget {
   final Driver driver;
@@ -19,6 +22,12 @@ class HomeMenu extends StatefulWidget {
 class _HomeMenuState extends State<HomeMenu> {
   List<CabRide> _cabRides = [];
   String? _errorMes;
+
+  String formatCurrency(double price) {
+    final NumberFormat formatter =
+        NumberFormat.currency(locale: 'vi_VN', symbol: 'VNĐ');
+    return formatter.format(price);
+  }
 
   @override
   void initState() {
@@ -40,7 +49,7 @@ class _HomeMenuState extends State<HomeMenu> {
                   padding: EdgeInsets.all(8),
                   color: Colors.black54,
                   width: double.infinity,
-                  height: 120,
+                  height: 180,
                   child: Row(
                     children: <Widget>[
                       CircleAvatar(
@@ -56,7 +65,7 @@ class _HomeMenuState extends State<HomeMenu> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Text(
-                              ' ${widget.driver.lastname} ${widget.driver.firstname}',
+                              '${widget.driver.lastname} ${widget.driver.firstname} ',
                               style:
                                   TextStyle(fontSize: 18, color: Colors.white),
                             ),
@@ -73,7 +82,7 @@ class _HomeMenuState extends State<HomeMenu> {
                 ),
               ),
               Divider(
-                height: 10,
+                height: 20,
                 thickness: 0,
                 color: Colors.white,
               ),
@@ -100,6 +109,10 @@ class _HomeMenuState extends State<HomeMenu> {
                         },
                       ),
                     ),
+                    SizedBox(
+                      width: 40,
+                      height: 15,
+                    ),
                     Card(
                       child: ListTile(
                         leading: Icon(Icons.wallet),
@@ -112,14 +125,30 @@ class _HomeMenuState extends State<HomeMenu> {
                         },
                       ),
                     ),
+                    SizedBox(
+                      width: 40,
+                      height: 15,
+                    ),
                     Card(
                       child: ListTile(
-                          leading: Icon(Icons.attach_money),
-                          title: Text(
-                            'Tổng hợp doanh thu',
-                            style: TextStyle(fontSize: 16, color: Colors.black),
-                          ),
-                          onTap: () {}),
+                        leading: Icon(Icons.attach_money),
+                        title: Text(
+                          'Tổng hợp doanh thu',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => DailyRevenueSummary(
+                                  driverId: widget.driver.Driver_ID),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 40,
+                      height: 15,
                     ),
                     Card(
                       child: ListTile(
@@ -138,23 +167,9 @@ class _HomeMenuState extends State<HomeMenu> {
                         },
                       ),
                     ),
-                    Card(
-                      child: ListTile(
-                        leading: Icon(Icons.percent),
-                        title: Text(
-                          'Tỷ lệ hoạt động',
-                          style: TextStyle(fontSize: 16, color: Colors.black),
-                        ),
-                      ),
-                    ),
-                    Card(
-                      child: ListTile(
-                        leading: Icon(Icons.message_rounded),
-                        title: Text(
-                          'Tin nhắn từ tổng đài',
-                          style: TextStyle(fontSize: 16, color: Colors.black),
-                        ),
-                      ),
+                    SizedBox(
+                      width: 40,
+                      height: 15,
                     ),
                     Card(
                       child: ListTile(
@@ -169,6 +184,10 @@ class _HomeMenuState extends State<HomeMenu> {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      width: 40,
+                      height: 15,
+                    ),
                     Card(
                       child: ListTile(
                         leading: Icon(Icons.logout_outlined),
@@ -176,6 +195,9 @@ class _HomeMenuState extends State<HomeMenu> {
                           'Đăng xuất',
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
+                        onTap: () async {
+                          LogOutService().logout(context); // gọi hàm logout
+                        },
                       ),
                     ),
                   ],
@@ -247,15 +269,15 @@ class _HomeMenuState extends State<HomeMenu> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              widget.driver.Wallet.toStringAsFixed(2),
+                              formatCurrency(widget.driver.Wallet),
                               style: TextStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                               ),
                             ),
-                            Icon(Icons.monetization_on,
-                                size: 40, color: Colors.green),
+                            // Icon(Icons.monetization_on,
+                            //     size: 40, color: Colors.green),
                           ],
                         ),
                       ],
@@ -274,6 +296,7 @@ class _HomeMenuState extends State<HomeMenu> {
     CabRideInfoService cabRides = CabRideInfoService();
     try {
       List<CabRide> rides = await cabRides.getCabRide(widget.driver.Driver_ID);
+      print('Received rides: $rides'); // In ra để kiểm tra dữ liệu nhận được
       setState(() {
         _cabRides = rides;
         _errorMes = rides.isEmpty ? "Không có dữ liệu chuyến đi" : null;
@@ -287,7 +310,16 @@ class _HomeMenuState extends State<HomeMenu> {
   }
 
   void totalPrice() {
+    // double totalPrice = _cabRides.fold(0.0, (sum, ride) {
+    //   // In ra giá trị của ride.price để kiểm tra
+    //   print('Price of ride: ${ride.price}');
+    //   return sum + ride.price;
+    // });
+    // setState(() {
+    //   widget.driver.Wallet = totalPrice;
+    // });
     double totalPrice = _cabRides.fold(0, (sum, ride) => sum + ride.price);
+    print('Total Price: $totalPrice');
     setState(() {
       if (_errorMes == null) {
         widget.driver.Wallet = double.parse(totalPrice.toStringAsFixed(2));

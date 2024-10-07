@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, non_constant_identifier_names
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/admin/models/user_model.dart';

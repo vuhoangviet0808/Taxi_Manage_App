@@ -1,6 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
+import './sms_page.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   @override
@@ -9,7 +10,12 @@ class ForgotPasswordPage extends StatefulWidget {
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final TextEditingController _sdtController = TextEditingController();
+  String phoneError = "";
 
+  bool checkPhone(String phone) {
+    if(phone.length != 10) return false;
+    return RegExp(r'^[0-9]+$').hasMatch(phone);
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +53,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   ),
                 ),
               ),
+              if (phoneError.isNotEmpty) Text(
+                phoneError,
+                style: TextStyle(color: Colors.red, fontSize: 15),
+              ),
               Padding(
                 padding: EdgeInsets.only( bottom: 6),
                 child: TextField(
@@ -82,7 +92,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Xử lý khi nút bấm được nhấn
+                    if(checkPhone(_sdtController.text)) {
+                      setState(() {
+                        phoneError = "Số điện thoại không hợp lệ";
+                      });
+                    }
+                    else {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SMSMessagePage(_sdtController.text)));
+                      _sdtController.clear();
+                      phoneError = "";
+                    }
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
