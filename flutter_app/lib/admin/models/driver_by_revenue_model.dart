@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_this
+
 import 'package:flutter_app/admin/models/models.dart';
 
 class DriverRevenue {

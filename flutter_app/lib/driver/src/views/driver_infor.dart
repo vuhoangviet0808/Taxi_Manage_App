@@ -85,7 +85,7 @@ class _DriverInforState extends State<DriverInfor> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          "Thông tin tài xế",
+          "Driver Information",
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -160,7 +160,7 @@ class _DriverInforState extends State<DriverInfor> {
                   SizedBox(height: 20),
                   _buildTextField(
                     controller: _lastNameController,
-                    label: "Họ",
+                    label: "Last Name",
                     icon: Icons.person_outline,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -172,7 +172,7 @@ class _DriverInforState extends State<DriverInfor> {
                   SizedBox(height: 20),
                   _buildTextField(
                     controller: _firstNameController,
-                    label: "Tên",
+                    label: "First Name",
                     icon: Icons.person,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -183,14 +183,14 @@ class _DriverInforState extends State<DriverInfor> {
                   ),
                   SizedBox(height: 20),
                   _buildTextField(
-                    label: "SĐT: ${widget.driver.SDT}",
+                    label: "Phone Number: ${widget.driver.SDT}",
                     icon: Icons.phone,
                     enabled: false,
                   ),
                   SizedBox(height: 20),
                   _buildTextField(
                     controller: _dobController,
-                    label: "Ngày sinh",
+                    label: "Date of Birth",
                     icon: Icons.calendar_today,
                     hintText: "YYYY-MM-DD",
                     readOnly: true,
@@ -212,7 +212,7 @@ class _DriverInforState extends State<DriverInfor> {
                       Expanded(
                         child: _buildTextField(
                           controller: _cccdController,
-                          label: "CCCD",
+                          label: "ID Card Number",
                           icon: Icons.credit_card,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -227,7 +227,7 @@ class _DriverInforState extends State<DriverInfor> {
                   SizedBox(height: 20),
                   _buildTextField(
                     controller: _addressController,
-                    label: "Địa chỉ",
+                    label: "Address",
                     icon: Icons.home,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -239,7 +239,7 @@ class _DriverInforState extends State<DriverInfor> {
                   SizedBox(height: 20),
                   _buildTextField(
                     controller: _licenseController,
-                    label: "Số giấy phép lái xe",
+                    label: "Driver's License Number",
                     icon: Icons.drive_eta,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -299,7 +299,7 @@ class _DriverInforState extends State<DriverInfor> {
     return DropdownButtonFormField<String>(
       value: _gender,
       decoration: InputDecoration(
-        labelText: 'Giới tính',
+        labelText: 'Gender',
         prefixIcon: Icon(Icons.wc),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(5),

@@ -45,7 +45,7 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
   }
 
   Future<LatLng?> _fetchLatLng(String address) async {
-    if (address == "Vị trí hiện tại" && _currentLocation != null) {
+    if (address == "Current Location" && _currentLocation != null) {
       return _currentLocation;
     }
     final url = Uri.parse(
@@ -86,7 +86,7 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
               icon: Icon(Icons.my_location, color: Colors.teal),
               onPressed: () {
                 if (_currentLocation != null) {
-                  controller.text = "Vị trí hiện tại";
+                  controller.text = "Current Location";
                   _updateLocations();
                 }
               },
@@ -170,7 +170,7 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
             SizedBox(height: 16.0),
             Center(
               child: Text(
-                "Chỉ Đường",
+                "Directions",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20.0,
@@ -180,14 +180,14 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
             ),
             SizedBox(height: 40.0),
             _buildTextField(
-              "Điểm đón",
+              "Pickup",
               widget.pickupLocationController,
               Icons.location_on,
               true,
             ),
             SizedBox(height: 16.0),
             _buildTextField(
-              "Điểm đến",
+              "Destination",
               widget.destinationLocationController,
               Icons.flag,
               false,
@@ -208,7 +208,7 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: Text('Chỉ đường'),
+                child: Text('Navigate'),
               ),
             ),
           ],

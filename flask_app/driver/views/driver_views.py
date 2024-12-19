@@ -27,3 +27,15 @@ def get_cab():
 @driver_blueprint.route('/getCabRide', methods = ['GET'])
 def get_cab_ride():
     return DriverController.cab_ride()
+@driver_blueprint.route('/postLocation', methods = ['POST'])
+def post_location():
+    return DriverController.postLocation()
+@driver_blueprint.route('/clearLocation', methods = ['DELETE'])
+def clear_location():
+    return DriverController.clearPostion()
+@driver_blueprint.route('/listRequest', methods = ['GET'])
+def list_request():
+    return DriverController.get_pending_bookings()
+@driver_blueprint.route('/accept_booking', methods=['POST'])
+def accept_booking():
+    return DriverController.accept_booking()

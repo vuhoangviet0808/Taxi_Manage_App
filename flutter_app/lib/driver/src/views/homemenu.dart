@@ -94,7 +94,7 @@ class _HomeMenuState extends State<HomeMenu> {
                       child: ListTile(
                         leading: Icon(Icons.person),
                         title: Text(
-                          'Thông tin cá nhân',
+                          'Personal Information',
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                         onTap: () {
@@ -117,7 +117,7 @@ class _HomeMenuState extends State<HomeMenu> {
                       child: ListTile(
                         leading: Icon(Icons.wallet),
                         title: Text(
-                          'Ví tài khoản',
+                          'Wallet',
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                         onTap: () {
@@ -133,7 +133,7 @@ class _HomeMenuState extends State<HomeMenu> {
                       child: ListTile(
                         leading: Icon(Icons.attach_money),
                         title: Text(
-                          'Tổng hợp doanh thu',
+                          'Revenue Summary',
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                         onTap: () {
@@ -154,7 +154,7 @@ class _HomeMenuState extends State<HomeMenu> {
                       child: ListTile(
                         leading: Icon(Icons.history_rounded),
                         title: Text(
-                          'Lịch sử chuyến đi',
+                          'Trip History',
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                         onTap: () {
@@ -179,7 +179,7 @@ class _HomeMenuState extends State<HomeMenu> {
                           height: 20,
                         ),
                         title: Text(
-                          'Thông báo',
+                          'Notifications',
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                       ),
@@ -192,7 +192,7 @@ class _HomeMenuState extends State<HomeMenu> {
                       child: ListTile(
                         leading: Icon(Icons.logout_outlined),
                         title: Text(
-                          'Đăng xuất',
+                          'Log Out',
                           style: TextStyle(fontSize: 16, color: Colors.black),
                         ),
                         onTap: () async {
@@ -310,14 +310,6 @@ class _HomeMenuState extends State<HomeMenu> {
   }
 
   void totalPrice() {
-    // double totalPrice = _cabRides.fold(0.0, (sum, ride) {
-    //   // In ra giá trị của ride.price để kiểm tra
-    //   print('Price of ride: ${ride.price}');
-    //   return sum + ride.price;
-    // });
-    // setState(() {
-    //   widget.driver.Wallet = totalPrice;
-    // });
     double totalPrice = _cabRides.fold(0, (sum, ride) => sum + ride.price);
     print('Total Price: $totalPrice');
     setState(() {

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -6,7 +8,6 @@ import 'package:geolocator/geolocator.dart';
 import '../../models/user.dart';
 import 'trip_info_panel.dart';
 import '../page/home_page.dart';
-
 
 class MapPage extends StatefulWidget {
   final User user;
@@ -20,7 +21,8 @@ class _MapPageState extends State<MapPage> {
   late LatLng _initialLocation = LatLng(0, 0);
   MapController _mapController = MapController();
   TextEditingController _pickupLocationController = TextEditingController();
-  TextEditingController _destinationLocationController = TextEditingController();
+  TextEditingController _destinationLocationController =
+      TextEditingController();
   double _heading = 0.0;
 
   void getLocation() async {
@@ -82,7 +84,8 @@ class _MapPageState extends State<MapPage> {
               ),
               children: [
                 TileLayer(
-                  urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  urlTemplate:
+                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                   subdomains: ['a', 'b', 'c'],
                 ),
               ],
@@ -149,7 +152,8 @@ class _MapPageState extends State<MapPage> {
           ),
           SlidingUpPanel(
             panel: TripInfoPanel(
-              onLocationsChanged: (LatLng pickupLatLng, LatLng destinationLatLng) {
+              onLocationsChanged:
+                  (LatLng pickupLatLng, LatLng destinationLatLng) {
                 // Do nothing for markers
               },
               pickupLocationController: _pickupLocationController,

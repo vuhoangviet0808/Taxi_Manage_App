@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, sized_box_for_whitespace
 
 import 'package:flutter/material.dart';
 
@@ -12,7 +12,8 @@ class SMSMessagePage extends StatefulWidget {
 }
 
 class _SMSMessagePageState extends State<SMSMessagePage> {
-  final List<TextEditingController> _controllers = List.generate(5, (index) => TextEditingController());
+  final List<TextEditingController> _controllers =
+      List.generate(5, (index) => TextEditingController());
   final _formKey = GlobalKey<FormState>();
   String _errorMessage = '';
 
@@ -77,7 +78,8 @@ class _SMSMessagePageState extends State<SMSMessagePage> {
                 key: _formKey,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(5, (index) => _buildNumberField(_controllers[index])),
+                  children: List.generate(
+                      5, (index) => _buildNumberField(_controllers[index])),
                 ),
               ),
               SizedBox(height: 20),

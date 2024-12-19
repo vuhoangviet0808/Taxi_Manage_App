@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/user/viewmodels/user_view_model.dart';
 import 'package:flutter_app/user/views/page/update_user_page.dart';
@@ -49,8 +51,8 @@ class _HomeMenuState extends State<HomeMenu> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => RideHistoryPage(
-                        userID: widget.user.User_ID),
+                    builder: (context) =>
+                        RideHistoryPage(userID: widget.user.User_ID),
                   ),
                 );
               },
@@ -85,7 +87,10 @@ class _HomeMenuState extends State<HomeMenu> {
     );
   }
 
-  Widget buildMenuItem({required String icon, required String text, required VoidCallback onTap}) {
+  Widget buildMenuItem(
+      {required String icon,
+      required String text,
+      required VoidCallback onTap}) {
     return ListTile(
       leading: Image.asset(
         icon,

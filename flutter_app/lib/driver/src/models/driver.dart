@@ -3,6 +3,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 
 class Driver {
   int Driver_ID;
@@ -159,5 +160,44 @@ class CabRide {
       'response': response,
       'evaluate': evaluate,
     };
+  }
+}
+
+class BookingDriver {
+  final int bookingId;
+  final int driverId;
+  final String pickupLocation;
+  final String dropoffLocation;
+  final LatLng gpsPickup;
+  final LatLng gpsDropoff;
+  final double price;
+  final String userPhone;
+  BookingDriver({
+    required this.bookingId,
+    required this.driverId,
+    required this.pickupLocation,
+    required this.dropoffLocation,
+    required this.gpsPickup,
+    required this.gpsDropoff,
+    required this.price,
+    required this.userPhone,
+  });
+  factory BookingDriver.fromJson(Map<String, dynamic> json) {
+    return BookingDriver(
+      bookingId: json['booking_id'],
+      driverId: json['driver_id'],
+      pickupLocation: json['pickup_location'],
+      dropoffLocation: json['dropoff_location'],
+      gpsPickup: LatLng(
+        json['gps_pickup']['latitude'], // Tách latitude từ gps_pickup
+        json['gps_pickup']['longitude'], // Tách longitude từ gps_pickup
+      ),
+      gpsDropoff: LatLng(
+        json['gps_dropoff']['latitude'], // Tách latitude từ gps_dropoff
+        json['gps_dropoff']['longitude'], // Tách longitude từ gps_dropoff
+      ),
+      price: json['price'],
+      userPhone: json['user_phone'],
+    );
   }
 }

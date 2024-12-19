@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -77,8 +77,10 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
   }
 
   Future<void> _navigateToPickTypeRide(BuildContext context) async {
-    LatLng? pickupLatLng = await _fetchLatLng(widget.pickupLocationController.text);
-    LatLng? destinationLatLng = await _fetchLatLng(widget.destinationLocationController.text);
+    LatLng? pickupLatLng =
+        await _fetchLatLng(widget.pickupLocationController.text);
+    LatLng? destinationLatLng =
+        await _fetchLatLng(widget.destinationLocationController.text);
 
     if (pickupLatLng != null && destinationLatLng != null) {
       widget.onLocationsChanged(pickupLatLng, destinationLatLng);
@@ -87,10 +89,11 @@ class _TripInfoPanelState extends State<TripInfoPanel> {
           builder: (context) => PickTypeRide(
             pickupLocation: pickupLatLng,
             destinationLocation: destinationLatLng,
-            pickupAddress: widget.pickupLocationController.text,  // Truyền địa chỉ đón
-            destinationAddress: widget.destinationLocationController.text, 
+            pickupAddress:
+                widget.pickupLocationController.text, // Truyền địa chỉ đón
+            destinationAddress: widget.destinationLocationController.text,
             user: widget.user,
-             // Truyền địa chỉ đến
+            // Truyền địa chỉ đến
           ),
         ),
       );

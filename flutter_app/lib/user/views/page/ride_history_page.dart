@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_string_interpolations
+
 import 'package:flutter/material.dart';
 import '../../models/user.dart';
 import '../../services/user_info_services.dart';
@@ -68,7 +70,8 @@ class RideHistoryPageState extends State<RideHistoryPage> {
                           Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start, // Đảm bảo căn trái
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.start, // Đảm bảo căn trái
                               children: [
                                 buildInfoRow('Thời gian bắt đầu:',
                                     '${ride.ride_start_time}'),

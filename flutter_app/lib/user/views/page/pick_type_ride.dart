@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, unused_field, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -143,7 +145,8 @@ class _PickTypeRideState extends State<PickTypeRide> {
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                urlTemplate:
+                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 subdomains: ['a', 'b', 'c'],
               ),
               PolylineLayer(
@@ -300,7 +303,8 @@ Widget _buildOptionItem(BuildContext context,
     required IconData icon,
     required bool isSelected,
     required VoidCallback onTap,
-    bool isBookingButton = false}) { // Thêm cờ isBookingButton để tùy chỉnh nút Đặt xe
+    bool isBookingButton = false}) {
+  // Thêm cờ isBookingButton để tùy chỉnh nút Đặt xe
   return GestureDetector(
     onTap: onTap,
     child: Container(
@@ -308,21 +312,30 @@ Widget _buildOptionItem(BuildContext context,
       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       margin: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       decoration: BoxDecoration(
-        color: isBookingButton ? Colors.teal : Colors.white, // Nền teal cho nút Đặt xe
+        color: isBookingButton
+            ? Colors.teal
+            : Colors.white, // Nền teal cho nút Đặt xe
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.teal, width: 1), // Viền màu teal
       ),
       child: Row(
-        mainAxisAlignment: isBookingButton ? MainAxisAlignment.center : MainAxisAlignment.start, // Căn giữa cho nút Đặt xe
+        mainAxisAlignment: isBookingButton
+            ? MainAxisAlignment.center
+            : MainAxisAlignment.start, // Căn giữa cho nút Đặt xe
         children: [
-          Icon(icon, color: isBookingButton ? Colors.white : Colors.teal, size: 24),
-          SizedBox(width: isBookingButton ? 0 : 12), // Xóa khoảng trống cho nút Đặt xe
+          Icon(icon,
+              color: isBookingButton ? Colors.white : Colors.teal, size: 24),
+          SizedBox(
+              width:
+                  isBookingButton ? 0 : 12), // Xóa khoảng trống cho nút Đặt xe
           Text(
             title,
             style: TextStyle(
               fontSize: 16,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isBookingButton ? Colors.white : Colors.black, // Màu chữ trắng cho nút Đặt xe
+              color: isBookingButton
+                  ? Colors.white
+                  : Colors.black, // Màu chữ trắng cho nút Đặt xe
             ),
           ),
         ],

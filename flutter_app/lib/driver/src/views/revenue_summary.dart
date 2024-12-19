@@ -266,7 +266,7 @@ class DailyRevenueSummaryState extends State<DailyRevenueSummary> {
                               ),
                             ),
                             subtitle: Text(
-                              "Doanh thu: ${formatCurrency(totalRevenue)}",
+                              "Doanh thu: ${formatCurrency(ride.price)}",
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black54,

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/user.dart';
@@ -14,40 +16,42 @@ class UserInfoService {
           'Content-Type': 'application/json',
         },
       );
-      if(response.statusCode == 200) {
+      if (response.statusCode == 200) {
         final User user = User.fromJson(jsonDecode(response.body));
         return user;
       } else {
-        throw Exception('Failed to get information. Error code: ${response.statusCode}');
+        throw Exception(
+            'Failed to get information. Error code: ${response.statusCode}');
       }
-
     } catch (e) {
       throw Exception('$e');
     }
   }
 }
+
 class UserUpdateService {
-  Future<bool> updateUserInfo(User user) async{
+  Future<bool> updateUserInfo(User user) async {
     try {
       print("Sending data: ${user.toJson()}");
       final response = await http.post(
-         Uri.parse('$baseUrl/user/update_user_infor'),
+          Uri.parse('$baseUrl/user/update_user_infor'),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(user.toJson()));
-       print('Received response: ${response.statusCode} ${response.body}');
+      print('Received response: ${response.statusCode} ${response.body}');
       if (response.statusCode == 200) {
         print("Update Success");
         return true;
       } else {
         print("Failed");
         return false;
-      } 
+      }
     } catch (e) {
       print(e);
       return false;
     }
   }
 }
+
 class CabRideInfoService {
   Future<List<CabRide>> getCabRide(int userID) async {
     try {

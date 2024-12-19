@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors, sized_box_for_whitespace, unused_import, curly_braces_in_flow_control_structures
 
 import 'package:flutter_app/common/viewmodels/account_register_view_model.dart';
 import 'package:provider/provider.dart';

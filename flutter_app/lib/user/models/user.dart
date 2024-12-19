@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class User {
   int User_ID;
   String SDT;
@@ -25,16 +27,18 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      User_ID: json['User_ID'] ?? 0,  // Default to 0 if null
-      SDT: json['SDT'] ?? '',  // Default to empty string if null
-      firstname: json['firstname'] ?? '',  // Default to empty string if null
-      lastname: json['lastname'] ?? '',  // Default to empty string if null
-      Wallet: json['Wallet'] != null ? double.tryParse(json['Wallet'].toString()) ?? 0.0 : 0.0,
-      DOB: json['DOB'] ?? '',  // Default to empty string if null
-      Gender: json['Gender'] ?? '',  // Default to empty string if null
-      Address: json['Address'] ?? '',  // Default to empty string if null
-      CCCD: json['CCCD'] ?? '',  // Default to empty string if null
-      user_token: json['user_token'] ?? '',  // Default to empty string if null
+      User_ID: json['User_ID'] ?? 0, // Default to 0 if null
+      SDT: json['SDT'] ?? '', // Default to empty string if null
+      firstname: json['firstname'] ?? '', // Default to empty string if null
+      lastname: json['lastname'] ?? '', // Default to empty string if null
+      Wallet: json['Wallet'] != null
+          ? double.tryParse(json['Wallet'].toString()) ?? 0.0
+          : 0.0,
+      DOB: json['DOB'] ?? '', // Default to empty string if null
+      Gender: json['Gender'] ?? '', // Default to empty string if null
+      Address: json['Address'] ?? '', // Default to empty string if null
+      CCCD: json['CCCD'] ?? '', // Default to empty string if null
+      user_token: json['user_token'] ?? '', // Default to empty string if null
     );
   }
 
@@ -89,20 +93,31 @@ class CabRide {
 
   factory CabRide.fromJson(Map<String, dynamic> json) {
     return CabRide(
-      id: json['id'] ?? 0,  // Default to 0 if null
-      shift_id: json['shift_id'] ?? 0,  // Default to 0 if null
-      user_id: json['user_id'] ?? 0,  // Default to 0 if null
-      ride_start_time: json['ride_start_time'] ?? '',  // Default to empty string if null
-      ride_end_time: json['ride_end_time'] ?? '',  // Default to empty string if null
-      address_starting_point: json['address_starting_point'] ?? '',  // Default to empty string if null
-      GPS_starting_point: json['GPS_starting_point'] ?? '',  // Default to empty string if null
-      address_destination: json['address_destination'] ?? '',  // Default to empty string if null
-      GPS_destination: json['GPS_destination'] ?? '',  // Default to empty string if null
-      status: json['status'] ?? '',  // Default to empty string if null
-      cancelled_by: json['cancelled_by'] ?? '',  // Default to empty string if null
-      price: json['price'] != null ? double.tryParse(json['price'].toString()) ?? 0.0 : 0.0,
-      response: json['response'] ?? '',  // Default to empty string if null
-      evaluate: json['evaluate'] != null ? double.tryParse(json['evaluate'].toString()) ?? 0.0 : 0.0,
+      id: json['id'] ?? 0, // Default to 0 if null
+      shift_id: json['shift_id'] ?? 0, // Default to 0 if null
+      user_id: json['user_id'] ?? 0, // Default to 0 if null
+      ride_start_time:
+          json['ride_start_time'] ?? '', // Default to empty string if null
+      ride_end_time:
+          json['ride_end_time'] ?? '', // Default to empty string if null
+      address_starting_point: json['address_starting_point'] ??
+          '', // Default to empty string if null
+      GPS_starting_point:
+          json['GPS_starting_point'] ?? '', // Default to empty string if null
+      address_destination:
+          json['address_destination'] ?? '', // Default to empty string if null
+      GPS_destination:
+          json['GPS_destination'] ?? '', // Default to empty string if null
+      status: json['status'] ?? '', // Default to empty string if null
+      cancelled_by:
+          json['cancelled_by'] ?? '', // Default to empty string if null
+      price: json['price'] != null
+          ? double.tryParse(json['price'].toString()) ?? 0.0
+          : 0.0,
+      response: json['response'] ?? '', // Default to empty string if null
+      evaluate: json['evaluate'] != null
+          ? double.tryParse(json['evaluate'].toString()) ?? 0.0
+          : 0.0,
     );
   }
 
@@ -155,17 +170,25 @@ class BookingRequest {
 
   factory BookingRequest.fromJson(Map<String, dynamic> json) {
     return BookingRequest(
-      booking_id: json['booking_id'] ?? 0,  // Default to 0 if null
-      user_id: json['user_id'] ?? 0,  // Default to 0 if null
-      requested_car_type: json['requested_car_type'] ?? '',  // Default to empty string if null
-      pickup_location: json['pickup_location'] ?? '',  // Default to empty string if null
-      dropoff_location: json['dropoff_location'] ?? '',  // Default to empty string if null
-      gps_pickup_location: json['gps_pickup_location'] ?? '',  // Default to empty string if null
-      gps_destination_location: json['gps_destination_location'] ?? '',  // Default to empty string if null
-      price: json['price'] != null ? double.tryParse(json['price'].toString()) ?? 0.0 : 0.0,
-      request_time: json['request_time'] ?? '',  // Default to empty string if null
-      status: json['status'] ?? '',  // Default to empty string if null
-      driver_id: json['driver_id'] ?? 0,  // Default to 0 if null
+      booking_id: json['booking_id'] ?? 0, // Default to 0 if null
+      user_id: json['user_id'] ?? 0, // Default to 0 if null
+      requested_car_type:
+          json['requested_car_type'] ?? '', // Default to empty string if null
+      pickup_location:
+          json['pickup_location'] ?? '', // Default to empty string if null
+      dropoff_location:
+          json['dropoff_location'] ?? '', // Default to empty string if null
+      gps_pickup_location:
+          json['gps_pickup_location'] ?? '', // Default to empty string if null
+      gps_destination_location: json['gps_destination_location'] ??
+          '', // Default to empty string if null
+      price: json['price'] != null
+          ? double.tryParse(json['price'].toString()) ?? 0.0
+          : 0.0,
+      request_time:
+          json['request_time'] ?? '', // Default to empty string if null
+      status: json['status'] ?? '', // Default to empty string if null
+      driver_id: json['driver_id'] ?? 0, // Default to 0 if null
     );
   }
 
@@ -201,10 +224,11 @@ class BookingDriver {
 
   factory BookingDriver.fromJson(Map<String, dynamic> json) {
     return BookingDriver(
-      booking_id: json['booking_id'] ?? 0,  // Default to 0 if null
-      driver_id: json['driver_id'] ?? 0,  // Default to 0 if null
-      status: json['status'] ?? '',  // Default to empty string if null
-      status_changed_at: json['status_changed_at'] ?? '',  // Default to empty string if null
+      booking_id: json['booking_id'] ?? 0, // Default to 0 if null
+      driver_id: json['driver_id'] ?? 0, // Default to 0 if null
+      status: json['status'] ?? '', // Default to empty string if null
+      status_changed_at:
+          json['status_changed_at'] ?? '', // Default to empty string if null
     );
   }
 

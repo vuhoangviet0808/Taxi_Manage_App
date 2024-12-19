@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/driver.dart';
+import '../services/driver_info_services.dart';
 import 'homemenu.dart';
 import 'riderpicker.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -16,12 +17,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool online = false;
   late LatLng _initialLocation = LatLng(0, 0);
   MapController _mapController = MapController();
   List<Marker> _markers = [];
   Marker? _currentLocationMarker;
   double _heading = 0.0;
+  final LocationServices _postLocationService = LocationServices();
 
   void getLocation() async {
     try {
@@ -97,6 +98,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> _onOpenRideButton() async {
+    await _postLocationService.postLocation(
+        widget.driver.Driver_ID, _initialLocation);
+    if (mounted) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => RiderPicker(driver: widget.driver)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,11 +178,7 @@ class _HomePageState extends State<HomePage> {
               left: MediaQuery.of(context).size.width * 0.3,
               child: FloatingActionButton.extended(
                 heroTag: 'rideButton',
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          RiderPicker(driver: widget.driver)));
-                },
+                onPressed: _onOpenRideButton,
                 backgroundColor: Colors.black.withOpacity(0.6),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12), // Bo tròn góc nút
@@ -182,7 +188,7 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.white,
                 ),
                 label: Text(
-                  'Mở nhận chuyến',
+                  'Start Receiving',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -215,7 +221,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Đang ngoại tuyến',
+                      'Offline',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 14,
@@ -228,16 +234,5 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ));
-  }
-
-  void toggleSwitch(bool value) {
-    setState(() {
-      online = value;
-    });
-    if (online) {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => RiderPicker(driver: widget.driver),
-      ));
-    }
   }
 }

@@ -123,3 +123,51 @@ class CabRide:
             'response': self.response,
             'evaluate': float(self.evaluate) if isinstance(self.evaluate, Decimal) else self.evaluate
         }
+class BookingDriver:
+    def __init__(self, booking_id, driver_id, pickup_location, dropoff_location, gps_pickup, gps_dropoff, price, user_phone):
+        self.booking_id = booking_id
+        self.driver_id = driver_id
+        self.pickup_location = pickup_location
+        self.dropoff_location = dropoff_location
+        self.gps_pickup = gps_pickup
+        self.gps_dropoff = gps_dropoff
+        self.price = price
+        self.user_phone = user_phone
+    @staticmethod
+    def from_dict(row):
+        gps_pickup = {
+        'longitude': row['gps_pickup_lng'],  # longitude trc
+        'latitude': row['gps_pickup_lat'],  # Đảm bảo latitude sau
+        }
+        gps_dropoff = {
+        'longitude': row['gps_dropoff_lng'],  # longitude trước 
+        'latitude': row['gps_dropoff_lat'],  # Đảm bảo latitude trước
+        }    
+        return BookingDriver(
+            booking_id=row['booking_id'],
+            driver_id=row['driver_id'],
+            pickup_location=row['pickup_location'],
+            dropoff_location=row['dropoff_location'],
+            gps_pickup=gps_pickup,
+            gps_dropoff=gps_dropoff,
+            price=row['price'],
+            user_phone=row['user_phone']
+        )
+    def to_dict(self):
+        return {
+            'booking_id': self.booking_id,
+            'driver_id': self.driver_id,
+            'pickup_location': self.pickup_location,
+            'dropoff_location': self.dropoff_location,
+            'gps_pickup': {
+                'longitude': self.gps_pickup['longitude'],
+                'latitude': self.gps_pickup['latitude'],
+                
+            },
+            'gps_dropoff': {
+                'longitude': self.gps_dropoff['longitude'],
+                'latitude': self.gps_dropoff['latitude'],
+            },
+            'price': float(self.price),  # Chuyển đổi thành float trước khi gửi về
+            'user_phone': self.user_phone
+        }

@@ -43,7 +43,7 @@ class RideHistoryPageState extends State<RideHistoryPage> {
       setState(() {
         _cabRides = rides;
         _filteredRides = rides;
-        _errorMessage = rides.isEmpty ? "Chưa có chuyến đi nào" : null;
+        _errorMessage = rides.isEmpty ? "No trips available" : null;
         _isLoading = false;
       });
     } catch (e) {
@@ -89,7 +89,7 @@ class RideHistoryPageState extends State<RideHistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lịch sử chuyến đi'),
+        title: Text('Trip History'),
         backgroundColor: Colors.greenAccent,
       ),
       body: Column(
@@ -108,7 +108,7 @@ class RideHistoryPageState extends State<RideHistoryPage> {
                     child: Text(
                       _selectedDateRange != null
                           ? 'Từ ${DateFormat('dd/MM/yyyy').format(_selectedDateRange!.start)} đến ${DateFormat('dd/MM/yyyy').format(_selectedDateRange!.end)}'
-                          : 'Chọn mốc thời gian',
+                          : 'Select Timeframe',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -156,7 +156,7 @@ class RideHistoryPageState extends State<RideHistoryPage> {
                                 horizontal: 10, vertical: 5),
                             elevation: 2,
                             child: ExpansionTile(
-                              title: Text('Ngày và giờ: $formattedDate'),
+                              title: Text('Date and Time: $formattedDate'),
                               children: <Widget>[
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
@@ -164,20 +164,20 @@ class RideHistoryPageState extends State<RideHistoryPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      buildInfoRow('Thời gian bắt đầu:',
+                                      buildInfoRow('Start Time:',
                                           '${ride.ride_start_time}'),
-                                      buildInfoRow('Thời gian kết thúc:',
-                                          '${ride.ride_end_time}'),
-                                      buildInfoRow('Điểm bắt đầu:',
+                                      buildInfoRow(
+                                          'End Time:', '${ride.ride_end_time}'),
+                                      buildInfoRow('Starting Point:',
                                           '${ride.address_starting_point}',
                                           multiline: true),
-                                      buildInfoRow('Điểm đến:',
+                                      buildInfoRow('Destination:',
                                           '${ride.address_destination}',
                                           multiline: true),
-                                      buildInfoRow('Giá:',
+                                      buildInfoRow('Price:',
                                           '${formatCurrency(ride.price)}'),
                                       buildInfoRow(
-                                          'Đánh giá:', '${ride.evaluate}',
+                                          'Rating:', '${ride.evaluate}',
                                           multiline: true),
                                     ],
                                   ),
